@@ -6,16 +6,12 @@ void main() {
     test('Constructor and percentage (default)', () {
       var mod = Modifier(name: 'bar');
       expect(mod.percentage, 0);
-      expect(mod.isEnhancement, true);
-      expect(mod.isLimitation, false);
       expect(mod.toString(), '+0%');
       expect(mod.name, 'bar');
     });
 
     test('Positive percentage', () {
       var mod = Modifier(percentage: 20, name: 'foo');
-      expect(mod.isEnhancement, true);
-      expect(mod.isLimitation, false);
       expect(mod.percentage, 20);
       expect(mod.toString(), '+20%');
       expect(mod.name, 'foo');
@@ -23,8 +19,6 @@ void main() {
 
     test('Negative percentage', () {
       var mod = Modifier(percentage: -50, name: 'baz');
-      expect(mod.isEnhancement, false);
-      expect(mod.isLimitation, true);
       expect(mod.percentage, -50);
       expect(mod.toString(), '-50%');
     });
@@ -43,8 +37,6 @@ void main() {
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 1);
       expect(mod.percentage, 5);
-      expect(mod.isEnhancement, true);
-      expect(mod.isLimitation, false);
       expect(mod.toString(), '+5%');
     });
 
@@ -70,8 +62,6 @@ void main() {
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 3);
       expect(mod.percentage, 15);
-      expect(mod.isEnhancement, true);
-      expect(mod.isLimitation, false);
       expect(mod.toString(), '+15%');
     });
 
@@ -92,8 +82,6 @@ void main() {
       expect(mod, isA<Modifier>());
       expect(mod.level, 1);
       expect(mod.percentage, 10);
-      expect(mod.isEnhancement, true);
-      expect(mod.isLimitation, false);
       expect(mod.toString(), '+10%');
     });
 

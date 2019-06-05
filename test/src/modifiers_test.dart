@@ -8,7 +8,6 @@ main() {
     test('Affects Insubstantial', () {
       Modifier mod = mods.fetch('Affects Insubstantial');
       expect(mod.name, 'Affects Insubstantial');
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
@@ -16,7 +15,6 @@ main() {
     test('Affects Insubstantial, Selective', () {
       Modifier mod = mods.fetch('Affects Insubstantial, Selective');
       expect(mod.name, 'Affects Insubstantial, Selective');
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 30);
       expect(mod.isAttackModifier, false);
     });
@@ -25,7 +23,6 @@ main() {
       Modifier mod = mods.fetch('Affects Substantial');
       expect(mod.name, 'Affects Substantial');
       expect(mod.percentage, 40);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
     });
 
@@ -33,7 +30,6 @@ main() {
       Modifier mod = mods.fetch('Affects Substantial, Selective');
       expect(mod.name, 'Affects Substantial, Selective');
       expect(mod.percentage, 50);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
     });
 
@@ -43,7 +39,6 @@ main() {
       Modifier mod = mods.fetch('AP Ammo, Huge piercing');
       expect(mod.name, 'AP Ammo, Huge piercing');
       expect(mod.percentage, 35);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
     });
 
@@ -53,7 +48,6 @@ main() {
       Modifier mod = mods.fetch('AP Ammo, Large piercing');
       expect(mod.name, 'AP Ammo, Large piercing');
       expect(mod.percentage, 45);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
     });
 
@@ -63,14 +57,12 @@ main() {
       Modifier mod = mods.fetch('AP Ammo, Piercing');
       expect(mod.name, 'AP Ammo, Piercing');
       expect(mod.percentage, 20);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
     });
 
     test('Aura', () {
       var mod = mods.fetch('Aura');
       expect(mod.name, 'Aura');
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 80);
       expect(mod.isAttackModifier, true);
     });
@@ -78,7 +70,6 @@ main() {
     test('Based on (Attribute)', () {
       var mod = mods.fetch('Based On');
       expect(mod.name, 'Based On');
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
@@ -87,30 +78,12 @@ main() {
       var mod = mods.fetch('Based On, Own Roll');
       expect(mod.name, 'Based On, Own Roll');
       expect(mod.percentage, 20);
-      expect(mod.isEnhancement, true);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Blood Agent', () {
-      var mod = mods.fetch('Blood Agent');
-      expect(mod.name, 'Blood Agent');
-      expect(mod.isEnhancement, true);
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Contact Agent', () {
-      var mod = mods.fetch('Contact Agent');
-      expect(mod.name, 'Contact Agent');
-      expect(mod.percentage, 150);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Avoiding drawbacks', () {
       var mod = mods.fetch('Cosmic, Avoiding drawbacks');
       expect(mod.name, 'Cosmic, Avoiding drawbacks');
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
@@ -119,14 +92,12 @@ main() {
       var mod = mods.fetch('Cosmic, Defensive');
       expect(mod.name, 'Cosmic, Defensive');
       expect(mod.percentage, 50);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Irresistible attack', () {
       var mod = mods.fetch('Cosmic, Irresistible attack');
       expect(mod.name, 'Cosmic, Irresistible attack');
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
     });
@@ -134,14 +105,12 @@ main() {
     test('Cosmic, Lingering effect', () {
       var mod = mods.fetch('Cosmic, Lingering effect');
       expect(mod.name, 'Cosmic, Lingering effect');
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, No active defense allowed', () {
       var mod = mods.fetch('Cosmic, No active defense allowed');
-      expect(mod.isEnhancement, true);
       expect(mod.name, 'Cosmic, No active defense allowed');
       expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
@@ -151,7 +120,6 @@ main() {
       var mod = mods.fetch('Cosmic, No die roll required');
       expect(mod.name, 'Cosmic, No die roll required');
       expect(mod.percentage, 100);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
     });
 
@@ -159,7 +127,6 @@ main() {
       var mod = mods.fetch('Cosmic, No Rule of 16');
       expect(mod.name, 'Cosmic, No Rule of 16');
       expect(mod.percentage, 50);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
     });
 
@@ -168,7 +135,6 @@ main() {
       expect(mod.name, 'Cosmic, Privileged attack');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Cosmic, Unhealing damage', () {
@@ -176,7 +142,6 @@ main() {
       expect(mod.name, 'Cosmic, Unhealing damage');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Cosmic, Unrestricted powers', () {
@@ -184,7 +149,6 @@ main() {
       expect(mod.name, 'Cosmic, Unrestricted powers');
       expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Decreased Immunity 0', () {
@@ -192,7 +156,6 @@ main() {
       expect(mod.name, 'Decreased Immunity 0');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Dehydration', () {
@@ -200,7 +163,6 @@ main() {
       expect(mod.name, 'Dehydration');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Delay, Fixed', () {
@@ -208,7 +170,6 @@ main() {
       expect(mod.name, 'Delay, Fixed');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Delay, Supernatural (fixed)', () {
@@ -216,7 +177,6 @@ main() {
       expect(mod.name, 'Delay, Supernatural (fixed)');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Delay, Supernatural (variable)', () {
@@ -224,7 +184,6 @@ main() {
       expect(mod.name, 'Delay, Supernatural (variable)');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Delay, Variable (short)', () {
@@ -232,7 +191,6 @@ main() {
       expect(mod.name, 'Delay, Variable (short)');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Delay, Variable (long)', () {
@@ -240,7 +198,6 @@ main() {
       expect(mod.name, 'Delay, Variable (long)');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Delay, Triggered', () {
@@ -248,7 +205,6 @@ main() {
       expect(mod.name, 'Delay, Triggered');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Destructive Parry', () {
@@ -256,7 +212,6 @@ main() {
       expect(mod.name, 'Destructive Parry');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Double Blunt Trauma', () {
@@ -264,7 +219,6 @@ main() {
       expect(mod.name, 'Double Blunt Trauma');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Double Knockback', () {
@@ -272,7 +226,6 @@ main() {
       expect(mod.name, 'Double Knockback');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Mobile is mutually exclusive with Drifting.
@@ -281,7 +234,6 @@ main() {
       expect(mod.name, 'Drifting');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Drowning', () {
@@ -289,7 +241,6 @@ main() {
       expect(mod.name, 'Drowning');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Dual', () {
@@ -297,7 +248,6 @@ main() {
       expect(mod.name, 'Dual');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Erosive', () {
@@ -305,7 +255,6 @@ main() {
       expect(mod.name, 'Erosive');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Extended Duration, Permanent', () {
@@ -313,7 +262,6 @@ main() {
       expect(mod.name, 'Extended Duration, Permanent');
       expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Extended Duration, Permanent, dispellable', () {
@@ -321,7 +269,6 @@ main() {
       expect(mod.name, 'Extended Duration, Permanent, dispellable');
       expect(mod.percentage, 150);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Fixed Duration', () {
@@ -329,7 +276,6 @@ main() {
       expect(mod.name, 'Fixed Duration');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Exception: On a passive carrier attack such as Spines, Follow-Up is
@@ -340,7 +286,6 @@ main() {
       var mod = mods.fetch('Follow-Up, Natural weapon');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Follow-Up, Universal is a “penetration modifier”; you cannot
@@ -350,7 +295,6 @@ main() {
       expect(mod.name, 'Follow-Up, Universal');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Force Field', () {
@@ -358,7 +302,6 @@ main() {
       expect(mod.name, 'Force Field');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Freezing', () {
@@ -366,7 +309,6 @@ main() {
       expect(mod.name, 'Freezing');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Game Time', () {
@@ -374,7 +316,6 @@ main() {
       expect(mod.name, 'Game Time');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Guided', () {
@@ -382,7 +323,6 @@ main() {
       expect(mod.name, 'Guided');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Heat', () {
@@ -390,7 +330,6 @@ main() {
       expect(mod.name, 'Heat');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Incendiary (non-burn)', () {
@@ -398,7 +337,6 @@ main() {
       expect(mod.name, 'Incendiary (non-burn)');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
@@ -407,7 +345,6 @@ main() {
       Modifier mod = mods.fetch('HP Ammo, Piercing');
       expect(mod.name, 'HP Ammo, Piercing');
       expect(mod.percentage, 20);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
     });
 
@@ -417,7 +354,6 @@ main() {
       Modifier mod = mods.fetch('HP Ammo, Large piercing');
       expect(mod.name, 'HP Ammo, Large piercing');
       expect(mod.percentage, 20);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
     });
 
@@ -427,7 +363,6 @@ main() {
       Modifier mod = mods.fetch('HP Ammo, Small piercing');
       expect(mod.name, 'HP Ammo, Small piercing');
       expect(mod.percentage, 40);
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
     });
 
@@ -436,7 +371,6 @@ main() {
       expect(mod.name, 'Independent');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Independent, Simultaneous uses', () {
@@ -444,7 +378,6 @@ main() {
       expect(mod.name, 'Independent, Simultaneous uses');
       expect(mod.percentage, 70);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Jet', () {
@@ -452,7 +385,6 @@ main() {
       expect(mod.name, 'Jet');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Link, Independent', () {
@@ -460,7 +392,6 @@ main() {
       expect(mod.name, 'Link, Independent');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Link, Permanent', () {
@@ -468,7 +399,6 @@ main() {
       expect(mod.name, 'Link, Permanent');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Low Signature', () {
@@ -476,7 +406,6 @@ main() {
       expect(mod.name, 'Low Signature');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Malediction is a "penetration modifier"; you cannot combine it with
@@ -485,7 +414,6 @@ main() {
     test('Malediction, -1 per yard', () {
       var mod = mods.fetch('Malediction, -1 per yard');
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 100);
     });
 
@@ -495,7 +423,6 @@ main() {
     test('Malediction, Long-Distance Modifiers', () {
       var mod = mods.fetch('Malediction, Long-Distance Modifiers');
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 200);
     });
 
@@ -505,7 +432,6 @@ main() {
     test('Malediction, Size and Speed/Range Table', () {
       var mod = mods.fetch('Malediction, Size and Speed/Range Table');
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
       expect(mod.percentage, 150);
     });
 
@@ -514,7 +440,6 @@ main() {
       expect(mod.name, 'Mental Defense Only');
       expect(mod.percentage, 250);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Missed Sleep', () {
@@ -522,7 +447,6 @@ main() {
       expect(mod.name, 'Missed Sleep');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
@@ -532,7 +456,6 @@ main() {
       expect(mod.name, 'Multi-Ammo, Large piercing');
       expect(mod.percentage, 65);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
@@ -542,7 +465,6 @@ main() {
       expect(mod.name, 'Multi-Ammo, Piercing');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('No Signature', () {
@@ -550,7 +472,6 @@ main() {
       expect(mod.name, 'No Signature');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Once On, Stays On', () {
@@ -558,7 +479,6 @@ main() {
       expect(mod.name, 'Once On, Stays On');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Overhead', () {
@@ -566,7 +486,6 @@ main() {
       expect(mod.name, 'Overhead');
       expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Persistent', () {
@@ -574,7 +493,6 @@ main() {
       expect(mod.name, 'Persistent');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Radiation, Toxic', () {
@@ -582,7 +500,6 @@ main() {
       expect(mod.name, 'Radiation, Toxic');
       expect(mod.percentage, 25);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Radiation, Burning', () {
@@ -590,7 +507,6 @@ main() {
       expect(mod.name, 'Radiation, Burning');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Ranged', () {
@@ -598,7 +514,6 @@ main() {
       expect(mod.name, 'Ranged');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Incompatible with Always On, as well as Active Defense and Usually
@@ -608,7 +523,6 @@ main() {
       expect(mod.name, 'Reflexive');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: You may only add this enhancement to an Affliction or to an Innate
@@ -621,7 +535,6 @@ main() {
       expect(mod.name, 'Respiratory Agent');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Ricochet', () {
@@ -629,7 +542,6 @@ main() {
       expect(mod.name, 'Ricochet');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     // TODO You may add this enhancement to any Area Effect or Cone attack.
@@ -638,7 +550,6 @@ main() {
       expect(mod.name, 'Selective Area');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Selective Effect', () {
@@ -646,7 +557,6 @@ main() {
       expect(mod.name, 'Selective Effect');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Selectivity', () {
@@ -654,7 +564,6 @@ main() {
       expect(mod.name, 'Selectivity');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     //TODO: Incompatible with any modifiers that don’t suit a muscle-powered
@@ -667,7 +576,6 @@ main() {
       expect(mod.name, 'ST-Based');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     // TODO It must be combined with the Melee Attack limitation. When making
@@ -681,7 +589,6 @@ main() {
       expect(mod.name, 'ST-Based, Limited');
       expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Starvation', () {
@@ -689,7 +596,6 @@ main() {
       expect(mod.name, 'Starvation');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Suffocation', () {
@@ -697,7 +603,6 @@ main() {
       expect(mod.name, 'Suffocation');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Super Attribute', () {
@@ -705,7 +610,6 @@ main() {
       expect(mod.name, 'Super Attribute');
       expect(mod.percentage, 25);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Surge', () {
@@ -713,7 +617,6 @@ main() {
       expect(mod.name, 'Surge');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Surge, Arcing', () {
@@ -721,7 +624,6 @@ main() {
       expect(mod.name, 'Surge, Arcing');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Surprise Attack', () {
@@ -729,7 +631,6 @@ main() {
       expect(mod.name, 'Surprise Attack');
       expect(mod.percentage, 150);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Switchable', () {
@@ -737,7 +638,6 @@ main() {
       expect(mod.name, 'Switchable');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Thrusting Blade', () {
@@ -745,7 +645,6 @@ main() {
       expect(mod.name, 'Thrusting Blade');
       expect(mod.percentage, 15);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Time-Spanning, Present plus (past or future)', () {
@@ -753,7 +652,6 @@ main() {
       expect(mod.name, 'Time-Spanning, Present plus (past or future)');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Time-Spanning, Universal', () {
@@ -761,7 +659,6 @@ main() {
       expect(mod.name, 'Time-Spanning, Universal');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Time-Spanning, Past and future only', () {
@@ -769,7 +666,6 @@ main() {
       expect(mod.name, 'Time-Spanning, Past and future only');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Time-Spanning, Past or future only', () {
@@ -777,7 +673,6 @@ main() {
       expect(mod.name, 'Time-Spanning, Past or future only');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Underwater', () {
@@ -785,7 +680,6 @@ main() {
       expect(mod.name, 'Underwater');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Usually On', () {
@@ -793,7 +687,6 @@ main() {
       expect(mod.name, 'Usually On');
       expect(mod.percentage, 5);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('Variable', () {
@@ -801,7 +694,6 @@ main() {
       expect(mod.name, 'Variable');
       expect(mod.percentage, 5);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Wall, Fixed shape', () {
@@ -809,7 +701,6 @@ main() {
       expect(mod.name, 'Wall, Fixed shape');
       expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('Wall, Variable shape', () {
@@ -817,7 +708,6 @@ main() {
       expect(mod.name, 'Wall, Variable shape');
       expect(mod.percentage, 60);
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
     });
 
     test('World-Spanning, Others only', () {
@@ -825,7 +715,6 @@ main() {
       expect(mod.name, 'World-Spanning, Others only');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
 
     test('World-Spanning, Others plus current', () {
@@ -833,14 +722,12 @@ main() {
       expect(mod.name, 'World-Spanning, Others plus current');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
     });
   });
 
   group('Leveled enhancers', () {
     test('Accurate', () {
       var mod = mods.fetch('Accurate') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 5);
@@ -850,7 +737,6 @@ main() {
 
     test('Affects Others', () {
       var mod = mods.fetch('Affects Others') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 50);
@@ -860,17 +746,6 @@ main() {
 
     test('Area Effect', () {
       var mod = mods.fetch('Area Effect') as LeveledModifier;
-      expect(mod.isEnhancement, true);
-      expect(mod.isAttackModifier, true);
-      expect(mod.level, 1);
-      expect(mod.percentage, 50);
-      mod.level = 3;
-      expect(mod.percentage, 150);
-    });
-
-    test('Armor Divisor', () {
-      var mod = mods.fetch('Armor Divisor') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 50);
@@ -882,7 +757,6 @@ main() {
     // Rapid Fire, or Emanation.
     test('Cone', () {
       var mod = mods.fetch('Cone') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 60);
@@ -892,7 +766,6 @@ main() {
 
     test('Decreased Immunity', () {
       var mod = mods.fetch('Decreased Immunity') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 50);
@@ -903,7 +776,6 @@ main() {
 
     test('Explosion', () {
       var mod = mods.fetch('Explosion') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 50);
@@ -913,7 +785,6 @@ main() {
 
     test('Extended Duration', () {
       var mod = mods.fetch('Extended Duration') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 20);
@@ -924,7 +795,6 @@ main() {
 
     test('Extra Passes', () {
       var mod = mods.fetch('Extra Passes') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 10);
@@ -934,7 +804,6 @@ main() {
 
     test('Fragmentation, Cutting', () {
       var mod = mods.fetch('Fragmentation, Cutting') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 15);
@@ -944,7 +813,6 @@ main() {
 
     test('Fragmentation, Hot', () {
       var mod = mods.fetch('Fragmentation, Hot') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 15);
@@ -954,7 +822,6 @@ main() {
 
     test('Fragmentation, Impaling', () {
       var mod = mods.fetch('Fragmentation, Impaling') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 20);
@@ -964,7 +831,6 @@ main() {
 
     test('Fragmentation, Large Piercing', () {
       var mod = mods.fetch('Fragmentation, Large Piercing') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 15);
@@ -974,7 +840,6 @@ main() {
 
     test('Incendiary, Burning', () {
       var mod = mods.fetch('Incendiary, Burning') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 10);
@@ -984,7 +849,6 @@ main() {
 
     test('Increased Range', () {
       var mod = mods.fetch('Increased Range') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 10);
@@ -994,7 +858,6 @@ main() {
 
     test('Long-Range', () {
       var mod = mods.fetch('Long-Range') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 50);
@@ -1005,7 +868,6 @@ main() {
 
     test('Low Psychic Signature', () {
       var mod = mods.fetch('Low Psychic Signature') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 5);
@@ -1016,7 +878,6 @@ main() {
 
     test('Low Signature, Variable', () {
       var mod = mods.fetch('Low Signature, Variable') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 5);
@@ -1030,7 +891,6 @@ main() {
     //TODO: Mobile is mutually exclusive with Drifting.
     test('Mobile', () {
       var mod = mods.fetch('Mobile') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 40);
@@ -1040,7 +900,6 @@ main() {
 
     test('Reduced Fatigue Cost', () {
       var mod = mods.fetch('Reduced Fatigue Cost') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 20);
@@ -1052,7 +911,6 @@ main() {
     // any kind of special modifier that affects activation time, or to Magery.
     test('Reduced Time', () {
       var mod = mods.fetch('Reduced Time') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 20);
@@ -1062,7 +920,6 @@ main() {
 
     test('Reliable', () {
       var mod = mods.fetch('Reliable') as LeveledModifier;
-      expect(mod.isEnhancement, true);
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 5);
@@ -1073,10 +930,29 @@ main() {
   });
 
   group('Variable enhancers', () {
+    test('Armor Divisor', () {
+      var mod = mods.fetch('Armor Divisor') as VariableModifier;
+      expect(mod.isAttackModifier, true);
+      expect(mod.level, 1);
+      expect(mod.percentage, -70);
+      mod.level = 2;
+      expect(mod.percentage, -50);
+      mod.level = 3;
+      expect(mod.percentage, -30);
+      mod.level = 4;
+      expect(mod.percentage, 50);
+      mod.level = 5;
+      expect(mod.percentage, 100);
+      mod.level = 6;
+      expect(mod.percentage, 150);
+      mod.level = 7;
+      expect(mod.percentage, 200);
+      expect(() => mod.level = 8, throwsA(isA<RangeError>()));
+    });
+
     test('Can Carry Objects', () {
       var mod = mods.fetch('Can Carry Objects') as VariableModifier;
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
       expect(mod.level, 1);
       expect(mod.percentage, 10);
       mod.level = 2;
@@ -1093,7 +969,6 @@ main() {
     test('Cyclic', () {
       var mod = mods.fetch('Cyclic') as VariableModifier;
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
       expect(mod.level, 1);
       expect(mod.percentage, 10);
       mod.level = 2;
@@ -1110,7 +985,6 @@ main() {
     test('Increased Range, LOS', () {
       var mod = mods.fetch('Increased Range, LOS') as VariableModifier;
       expect(mod.isAttackModifier, false);
-      expect(mod.isEnhancement, true);
       expect(mod.level, 1);
       expect(mod.percentage, 90);
       mod.level = 2;
@@ -1137,7 +1011,6 @@ main() {
     test('Rapid Fire', () {
       var mod = mods.fetch('Rapid Fire') as VariableModifier;
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
       expect(mod.level, 1);
       expect(mod.percentage, 40);
       mod.level = 2;
@@ -1160,7 +1033,6 @@ main() {
     test('Rapid Fire, Selective', () {
       var mod = mods.fetch('Rapid Fire, Selective') as VariableModifier;
       expect(mod.isAttackModifier, true);
-      expect(mod.isEnhancement, true);
       expect(mod.level, 1);
       expect(mod.percentage, 80);
       mod.level = 2;
@@ -1176,6 +1048,112 @@ main() {
       expect(() => mod.level = 7, throwsA(isA<RangeError>()));
     });
   });
+
+  group('Simple Limitations', () {
+    test('Active Defense', () {
+      var mod = mods.fetch('Active Defense');
+      expect(mod.percentage, -40);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Active Defense, Indpependent', () {
+      var mod = mods.fetch('Active Defense, Independent');
+      expect(mod.percentage, -20);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('All-Out', () {
+      var mod = mods.fetch('All-Out');
+      expect(mod.percentage, -25);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('All-Out Concentrate', () {
+      var mod = mods.fetch('All-Out Concentrate');
+      expect(mod.percentage, -25);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Aspected', () {
+      var mod = mods.fetch('Aspected');
+      expect(mod.percentage, -20);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Attracts Threats, 6 or less', () {
+      var mod = mods.fetch('Attracts Threats, 6 or less');
+      expect(mod.percentage, -5);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Attracts Threats, 9 or less', () {
+      var mod = mods.fetch('Attracts Threats, 9 or less');
+      expect(mod.percentage, -10);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Blockable', () {
+      var mod = mods.fetch('Blockable');
+      expect(mod.percentage, -5);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Blood Agent, Reversed', () {
+      var mod = mods.fetch('Blood Agent, Reversed');
+      expect(mod.percentage, -40);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Can Be Blocked or Parried', () {
+      var mod = mods.fetch('Can Be Blocked or Parried');
+      expect(mod.percentage, -10);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Can Be Parried', () {
+      var mod = mods.fetch('Can Be Parried');
+      expect(mod.percentage, -5);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: You may only take this limitation in conjunction with Area Effect or Cone.
+    test('Dissipation', () {
+      var mod = mods.fetch('Dissipation');
+      expect(mod.percentage, -50);
+      expect(mod.isAttackModifier, true);
+    });
+
+    //TODO: You may only take this limitation in conjunction with Area Effect.
+    test('Emanation', () {
+      var mod = mods.fetch('Emanation');
+      expect(mod.percentage, -20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Emergencies Only', () {
+      var mod = mods.fetch('Emergencies Only');
+      expect(mod.percentage, -30);
+      expect(mod.isAttackModifier, false);
+    });
+  });
+
+  //TODO: Blood Agent: -40% limitation UNLESS combined with Area Effect or
+  // Cone, in which case it is a 100% enhancement. This is a “penetration
+  // modifier”; you cannot combine it with other penetration modifiers,
+  // such as Follow-Up.
+
+  //TODO: Contact Agent: -30% limitation UNLESS combined with Area Effect or
+  // Cone, in which case it is a 150% enhancement. This is a “penetration
+  // modifier”; you cannot combine it with other penetration modifiers,
+  // such as Follow-Up.
+
+  //TODO: Corrupting: A trait with this limitation causes you to accumulate
+  // Corruption each time it’s used. You gain 1 point of Corruption per point
+  // by which Corrupting reduces the cost of the modified trait. Corrupting can
+  // also be applied to a disadvantage that offers a self-control roll. In that
+  // case, it’s a +20% enhancement, wors- ening the disadvantage. You gain 1
+  // point of Corruption per 5 points of unmodified disadvantage value each
+  // time you fail a self-control roll.
 
   //TODO: Decide how Homing seeks its target: with ordinary vision or a
   // sensory advantage such as Detect, Infravision, Night Vision, Scanning

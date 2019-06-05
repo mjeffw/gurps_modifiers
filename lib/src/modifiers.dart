@@ -3,10 +3,8 @@ import 'dart:convert';
 import 'package:gurps_enhancers/src/modifier.dart';
 
 class Modifiers {
-  var ctor = (x) => Modifier.fromJSON(x);
-
   final Map _constructors = {
-    'Modifier': (x) => Modifier.fromJSON(x),
+    'Simple': (x) => Modifier.fromJSON(x),
     'Leveled': (x) => LeveledModifier.fromJSON(x),
     'Variable': (x) => VariableModifier.fromJSON(x)
   };
@@ -37,13 +35,23 @@ String _source = '''
         "isAttackModifier": true
       },
       {
+        "name": "Active Defense",
+        "type": "Simple",
+        "percentage": -40
+      },
+      {
+        "name": "Active Defense, Independent",
+        "type": "Simple",
+        "percentage": -20
+      },
+      {
         "name": "Affects Insubstantial",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20
       },
       {
         "name": "Affects Insubstantial, Selective",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 30
       },
       {
@@ -53,13 +61,41 @@ String _source = '''
       },
       {
         "name": "Affects Substantial",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 40
       },
       {
         "name": "Affects Substantial, Selective",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
+      },
+      {
+        "name": "All-Out",
+        "type": "Simple",
+        "percentage": -25
+      },
+      {
+        "name": "All-Out Concentrate",
+        "type": "Simple",
+        "percentage": -25
+      },
+      {
+        "name": "AP Ammo, Huge piercing",
+        "type": "Simple",
+        "percentage": 35,
+        "isAttackModifier": true
+      },
+      {
+        "name": "AP Ammo, Large piercing",
+        "type": "Simple",
+        "percentage": 45,
+        "isAttackModifier": true
+      },
+      {
+        "name": "AP Ammo, Piercing",
+        "type": "Simple",
+        "percentage": 20,
+        "isAttackModifier": true
       },
       {
         "name": "Area Effect",
@@ -68,49 +104,62 @@ String _source = '''
         "isAttackModifier": true
       },
       {
+        "COMMENT": "Divisors: 0.1 (x10), 0.2 (x5), 0.5 (x2), 2 (x1/2), 3 (x1/3), 5 (x1/5), 10 (x0.1)",
         "name": "Armor Divisor",
-        "type": "Leveled",
-        "valuePerLevel": 50,
+        "type": "Variable",
+        "levelPercentages": [-70, -50, -30, 50, 100, 150, 200],
         "isAttackModifier": true
       },
       {
-        "name": "AP Ammo, Huge piercing",
-        "type": "Modifier",
-        "percentage": 35,
-        "isAttackModifier": true
+        "name": "Aspected",
+        "type": "Simple",
+        "percentage": -20
       },
       {
-        "name": "AP Ammo, Large piercing",
-        "type": "Modifier",
-        "percentage": 45,
-        "isAttackModifier": true
+        "name": "Attracts Threats, 6 or less",
+        "type": "Simple",
+        "percentage": -5
       },
       {
-        "name": "AP Ammo, Piercing",
-        "type": "Modifier",
-        "percentage": 20,
-        "isAttackModifier": true
+        "name": "Attracts Threats, 9 or less",
+        "type": "Simple",
+        "percentage": -10
       },
       {
         "name": "Aura",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 80,
         "isAttackModifier": true
       },
       {
         "name": "Based On",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20
       },
       {
         "name": "Based On, Own Roll",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20
       },
       {
-        "name": "Blood Agent",
-        "type": "Modifier",
-        "percentage": 100
+        "name": "Blockable",
+        "type": "Simple",
+        "percentage": -5
+      },
+      {
+        "name": "Blood Agent, Reversed",
+        "type": "Simple",
+        "percentage": -40
+      },
+      {
+        "name": "Can Be Blocked or Parried",
+        "type": "Simple",
+        "percentage": -10
+      },
+      {
+        "name": "Can Be Parried",
+        "type": "Simple",
+        "percentage": -5
       },
       {
         "name": "Can Carry Objects",
@@ -125,58 +174,53 @@ String _source = '''
         "isAttackModifier": true
       },
       {
-        "name": "Contact Agent",
-        "type": "Modifier",
-        "percentage": 150
-      },
-      {
         "name": "Cosmic, Avoiding drawbacks",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "Cosmic, Defensive",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "Cosmic, Irresistible attack",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 300
       },
       {
         "name": "Cosmic, Lingering effect",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100
       },
       {
         "name": "Cosmic, No active defense allowed",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 300
       },
       {
         "name": "Cosmic, No die roll required",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100
       },
       {
         "name": "Cosmic, No Rule of 16",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "Cosmic, Privileged attack",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "Cosmic, Unhealing damage",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100
       },
       {
         "name": "Cosmic, Unrestricted powers",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 300
       },
       {
@@ -187,7 +231,7 @@ String _source = '''
       },
       {
         "name": "Decreased Immunity 0",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20
       },
       {
@@ -198,83 +242,100 @@ String _source = '''
       },
       {
         "name": "Dehydration",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Delay, Fixed",
-        "type": "Modifier",
+        "type": "Simple",
         "isAttackModifier": true
       },
       {
         "name": "Delay, Supernatural (fixed)",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50,
         "isAttackModifier": true
       },
       {
         "name": "Delay, Supernatural (variable)",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100,
         "isAttackModifier": true
       },
       {
         "name": "Delay, Triggered",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50,
         "isAttackModifier": true
       },
       {
         "name": "Delay, Variable (long)",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Delay, Variable (short)",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10,
         "isAttackModifier": true
       },
       {
         "name": "Destructive Parry",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10,
         "isAttackModifier": true
       },
       {
+        "name": "Dissipation",
+        "type": "Simple",
+        "percentage": -50,
+        "isAttackModifier": true
+      },
+      {
         "name": "Double Blunt Trauma",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Double Knockback",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Drifting",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Drowning",
-        "type": "Modifier",
+        "type": "Simple",
         "isAttackModifier": true
       },
       {
         "name": "Dual",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10,
         "isAttackModifier": true
       },
       {
+        "name": "Emanation",
+        "type": "Simple",
+        "percentage": -20,
+        "isAttackModifier": true
+      },
+      {
+        "name": "Emergencies Only",
+        "type": "Simple",
+        "percentage": -30
+      },
+      {
         "name": "Erosive",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10,
         "isAttackModifier": true
       },
@@ -292,12 +353,12 @@ String _source = '''
       },
       {
         "name": "Extended Duration, Permanent",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 300
       },
       {
         "name": "Extended Duration, Permanent, dispellable",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 150
       },
       {
@@ -308,20 +369,20 @@ String _source = '''
       },
       {
         "name": "Fixed Duration",
-        "type": "Modifier"
+        "type": "Simple"
       },
       {
         "name": "Follow-Up, Universal",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "Follow-Up, Natural weapon",
-        "type": "Modifier"
+        "type": "Simple"
       },
       {
         "name": "Force Field",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20
       },
       {
@@ -350,47 +411,47 @@ String _source = '''
       },
       {
         "name": "Freezing",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Game Time",
-        "type": "Modifier"
+        "type": "Simple"
       },
       {
         "name": "Guided",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50,
         "isAttackModifier": true
       },
       {
         "name": "Heat",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "HP Ammo, Large piercing",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "HP Ammo, Piercing",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "HP Ammo, Small piercing",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 40,
         "isAttackModifier": true
       },
       {
         "name": "Incendiary (non-burn)",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10,
         "isAttackModifier": true
       },
@@ -412,27 +473,27 @@ String _source = '''
       },
       {
         "name": "Independent",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 40
       },
       {
         "name": "Independent, Simultaneous uses",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 70
       },
       {
         "name": "Jet",
-        "type": "Modifier",
+        "type": "Simple",
         "isAttackModifier": true
       },
       {
         "name": "Link, Permanent",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10
       },
       {
         "name": "Link, Independent",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20
       },
       {
@@ -449,7 +510,7 @@ String _source = '''
       },
       {
         "name": "Low Signature",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10,
         "isAttackModifier": true
       },
@@ -461,43 +522,43 @@ String _source = '''
       },
       {
         "name": "Malediction, -1 per yard",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100,
         "isAttackModifier": true
       },
       {
         "name": "Malediction, Long-Distance Modifiers",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 200,
         "isAttackModifier": true
       },
       {
         "name": "Malediction, Size and Speed/Range Table",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 150,
         "isAttackModifier": true
       },
       {
         "name": "Mental Defense Only",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 250,
         "isAttackModifier": true
       },
       {
         "name": "Missed Sleep",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50,
         "isAttackModifier": true
       },
       {
         "name": "Multi-Ammo, Large piercing",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 65,
         "isAttackModifier": true
       },
       {
         "name": "Multi-Ammo, Piercing",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 40,
         "isAttackModifier": true
       },
@@ -509,42 +570,42 @@ String _source = '''
       },
       {
         "name": "No Signature",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Once On, Stays On",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "Overhead",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 30,
         "isAttackModifier": true
       },
       {
         "name": "Persistent",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 40,
         "isAttackModifier": true
       },
       {
         "name": "Radiation, Toxic",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 25,
         "isAttackModifier": true
       },
       {
         "name": "Radiation, Burning",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100,
         "isAttackModifier": true
       },
       {
         "name": "Ranged",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 40
       },
       {
@@ -571,7 +632,7 @@ String _source = '''
       },
       {
         "name": "Reflexive",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 40
       },
       {
@@ -582,145 +643,145 @@ String _source = '''
       },
       {
         "name": "Respiratory Agent",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50,
         "isAttackModifier": true
       },
       {
         "name": "Ricochet",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10,
         "isAttackModifier": true
       },
       {
         "name": "Selective Area",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Selective Effect",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20
       },
       {
         "name": "Selectivity",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10
       },
       {
         "name": "ST-Based",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100,
         "isAttackModifier": true
       },
       {
         "name": "ST-Based, Limited",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 30,
         "isAttackModifier": true
       },
       {
         "name": "Starvation",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 40,
         "isAttackModifier": true
       },
       {
         "name": "Suffocation",
-        "type": "Modifier",
+        "type": "Simple",
         "isAttackModifier": true
       },
       {
         "name": "Super Attribute",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 25
       },
       {
         "name": "Surge",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Surge, Arcing",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100,
         "isAttackModifier": true
       },
       {
         "name": "Surprise Attack",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 150,
         "isAttackModifier": true
       },
       {
         "name": "Switchable",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 10
       },
       {
         "name": "Thrusting Blade",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 15,
         "isAttackModifier": true
       },
       {
         "name": "Time-Spanning, Present plus (past or future)",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "Time-Spanning, Universal",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100
       },
       {
         "name": "Time-Spanning, Past and future only",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "Time-Spanning, Past or future only",
-        "type": "Modifier"
+        "type": "Simple"
       },
       {
         "name": "Underwater",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 20,
         "isAttackModifier": true
       },
       {
         "name": "Usually On",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 5
       },
       {
         "name": "Variable",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 5,
         "isAttackModifier": true
       },
       {
         "name": "Wall, Fixed shape",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 30,
         "isAttackModifier": true
       },
       {
         "name": "Wall, Variable shape",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 60,
         "isAttackModifier": true
       },
       {
         "name": "World-Spanning, Others only",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 50
       },
       {
         "name": "World-Spanning, Others plus current",
-        "type": "Modifier",
+        "type": "Simple",
         "percentage": 100
       }
     ]

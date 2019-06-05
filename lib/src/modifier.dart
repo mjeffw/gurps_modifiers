@@ -25,7 +25,7 @@ class Modifier {
 
   factory Modifier.fromJSON(Map<String, dynamic> json) {
     var type = json['type'];
-    assert(type == 'Modifier');
+    assert(type == 'Simple');
 
     var isAttack = json['isAttackModifier'];
     var percent = json['percentage'];
@@ -36,12 +36,8 @@ class Modifier {
         isAttackModifier: (isAttack ?? false) as bool);
   }
 
-  bool get isEnhancement => !percentage.isNegative;
-
-  bool get isLimitation => !isEnhancement;
-
   @override
-  String toString() => '${isEnhancement ? "+" : ""}$percentage%';
+  String toString() => '${!percentage.isNegative ? "+" : ""}$percentage%';
 }
 
 ///
@@ -70,8 +66,9 @@ class _BaseLeveledModifier extends Modifier {
   int get level => _level;
 
   set level(int level) {
-    if (level < 1 || (maxLevel != null && level > maxLevel))
+    if (level < 1 || (maxLevel != null && level > maxLevel)) {
       throw RangeError('level is outside range');
+    }
     _level = level;
   }
 }
@@ -128,9 +125,6 @@ class LeveledModifier extends _BaseLeveledModifier {
   ///
   @override
   int get percentage => basePercentage + valuePerLevel * _level;
-
-  @override
-  bool get isEnhancement => !_level.isNegative;
 }
 
 ///
@@ -164,7 +158,4 @@ class VariableModifier extends _BaseLeveledModifier {
 
   @override
   int get percentage => _levelPercentages[level - 1];
-
-  @override
-  bool get isEnhancement => !_levelPercentages.last.isNegative;
 }
