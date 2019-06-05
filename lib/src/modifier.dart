@@ -83,7 +83,7 @@ class LeveledModifier extends _BaseLeveledModifier {
   ///
   /// The base percentage of the Modifier.
   ///
-  final int basePercentage;
+  final int baseValue;
 
   ///
   /// The multiplicative percentage per level.
@@ -93,7 +93,7 @@ class LeveledModifier extends _BaseLeveledModifier {
   LeveledModifier(
       {@required String name,
       @required this.valuePerLevel,
-      this.basePercentage = 0,
+      this.baseValue = 0,
       int maxLevel,
       int level = 1,
       bool isAttackModifier})
@@ -115,7 +115,7 @@ class LeveledModifier extends _BaseLeveledModifier {
         name: json['name'],
         isAttackModifier: (isAttack ?? false) as bool,
         valuePerLevel: json['valuePerLevel'] as int,
-        basePercentage: (base ?? 0) as int,
+        baseValue: (base ?? 0) as int,
         maxLevel: json['maxLevel'] as int);
   }
 
@@ -123,7 +123,7 @@ class LeveledModifier extends _BaseLeveledModifier {
   /// Percentage is basePercentage + (valuePerLevel * _level).
   ///
   @override
-  int get value => basePercentage + valuePerLevel * _level;
+  int get value => baseValue + valuePerLevel * _level;
 }
 
 ///
@@ -131,15 +131,15 @@ class LeveledModifier extends _BaseLeveledModifier {
 /// increment per level.
 ///
 class VariableModifier extends _BaseLeveledModifier {
-  final List<int> _levelPercentages;
+  final List<int> _levelValues;
 
   VariableModifier(
-      {@required List<int> levelPercentages,
+      {@required List<int> levelValues,
       @required String name,
       bool isAttackModifier = false})
-      : _levelPercentages = List.unmodifiable(levelPercentages),
+      : _levelValues = List.unmodifiable(levelValues),
         super(
-            maxLevel: levelPercentages.length,
+            maxLevel: levelValues.length,
             name: name,
             isAttackModifier: isAttackModifier);
 
@@ -150,11 +150,11 @@ class VariableModifier extends _BaseLeveledModifier {
     var isAttack = json['isAttackModifier'];
     var array = List<int>.from(json['levelValues'] as List);
     return VariableModifier(
-        levelPercentages: array,
+        levelValues: array,
         isAttackModifier: (isAttack ?? false) as bool,
         name: json['name']);
   }
 
   @override
-  int get value => _levelPercentages[level - 1];
+  int get value => _levelValues[level - 1];
 }
