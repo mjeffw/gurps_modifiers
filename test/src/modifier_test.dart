@@ -5,27 +5,27 @@ void main() {
   group('Modifier', () {
     test('Constructor and percentage (default)', () {
       var mod = Modifier(name: 'bar');
-      expect(mod.percentage, 0);
+      expect(mod.value, 0);
       expect(mod.toString(), '+0%');
       expect(mod.name, 'bar');
     });
 
     test('Positive percentage', () {
-      var mod = Modifier(percentage: 20, name: 'foo');
-      expect(mod.percentage, 20);
+      var mod = Modifier(value: 20, name: 'foo');
+      expect(mod.value, 20);
       expect(mod.toString(), '+20%');
       expect(mod.name, 'foo');
     });
 
     test('Negative percentage', () {
-      var mod = Modifier(percentage: -50, name: 'baz');
-      expect(mod.percentage, -50);
+      var mod = Modifier(value: -50, name: 'baz');
+      expect(mod.value, -50);
       expect(mod.toString(), '-50%');
     });
 
     test('null name', () {
-      expect(() => Modifier(name: null, percentage: 0),
-          throwsA(isA<AssertionError>()));
+      expect(
+          () => Modifier(name: null, value: 0), throwsA(isA<AssertionError>()));
     });
   });
 
@@ -36,7 +36,7 @@ void main() {
       expect(mod.basePercentage, 0);
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 1);
-      expect(mod.percentage, 5);
+      expect(mod.value, 5);
       expect(mod.toString(), '+5%');
     });
 
@@ -61,7 +61,7 @@ void main() {
       expect(mod.basePercentage, 0);
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 3);
-      expect(mod.percentage, 15);
+      expect(mod.value, 15);
       expect(mod.toString(), '+15%');
     });
 
@@ -81,7 +81,7 @@ void main() {
           name: 'Bar', levelPercentages: <int>[10, 20, 40, 50, 100]);
       expect(mod, isA<Modifier>());
       expect(mod.level, 1);
-      expect(mod.percentage, 10);
+      expect(mod.value, 10);
       expect(mod.toString(), '+10%');
     });
 
@@ -91,11 +91,11 @@ void main() {
 
       mod.level = 4;
       expect(mod.level, 4);
-      expect(mod.percentage, 50);
+      expect(mod.value, 50);
 
       mod.level = 5;
       expect(mod.level, 5);
-      expect(mod.percentage, 100);
+      expect(mod.value, 100);
     });
 
     test('set level outside range', () {

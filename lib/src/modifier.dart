@@ -10,34 +10,33 @@ class Modifier {
   /// Modifiers adjust the base cost of a trait in proportion to their effects.
   /// This is expressed as a percentage.
   ///
-  final int _percentage;
+  final int _value;
 
   final String name;
 
   final bool isAttackModifier;
 
-  int get percentage => _percentage;
+  int get value => _value;
 
-  Modifier(
-      {int percentage = 0, @required this.name, this.isAttackModifier = false})
+  Modifier({int value = 0, @required this.name, this.isAttackModifier = false})
       : assert(name != null),
-        _percentage = percentage;
+        _value = value;
 
   factory Modifier.fromJSON(Map<String, dynamic> json) {
     var type = json['type'];
     assert(type == 'Simple');
 
     var isAttack = json['isAttackModifier'];
-    var percent = json['percentage'];
+    var percent = json['value'];
 
     return Modifier(
-        percentage: (percent ?? 0) as int,
+        value: (percent ?? 0) as int,
         name: json['name'],
         isAttackModifier: (isAttack ?? false) as bool);
   }
 
   @override
-  String toString() => '${!percentage.isNegative ? "+" : ""}$percentage%';
+  String toString() => '${!value.isNegative ? "+" : ""}$value%';
 }
 
 ///
@@ -61,7 +60,7 @@ class _BaseLeveledModifier extends Modifier {
       bool isAttackModifier = false})
       : assert(level > 0),
         _level = level,
-        super(name: name, percentage: null, isAttackModifier: isAttackModifier);
+        super(name: name, value: null, isAttackModifier: isAttackModifier);
 
   int get level => _level;
 
@@ -110,7 +109,7 @@ class LeveledModifier extends _BaseLeveledModifier {
     assert(type == 'Leveled');
 
     var isAttack = json['isAttackModifier'];
-    var base = json['basePercentage'];
+    var base = json['baseValue'];
 
     return LeveledModifier(
         name: json['name'],
@@ -124,7 +123,7 @@ class LeveledModifier extends _BaseLeveledModifier {
   /// Percentage is basePercentage + (valuePerLevel * _level).
   ///
   @override
-  int get percentage => basePercentage + valuePerLevel * _level;
+  int get value => basePercentage + valuePerLevel * _level;
 }
 
 ///
@@ -149,7 +148,7 @@ class VariableModifier extends _BaseLeveledModifier {
     assert(type == 'Variable');
 
     var isAttack = json['isAttackModifier'];
-    var array = List<int>.from(json['levelPercentages'] as List);
+    var array = List<int>.from(json['levelValues'] as List);
     return VariableModifier(
         levelPercentages: array,
         isAttackModifier: (isAttack ?? false) as bool,
@@ -157,5 +156,5 @@ class VariableModifier extends _BaseLeveledModifier {
   }
 
   @override
-  int get percentage => _levelPercentages[level - 1];
+  int get value => _levelPercentages[level - 1];
 }

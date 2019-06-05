@@ -31,7 +31,7 @@ class Trait {
       -80,
       (_modifiers.isEmpty)
           ? 0
-          : _modifiers.map((m) => m.percentage).reduce((a, b) => a + b));
+          : _modifiers.map((m) => m.value).reduce((a, b) => a + b));
 
   ///
   /// A modifier is a feature that you can add to a trait – usually an
