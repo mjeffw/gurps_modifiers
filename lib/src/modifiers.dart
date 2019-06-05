@@ -22,18 +22,113 @@ class Modifiers {
       _map[m.name] = m;
     });
 
-    var keys = _map.keys.toList();
-    keys
-      ..sort()
-      ..forEach((f) => print(f));
+    if (false) {
+      var keys = _map.keys.toList();
+      keys.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+      var data = keys.map((f) => _map[f].toJSON()).toList();
+      var line = data.reduce((x, y) => '$x,\n$y');
+
+      print('''
+{
+  "modifiers":
+    [
+      $line
+    ]
+}''');
+    }
   }
 }
 
 String _source = '''
 {
-  "modifiers": 
-    [      
-      {      
+  "modifiers":
+    [
+      {
+        "name": "Accessibility, Only at day",
+        "type": "Simple",
+        "value": -20
+      },
+      {
+        "name": "Accessibility, Only at night",
+        "type": "Simple",
+        "value": -20
+      },
+      {
+        "name": "Accessibility, Only by one side of split personality",
+        "type": "Simple",
+        "value": -40
+      },
+      {
+        "name": "Accessibility, Only during full moon",
+        "type": "Simple",
+        "value": -40
+      },
+      {
+        "name": "Accessibility, Only during new moon",
+        "type": "Simple",
+        "value": -40
+      },
+      {
+        "name": "Accessibility, Only in altered body form",
+        "type": "Simple",
+        "value": -10
+      },
+      {
+        "name": "Accessibility, Only in direct sunlight",
+        "type": "Simple",
+        "value": -30
+      },
+      {
+        "name": "Accessibility, Only on those who share a language with me",
+        "type": "Simple",
+        "value": -10
+      },
+      {
+        "name": "Accessibility, Only while flying",
+        "type": "Simple",
+        "value": -30
+      },
+      {
+        "name": "Accessibility, Only while in hypnotic trance",
+        "type": "Simple",
+        "value": -30
+      },
+      {
+        "name": "Accessibility, Only while moving (1 step/turn)",
+        "type": "Simple",
+        "value": -10
+      },
+      {
+        "name": "Accessibility, Only while moving (full Move)",
+        "type": "Simple",
+        "value": -30
+      },
+      {
+        "name": "Accessibility, Only while moving (half Move)",
+        "type": "Simple",
+        "value": -20
+      },
+      {
+        "name": "Accessibility, Only while playing musical instrument",
+        "type": "Simple",
+        "value": -20
+      },
+      {
+        "name": "Accessibility, Only while swimming",
+        "type": "Simple",
+        "value": -30
+      },
+      {
+        "name": "Accessibility, Requires (item)",
+        "type": "Simple",
+        "value": -10
+      },
+      {
+        "name": "Accessibility, Requires complex ritual",
+        "type": "Simple",
+        "value": -20
+      },
+      {
         "name": "Accessibility, Requires gestures",
         "type": "Simple",
         "value": -10
@@ -64,35 +159,20 @@ String _source = '''
         "value": -10
       },
       {
-        "name": "Accessibility, Requires complex ritual",
+        "name": "Accessibility, Useless under stress",
         "type": "Simple",
-        "value": -20
+        "value": -60
       },
       {
-        "name": "Accessibility, Only on those who share a language with me",
+        "name": "Accessibility, While conscious",
         "type": "Simple",
-        "value": -10
-      },
-      {
-        "name": "Accessibility, Only while moving (1 step/turn)",
-        "type": "Simple",
-        "value": -10
-      },
-      {
-        "name": "Accessibility, Only while moving (half Move)",
-        "type": "Simple",
-        "value": -20
-      },
-      {
-        "name": "Accessibility, Only while moving (full Move)",
-        "type": "Simple",
-        "value": -30
+        "value": -5
       },
       {
         "name": "Accurate",
         "type": "Leveled",
-        "valuePerLevel": 5,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 5
       },
       {
         "name": "Active Defense",
@@ -140,6 +220,21 @@ String _source = '''
         "value": -25
       },
       {
+        "name": "Always On, Dangerous",
+        "type": "Simple",
+        "value": -40
+      },
+      {
+        "name": "Always On, Physically Inconvenient",
+        "type": "Simple",
+        "value": -20
+      },
+      {
+        "name": "Always On, Social or Cosmetic",
+        "type": "Simple",
+        "value": -10
+      },
+      {
         "name": "AP Ammo, Huge piercing",
         "type": "Simple",
         "value": 35,
@@ -160,11 +255,10 @@ String _source = '''
       {
         "name": "Area Effect",
         "type": "Leveled",
-        "valuePerLevel": 50,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 50
       },
       {
-        "COMMENT": "Divisors: 0.1 (x10), 0.2 (x5), 0.5 (x2), 2 (x1/2), 3 (x1/3), 5 (x1/5), 10 (x0.1)",
         "name": "Armor Divisor",
         "type": "Variable",
         "levelValues": [-70, -50, -30, 50, 100, 150, 200],
@@ -212,6 +306,30 @@ String _source = '''
         "value": -40
       },
       {
+        "name": "Bombardment, Effective skill 8",
+        "type": "Simple",
+        "value": -20,
+        "isAttackModifier": true
+      },
+      {
+        "name": "Bombardment, Effective skill 10",
+        "type": "Simple",
+        "value": -15,
+        "isAttackModifier": true
+      },
+      {
+        "name": "Bombardment, Effective skill 12",
+        "type": "Simple",
+        "value": -10,
+        "isAttackModifier": true
+      },
+      {
+        "name": "Bombardment, Effective skill 14",
+        "type": "Simple",
+        "value": -5,
+        "isAttackModifier": true
+      },
+      {
         "name": "Can Be Blocked or Parried",
         "type": "Simple",
         "value": -10
@@ -222,16 +340,46 @@ String _source = '''
         "value": -5
       },
       {
+        "name": "Can Be Stolen, Forcefully removed",
+        "type": "Simple",
+        "value": -10
+      },
+      {
+        "name": "Can Be Stolen, Easily snatched",
+        "type": "Simple",
+        "value": -40
+      },
+      {
+        "name": "Can Be Stolen, Quick Contest",
+        "type": "Simple",
+        "value": -30
+      },
+      {
+        "name": "Can Be Stolen, Stealth or trickery",
+        "type": "Simple",
+        "value": -20
+      },
+      {
         "name": "Can Carry Objects",
         "type": "Variable",
         "levelValues": [10, 20, 50, 100, 150]
       },
       {
+        "name": "Cardiac Stress",
+        "type": "Variable",
+        "levelValues": [-50, -40, -30, -20, -10]
+      },
+      {
+        "name": "Cerebral Stress",
+        "type": "Variable",
+        "levelValues": [-50, -40, -30, -20, -10]
+      },
+      {
         "name": "Cone",
         "type": "Leveled",
-        "valuePerLevel": 10,
         "baseValue": 50,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 10
       },
       {
         "name": "Cosmic, Avoiding drawbacks",
@@ -284,21 +432,41 @@ String _source = '''
         "value": 300
       },
       {
+        "name": "Costs Fatigue",
+        "type": "Leveled",
+        "valuePerLevel": -5
+      },
+      {
+        "name": "Costs Fatigue, Per second",
+        "type": "Leveled",
+        "valuePerLevel": -10
+      },
+      {
+        "name": "Costs Hit Points",
+        "type": "Leveled",
+        "valuePerLevel": -10
+      },
+      {
+        "name": "Costs Hit Points, Per second",
+        "type": "Leveled",
+        "valuePerLevel": -20
+      },
+      {
         "name": "Cyclic",
         "type": "Variable",
-        "isAttackModifier": true,
-        "levelValues": [10, 20, 40, 50, 100]
+        "levelValues": [10, 20, 40, 50, 100],
+        "isAttackModifier": true
+      },
+      {
+        "name": "Decreased Immunity",
+        "type": "Leveled",
+        "maxLevel": 4,
+        "valuePerLevel": 50
       },
       {
         "name": "Decreased Immunity 0",
         "type": "Simple",
         "value": 20
-      },
-      {
-        "name": "Decreased Immunity",
-        "type": "Leveled",
-        "valuePerLevel": 50,
-        "maxLevel": 4
       },
       {
         "name": "Dehydration",
@@ -309,6 +477,7 @@ String _source = '''
       {
         "name": "Delay, Fixed",
         "type": "Simple",
+        "value": 0,
         "isAttackModifier": true
       },
       {
@@ -374,6 +543,7 @@ String _source = '''
       {
         "name": "Drowning",
         "type": "Simple",
+        "value": 0,
         "isAttackModifier": true
       },
       {
@@ -402,14 +572,14 @@ String _source = '''
       {
         "name": "Explosion",
         "type": "Leveled",
-        "valuePerLevel": 50,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 50
       },
       {
         "name": "Extended Duration",
         "type": "Leveled",
-        "valuePerLevel": 20,
-        "maxLevel": 14
+        "maxLevel": 14,
+        "valuePerLevel": 20
       },
       {
         "name": "Extended Duration, Permanent",
@@ -424,8 +594,8 @@ String _source = '''
       {
         "name": "Extra Passes",
         "type": "Leveled",
-        "valuePerLevel": 10,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 10
       },
       {
         "name": "Fickle",
@@ -434,16 +604,18 @@ String _source = '''
       },
       {
         "name": "Fixed Duration",
-        "type": "Simple"
+        "type": "Simple",
+        "value": 0
+      },
+      {
+        "name": "Follow-Up, Natural weapon",
+        "type": "Simple",
+        "value": 0
       },
       {
         "name": "Follow-Up, Universal",
         "type": "Simple",
         "value": 50
-      },
-      {
-        "name": "Follow-Up, Natural weapon",
-        "type": "Simple"
       },
       {
         "name": "Force Field",
@@ -453,26 +625,26 @@ String _source = '''
       {
         "name": "Fragmentation, Cutting",
         "type": "Leveled",
-        "valuePerLevel": 15,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 15
       },
       {
         "name": "Fragmentation, Hot",
         "type": "Leveled",
-        "valuePerLevel": 15,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 15
       },
       {
         "name": "Fragmentation, Impaling",
         "type": "Leveled",
-        "valuePerLevel": 20,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 20
       },
       {
         "name": "Fragmentation, Large Piercing",
         "type": "Leveled",
-        "valuePerLevel": 15,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 15
       },
       {
         "name": "Freezing",
@@ -487,7 +659,8 @@ String _source = '''
       },
       {
         "name": "Game Time",
-        "type": "Simple"
+        "type": "Simple",
+        "value": 0
       },
       {
         "name": "Granted by (Other)",
@@ -533,8 +706,8 @@ String _source = '''
       {
         "name": "Incendiary, Burning",
         "type": "Leveled",
-        "valuePerLevel": 10,
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "valuePerLevel": 10
       },
       {
         "name": "Increased Range",
@@ -569,12 +742,8 @@ String _source = '''
       {
         "name": "Jet",
         "type": "Simple",
+        "value": 0,
         "isAttackModifier": true
-      },
-      {
-        "name": "Link, Permanent",
-        "type": "Simple",
-        "value": 10
       },
       {
         "name": "Link, Independent",
@@ -582,16 +751,21 @@ String _source = '''
         "value": 20
       },
       {
+        "name": "Link, Permanent",
+        "type": "Simple",
+        "value": 10
+      },
+      {
         "name": "Long-Range",
         "type": "Leveled",
-        "valuePerLevel": 50,
-        "maxLevel": 3
+        "maxLevel": 3,
+        "valuePerLevel": 50
       },
       {
         "name": "Low Psychic Signature",
         "type": "Leveled",
-        "valuePerLevel": 5,
-        "maxLevel": 5
+        "maxLevel": 5,
+        "valuePerLevel": 5
       },
       {
         "name": "Low Signature",
@@ -602,8 +776,8 @@ String _source = '''
       {
         "name": "Low Signature, Variable",
         "type": "Leveled",
-        "valuePerLevel": 5,
-        "maxLevel": 5
+        "maxLevel": 5,
+        "valuePerLevel": 5
       },
       {
         "name": "Magnetic",
@@ -656,6 +830,12 @@ String _source = '''
         "isAttackModifier": true
       },
       {
+        "name": "Mobile",
+        "type": "Leveled",
+        "isAttackModifier": true,
+        "valuePerLevel": 40
+      },
+      {
         "name": "Multi-Ammo, Large piercing",
         "type": "Simple",
         "value": 65,
@@ -665,12 +845,6 @@ String _source = '''
         "name": "Multi-Ammo, Piercing",
         "type": "Simple",
         "value": 40,
-        "isAttackModifier": true
-      },
-      {
-        "name": "Mobile",
-        "type": "Leveled",
-        "valuePerLevel": 40,
         "isAttackModifier": true
       },
       {
@@ -698,15 +872,15 @@ String _source = '''
         "isAttackModifier": true
       },
       {
-        "name": "No Wounding",
-        "type": "Simple",
-        "value": -10,
-        "isAttackModifier": true
-      },
-      {
         "name": "No Signature",
         "type": "Simple",
         "value": 20,
+        "isAttackModifier": true
+      },
+      {
+        "name": "No Wounding",
+        "type": "Simple",
+        "value": -10,
         "isAttackModifier": true
       },
       {
@@ -732,15 +906,15 @@ String _source = '''
         "isAttackModifier": true
       },
       {
-        "name": "Radiation, Toxic",
-        "type": "Simple",
-        "value": 25,
-        "isAttackModifier": true
-      },
-      {
         "name": "Radiation, Burning",
         "type": "Simple",
         "value": 100,
+        "isAttackModifier": true
+      },
+      {
+        "name": "Radiation, Toxic",
+        "type": "Simple",
+        "value": 25,
         "isAttackModifier": true
       },
       {
@@ -751,14 +925,14 @@ String _source = '''
       {
         "name": "Rapid Fire",
         "type": "Variable",
-        "isAttackModifier": true,
-        "levelValues": [40, 50, 70, 100, 150, 200, 250, 300]
+        "levelValues": [40, 50, 70, 100, 150, 200, 250, 300],
+        "isAttackModifier": true
       },
       {
         "name": "Rapid Fire, Selective",
         "type": "Variable",
-        "isAttackModifier": true,
-        "levelValues": [80, 110, 160, 210, 260, 310]
+        "levelValues": [80, 110, 160, 210, 260, 310],
+        "isAttackModifier": true
       },
       {
         "name": "Reduced Fatigue Cost",
@@ -771,21 +945,6 @@ String _source = '''
         "valuePerLevel": 20
       },
       {
-        "name": "Requires Concentrate",
-        "type": "Simple",
-        "value": -15
-      },
-      {
-        "name": "Requires Ready",
-        "type": "Simple",
-        "value": -10
-      },
-      {
-        "name": "Requires Reaction Roll",
-        "type": "Simple",
-        "value": -5
-      },
-      {
         "name": "Reflexive",
         "type": "Simple",
         "value": 40
@@ -793,8 +952,23 @@ String _source = '''
       {
         "name": "Reliable",
         "type": "Leveled",
-        "valuePerLevel": 5,
-        "maxLevel": 10
+        "maxLevel": 10,
+        "valuePerLevel": 5
+      },
+      {
+        "name": "Requires Concentrate",
+        "type": "Simple",
+        "value": -15
+      },
+      {
+        "name": "Requires Reaction Roll",
+        "type": "Simple",
+        "value": -5
+      },
+      {
+        "name": "Requires Ready",
+        "type": "Simple",
+        "value": -10
       },
       {
         "name": "Respiratory Agent",
@@ -855,6 +1029,7 @@ String _source = '''
       {
         "name": "Suffocation",
         "type": "Simple",
+        "value": 0,
         "isAttackModifier": true
       },
       {
@@ -892,6 +1067,16 @@ String _source = '''
         "isAttackModifier": true
       },
       {
+        "name": "Time-Spanning, Past and future only",
+        "type": "Simple",
+        "value": 50
+      },
+      {
+        "name": "Time-Spanning, Past or future only",
+        "type": "Simple",
+        "value": 0
+      },
+      {
         "name": "Time-Spanning, Present plus (past or future)",
         "type": "Simple",
         "value": 50
@@ -902,28 +1087,19 @@ String _source = '''
         "value": 100
       },
       {
-        "name": "Time-Spanning, Past and future only",
-        "type": "Simple",
-        "value": 50
-      },
-      {
-        "name": "Time-Spanning, Past or future only",
-        "type": "Simple"
-      },
-      {
         "name": "Unconscious Only",
         "type": "Simple",
         "value": -20
       },
       {
-        "name": "Uncontrollable, Inconvenient",
-        "type": "Simple",
-        "value": -10
-      },
-      {
         "name": "Uncontrollable, Dangerous",
         "type": "Simple",
         "value": -30
+      },
+      {
+        "name": "Uncontrollable, Inconvenient",
+        "type": "Simple",
+        "value": -10
       },
       {
         "name": "Underwater",
@@ -990,5 +1166,4 @@ String _source = '''
         "value": 100
       }
     ]
-}
-''';
+}''';

@@ -41,8 +41,11 @@ void main() {
     });
 
     test('negative valuePerLevel in constructor', () {
-      expect(() => LeveledModifier(valuePerLevel: -1, level: 1, name: 'Baz'),
-          throwsA(isA<AssertionError>()));
+      var mod = LeveledModifier(valuePerLevel: -1, level: 1, name: 'Baz');
+      expect(mod.valuePerLevel, -1);
+      expect(mod.value, -1);
+      mod.level = 3;
+      expect(mod.value, -3);
     });
 
     test('negative level in constructor', () {

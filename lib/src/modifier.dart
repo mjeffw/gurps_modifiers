@@ -37,6 +37,14 @@ class Modifier {
 
   @override
   String toString() => '${!value.isNegative ? "+" : ""}$value%';
+
+  String toJSON() {
+    return '''      {
+        "name": "$name",
+        "type": "Simple",
+        "value": $value${isAttackModifier ? ',\n        "isAttackModifier": true' : ''}
+      }''';
+  }
 }
 
 ///
@@ -97,7 +105,7 @@ class LeveledModifier extends _BaseLeveledModifier {
       int maxLevel,
       int level = 1,
       bool isAttackModifier})
-      : assert(valuePerLevel > 0),
+      : assert(valuePerLevel != null),
         super(
             maxLevel: maxLevel,
             level: level,
@@ -117,6 +125,21 @@ class LeveledModifier extends _BaseLeveledModifier {
         valuePerLevel: json['valuePerLevel'] as int,
         baseValue: (base ?? 0) as int,
         maxLevel: json['maxLevel'] as int);
+  }
+
+  @override
+  String toJSON() {
+    var lead = '        ';
+    var baseText = baseValue != 0 ? '\n$lead"baseValue": ${baseValue},' : '';
+    var attkText = isAttackModifier
+        ? '\n$lead"isAttackModifier": ${isAttackModifier},'
+        : '';
+    var maxText = maxLevel == null ? '' : '\n$lead"maxLevel": $maxLevel,';
+    return '''      {
+        "name": "$name",
+        "type": "Leveled",$baseText$attkText$maxText
+        "valuePerLevel": $valuePerLevel
+      }''';
   }
 
   ///
@@ -153,6 +176,15 @@ class VariableModifier extends _BaseLeveledModifier {
         levelValues: array,
         isAttackModifier: (isAttack ?? false) as bool,
         name: json['name']);
+  }
+
+  @override
+  String toJSON() {
+    return '''      {
+        "name": "$name",
+        "type": "Variable",
+        "levelValues": $_levelValues${isAttackModifier ? ',\n        "isAttackModifier": true' : ''}
+      }''';
   }
 
   @override

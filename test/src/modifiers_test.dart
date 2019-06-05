@@ -1,3 +1,5 @@
+import 'dart:mirrors';
+
 import 'package:gurps_enhancers/src/modifier.dart';
 import 'package:gurps_enhancers/src/modifiers.dart';
 import 'package:test/test.dart';
@@ -985,6 +987,59 @@ main() {
   });
 
   group('Simple limitations', () {
+    //TODO: You may only take this limitation in conjunction with Area Effect or Cone.
+    test('Bombardment, Effective skill 14', () {
+      var mod = mods.fetch('Bombardment, Effective skill 14');
+      expect(mod.value, -5);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Bombardment, Effective skill 12', () {
+      var mod = mods.fetch('Bombardment, Effective skill 12');
+      expect(mod.value, -10);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Bombardment, Effective skill 10', () {
+      var mod = mods.fetch('Bombardment, Effective skill 10');
+      expect(mod.value, -15);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Bombardment, Effective skill 8', () {
+      var mod = mods.fetch('Bombardment, Effective skill 8');
+      expect(mod.value, -20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    //TODO: Gadget limitation.
+    test('Can Be Stolen, Forcefully removed', () {
+      var mod = mods.fetch('Can Be Stolen, Forcefully removed');
+      expect(mod.value, -10);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: Gadget limitation.
+    test('Can Be Stolen, Easily snatched', () {
+      var mod = mods.fetch('Can Be Stolen, Easily snatched');
+      expect(mod.value, -40);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: Gadget limitation.
+    test('Can Be Stolen, Quick Contest', () {
+      var mod = mods.fetch('Can Be Stolen, Quick Contest');
+      expect(mod.value, -30);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: Gadget limitation.
+    test('Can Be Stolen, Stealth or trickery', () {
+      var mod = mods.fetch('Can Be Stolen, Stealth or trickery');
+      expect(mod.value, -20);
+      expect(mod.isAttackModifier, false);
+    });
+
     test('Active Defense', () {
       var mod = mods.fetch('Active Defense');
       expect(mod.value, -40);
@@ -1241,8 +1296,28 @@ main() {
       expect(mod.value, -10);
       expect(mod.isAttackModifier, false);
     });
+
+    test('Always On, Social or Cosmetic', () {
+      var mod = mods.fetch('Always On, Social or Cosmetic');
+      expect(mod.value, -10);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Always On, Dangerous', () {
+      var mod = mods.fetch('Always On, Dangerous');
+      expect(mod.value, -40);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Always On, Physically Inconvenient', () {
+      var mod = mods.fetch('Always On, Physically Inconvenient');
+      expect(mod.value, -20);
+      expect(mod.isAttackModifier, false);
+    });
   });
 
+  //TODO: This is the catch-all limitation. Must provide someway to enter
+  // limitation information (and potentially save it).
   group('Accessibility', () {
     test('Requires gestures', () {
       var mod = mods.fetch('Accessibility, Requires gestures');
@@ -1273,6 +1348,10 @@ main() {
       var mod = mods.fetch('Accessibility, Requires complex ritual');
       expect(mod.value, -20);
     });
+    test('Requires (item)', () {
+      var mod = mods.fetch('Accessibility, Requires (item)');
+      expect(mod.value, -10);
+    });
     test('Only on those who share a language with me', () {
       var mod = mods
           .fetch('Accessibility, Only on those who share a language with me');
@@ -1286,9 +1365,121 @@ main() {
       var mod = mods.fetch('Accessibility, Only while moving (half Move)');
       expect(mod.value, -20);
     });
+    test('While conscious', () {
+      var mod = mods.fetch('Accessibility, While conscious');
+      expect(mod.value, -5);
+    });
     test('Only while moving (full Move)', () {
       var mod = mods.fetch('Accessibility, Only while moving (full Move)');
       expect(mod.value, -30);
+    });
+    test('Only at day', () {
+      var mod = mods.fetch('Accessibility, Only at day');
+      expect(mod.value, -20);
+    });
+    test('Only at night', () {
+      var mod = mods.fetch('Accessibility, Only at night');
+      expect(mod.value, -20);
+    });
+    test('Only by one side of split personality', () {
+      var mod =
+          mods.fetch('Accessibility, Only by one side of split personality');
+      expect(mod.value, -40);
+    });
+    test('Only in altered body form', () {
+      var mod = mods.fetch('Accessibility, Only in altered body form');
+      expect(mod.value, -10);
+    });
+    test('Only in direct sunlight', () {
+      var mod = mods.fetch('Accessibility, Only in direct sunlight');
+      expect(mod.value, -30);
+    });
+    test('Only during full moon', () {
+      var mod = mods.fetch('Accessibility, Only during full moon');
+      expect(mod.value, -40);
+    });
+    test('Only during new moon', () {
+      var mod = mods.fetch('Accessibility, Only during new moon');
+      expect(mod.value, -40);
+    });
+    test('Only while flying', () {
+      var mod = mods.fetch('Accessibility, Only while flying');
+      expect(mod.value, -30);
+    });
+    test('Only while in hypnotic trance', () {
+      var mod = mods.fetch('Accessibility, Only while in hypnotic trance');
+      expect(mod.value, -30);
+    });
+    test('Only while swimming', () {
+      var mod = mods.fetch('Accessibility, Only while swimming');
+      expect(mod.value, -30);
+    });
+    test('Only while playing musical instrument', () {
+      var mod =
+          mods.fetch('Accessibility, Only while playing musical instrument');
+      expect(mod.value, -20);
+    });
+    test('Useless under stress', () {
+      var mod = mods.fetch('Accessibility, Useless under stress');
+      expect(mod.value, -60);
+    });
+  });
+
+  group('Leveled limitations', () {
+    test('Cardiac Stress', () {
+      var mod = mods.fetch('Cardiac Stress') as VariableModifier;
+      expect(mod.value, -50);
+      expect(mod.level, 1);
+      expect(mod.isAttackModifier, false);
+      mod.level = 5;
+      expect(mod.value, -10);
+      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
+    });
+
+    test('Cerebral Stress', () {
+      var mod = mods.fetch('Cerebral Stress') as VariableModifier;
+      expect(mod.value, -50);
+      expect(mod.level, 1);
+      expect(mod.isAttackModifier, false);
+      mod.level = 5;
+      expect(mod.value, -10);
+      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
+    });
+
+    test('Costs Fatigue', () {
+      var mod = mods.fetch('Costs Fatigue') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+    });
+
+    test('Costs Fatigue, Per second', () {
+      var mod = mods.fetch('Costs Fatigue, Per second') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -10);
+      mod.level = 4;
+      expect(mod.value, -40);
+    });
+
+    test('Costs Hit Points', () {
+      var mod = mods.fetch('Costs Hit Points') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -10);
+      mod.level = 4;
+      expect(mod.value, -40);
+    });
+
+    test('Costs Hit Points, Per second', () {
+      var mod = mods.fetch('Costs Hit Points, Per second') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -20);
+      mod.level = 4;
+      expect(mod.value, -80);
     });
   });
 
@@ -1382,4 +1573,36 @@ main() {
 
   //TODO: Very Rapid Fire: This costs +10% more than the equivalent Rapid Fire
   // enhancement would. It is incompatible with Extra Recoil.
+
+  //TODO: Aftermath: You suffer the effects of a Temporary Disadvantage, but
+  // only once your advantage switches off. You can add this only to a
+  // switchable advantage that you can and must eventually turn off – whether
+  // because you’ll run out of FP to maintain it, its duration is fixed by
+  // Limited Use or Trigger, or leaving it on indefinitely would negatively
+  // affect your health. Find the limitation value as usual, and halve it.
+  //
+  // Expanded Aftermath: With GM permission, other limitations may have
+  // Aftermath variants that kick in after the fact, halving their normal
+  // values.
+
+  //TODO: Backlash: Choose from among Attribute Penalty, Incapacitation,
+  // Irritant, and Stunning, as defined for Affliction (p. B35). If you succumb
+  // for a minute (a second, for Stunning), and can roll against HT once per
+  // minute (second) after that to recover, apply a limitation equal in size
+  // to the equivalent enhancements. If you get a HT roll to resist, and the
+  // effects last for minutes (seconds) equal to your margin of failure, halve
+  // this.
+
+  //TODO: Breakable: Add the following elements together to find the final limitation value.
+  // Gadget limitation.
+
+  //TODO: Costs Fatigue, Variable: Those adding Costs Fatigue to an Innate
+  // Attack that has the Variable enhancement may, if the GM permits, specify
+  // that the FP cost is proportional to the dice of damage used. To find the
+  // size of the limitation:
+  //  1. Set the FP cost to use the ability at full effect.
+  //  2. Divide this maximum FP cost by the attack’s maximum dice of damage to find the FP cost per die.
+  //  3. Multiply cost per die by “average” damage dice – (1 + maximum dice)/2 – to find average FP cost.
+  //  4. Drop all fractions.
+  // The result is the number of levels of Cost Fatigue to take.
 }
