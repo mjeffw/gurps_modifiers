@@ -33,7 +33,7 @@ void main() {
     test('defaults', () {
       var mod = LeveledModifier(valuePerLevel: 5, name: 'Baz');
       expect(mod, isA<Modifier>());
-      expect(mod.basePercentage, 0);
+      expect(mod.baseValue, 0);
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 1);
       expect(mod.value, 5);
@@ -58,7 +58,7 @@ void main() {
     test('level greater than 1', () {
       var mod = LeveledModifier(valuePerLevel: 5, level: 3, name: 'Baz');
       expect(mod, isA<Modifier>());
-      expect(mod.basePercentage, 0);
+      expect(mod.baseValue, 0);
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 3);
       expect(mod.value, 15);
@@ -78,7 +78,7 @@ void main() {
   group('variable modifier', () {
     test('constructor', () {
       var mod = VariableModifier(
-          name: 'Bar', levelPercentages: <int>[10, 20, 40, 50, 100]);
+          name: 'Bar', levelValues: <int>[10, 20, 40, 50, 100]);
       expect(mod, isA<Modifier>());
       expect(mod.level, 1);
       expect(mod.value, 10);
@@ -86,8 +86,8 @@ void main() {
     });
 
     test('set level inside range', () {
-      var mod = VariableModifier(
-          levelPercentages: [10, 20, 40, 50, 100], name: 'Aaz');
+      var mod =
+          VariableModifier(levelValues: [10, 20, 40, 50, 100], name: 'Aaz');
 
       mod.level = 4;
       expect(mod.level, 4);
@@ -99,8 +99,8 @@ void main() {
     });
 
     test('set level outside range', () {
-      var mod = VariableModifier(
-          levelPercentages: [10, 20, 40, 50, 100], name: 'Aaz');
+      var mod =
+          VariableModifier(levelValues: [10, 20, 40, 50, 100], name: 'Aaz');
       expect(() => mod.level = 6, throwsA(isA<RangeError>()));
       expect(() => mod.level = 0, throwsA(isA<RangeError>()));
     });
