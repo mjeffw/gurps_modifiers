@@ -569,5 +569,88 @@ main() {
       expect(mod.value, -40);
       expect(() => mod.level = 5, throwsA(isA<RangeError>()));
     });
+
+    test('Glamour', () {
+      var mod = mods.fetch('Glamour') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 10;
+      expect(mod.value, -50);
+    });
+
+    test('Hard to Use', () {
+      var mod = mods.fetch('Hard to Use') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Immediate Preparation Required', () {
+      var mod =
+          mods.fetch('Immediate Preparation Required') as VariableModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -30);
+      mod.level = 2;
+      expect(mod.value, -45);
+      mod.level = 3;
+      expect(mod.value, -75);
+      mod.level = 4;
+      expect(mod.value, -90);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Increased Immunity', () {
+      var mod = mods.fetch('Increased Immunity') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -10);
+      mod.level = 4;
+      expect(mod.value, -40);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Inaccurate', () {
+      var mod = mods.fetch('Inaccurate') as LeveledModifier;
+      expect(mod.isAttackModifier, true);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+    });
+
+    test('Limited Use', () {
+      var mod = mods.fetch('Limited Use') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -10);
+      mod.level = 4;
+      expect(mod.value, -40);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Limited Use, Fast Reload', () {
+      var mod = mods.fetch('Limited Use, Fast Reload') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Limited Use, Slow Reload', () {
+      var mod = mods.fetch('Limited Use, Slow Reload') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -35);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
   });
 }

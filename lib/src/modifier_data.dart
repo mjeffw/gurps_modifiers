@@ -2,7 +2,7 @@ String modifierDataString = '''
   {
   "modifiers":
     [
-            {
+      {
         "name": "Accessibility, Only at day",
         "type": "Simple",
         "value": -20
@@ -597,6 +597,13 @@ String modifierDataString = '''
         "valuePerLevel": 10
       },
       {
+        "name": "Extra Recoil",
+        "type": "Leveled",
+        "isAttackModifier": true,
+        "maxLevel": 4,
+        "valuePerLevel": -10
+      },
+      {
         "name": "Fickle",
         "type": "Simple",
         "value": -20
@@ -662,6 +669,11 @@ String modifierDataString = '''
         "value": 0
       },
       {
+        "name": "Glamour",
+        "type": "Leveled",
+        "valuePerLevel": -5
+      },
+      {
         "name": "Granted by (Other)",
         "type": "Simple",
         "value": -40
@@ -671,6 +683,12 @@ String modifierDataString = '''
         "type": "Simple",
         "value": 50,
         "isAttackModifier": true
+      },
+      {
+        "name": "Hard to Use",
+        "type": "Leveled",
+        "maxLevel": 4,
+        "valuePerLevel": -5
       },
       {
         "name": "Heat",
@@ -697,6 +715,17 @@ String modifierDataString = '''
         "isAttackModifier": true
       },
       {
+        "name": "Immediate Preparation Required",
+        "type": "Variable",
+        "levelValues": [-30, -45, -75, -90]
+      },
+      {
+        "name": "Inaccurate",
+        "type": "Leveled",
+        "isAttackModifier": true,
+        "valuePerLevel": -5
+      },
+      {
         "name": "Incendiary (non-burn)",
         "type": "Simple",
         "value": 10,
@@ -707,6 +736,12 @@ String modifierDataString = '''
         "type": "Leveled",
         "isAttackModifier": true,
         "valuePerLevel": 10
+      },
+      {
+        "name": "Increased Immunity",
+        "type": "Leveled",
+        "maxLevel": 4,
+        "valuePerLevel": -10
       },
       {
         "name": "Increased Range",
@@ -743,6 +778,25 @@ String modifierDataString = '''
         "type": "Simple",
         "value": 0,
         "isAttackModifier": true
+      },
+      {
+        "name": "Limited Use",
+        "type": "Leveled",
+        "maxLevel": 4,
+        "valuePerLevel": -10
+      },
+      {
+        "name": "Limited Use, Fast Reload",
+        "type": "Leveled",
+        "maxLevel": 4,
+        "valuePerLevel": -5
+      },
+      {
+        "name": "Limited Use, Slow Reload",
+        "type": "Leveled",
+        "baseValue": 5,
+        "maxLevel": 4,
+        "valuePerLevel": -10
       },
       {
         "name": "Link, Independent",
