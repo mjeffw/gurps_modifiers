@@ -452,6 +452,16 @@ String _source = '''
         "valuePerLevel": -20
       },
       {
+        "name": "Costs Hit Points, Instead of Fatigue",
+        "type": "Leveled",
+        "valuePerLevel": -5
+      },
+      {
+        "name": "Costs Hit Points, Per second instead of Fatigue",
+        "type": "Leveled",
+        "valuePerLevel": -10
+      },
+      {
         "name": "Cyclic",
         "type": "Variable",
         "levelValues": [10, 20, 40, 50, 100],

@@ -1481,6 +1481,26 @@ main() {
       mod.level = 4;
       expect(mod.value, -80);
     });
+
+    test('Costs Hit Points, Instead of Fatigue', () {
+      var mod =
+          mods.fetch('Costs Hit Points, Instead of Fatigue') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+    });
+
+    test('Costs Hit Points, Per second instead of Fatigue', () {
+      var mod = mods.fetch('Costs Hit Points, Per second instead of Fatigue')
+          as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -10);
+      mod.level = 4;
+      expect(mod.value, -40);
+    });
   });
 
   //TODO: Blood Agent: -40% limitation UNLESS combined with Area Effect or
