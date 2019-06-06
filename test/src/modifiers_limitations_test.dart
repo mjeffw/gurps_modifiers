@@ -2,6 +2,9 @@ import 'package:gurps_enhancers/src/modifier.dart';
 import 'package:gurps_enhancers/src/modifiers.dart';
 import 'package:test/test.dart';
 
+//TODO: Implementation idea: Modifiers with multiple options, like Bombardment, Effective skill 14
+// AND Bombardment, Effective skill 12, etc, could be turned into a single entry ("Bombardment"),
+// with a number of radio buttons (one for each option).
 main() {
   var mods = modifiers;
 
@@ -363,6 +366,95 @@ main() {
       expect(mod.value, -80);
       expect(mod.isAttackModifier, false);
     });
+
+    test('Mitigator, Vulnerable', () {
+      var mod = mods.fetch('Mitigator, Vulnerable');
+      expect(mod.value, -60);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Mitigator, Daily', () {
+      var mod = mods.fetch('Mitigator, Daily');
+      expect(mod.value, -60);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Mitigator, Weekly', () {
+      var mod = mods.fetch('Mitigator, Weekly');
+      expect(mod.value, -65);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Mitigator, Horde Intelligence', () {
+      var mod = mods.fetch('Mitigator, Horde Intelligence');
+      expect(mod.value, -60);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Mitigator, Monthly', () {
+      var mod = mods.fetch('Mitigator, Monthly');
+      expect(mod.value, -70);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: Requires (Attribute) Roll - perhaps a better implementation is to
+    // select the Attribute and use that to derive the value.
+    test('Requires (Attribute) Roll, DX or IQ or HT', () {
+      var mod = mods.fetch('Requires (Attribute) Roll, DX or IQ or HT');
+      expect(mod.value, -10);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Requires (Attribute) Roll, Per or Will', () {
+      var mod = mods.fetch('Requires (Attribute) Roll, Per or Will');
+      expect(mod.value, -5);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: Requires (Skill) Roll - perhaps a better implementation is to
+    // select the Skill and use that to derive the value.
+    test('Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder', () {
+      var mod = mods.fetch(
+          'Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder');
+      expect(mod.value, -10);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Requires (Skill) Roll, DX- or IQ- or HT-Based Easy', () {
+      var mod =
+          mods.fetch('Requires (Skill) Roll, DX- or IQ- or HT-Based Easy');
+      expect(mod.value, -5);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Requires (Skill) Roll, Per- or Will-Based Average or harder', () {
+      var mod = mods
+          .fetch('Requires (Skill) Roll, Per- or Will-Based Average or harder');
+      expect(mod.value, -5);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Requires (Attribute) Roll, Quick Contest of DX or IQ or HT', () {
+      var mod = mods
+          .fetch('Requires (Attribute) Roll, Quick Contest of DX or IQ or HT');
+      expect(mod.value, -20);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Requires (Attribute) Roll, Quick Contest of Per or Will', () {
+      var mod =
+          mods.fetch('Requires (Attribute) Roll, Quick Contest of Per or Will');
+      expect(mod.value, -15);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Requires (Attribute) Roll, Quick Contest replaces Attribute roll',
+        () {
+      var mod = mods.fetch(
+          'Requires (Attribute) Roll, Quick Contest replaces Attribute roll');
+      expect(mod.value, -10);
+      expect(mod.isAttackModifier, false);
+    });
   });
 
   //TODO: This is the catch-all limitation. Must provide someway to enter
@@ -380,9 +472,9 @@ main() {
       var mod = mods.fetch('Accessibility, Requires material component');
       expect(mod.value, -10);
     });
-    test('Requires material component (extremely rare)', () {
+    test('Requires material component, extremely rare', () {
       var mod = mods
-          .fetch('Accessibility, Requires material component (extremely rare)');
+          .fetch('Accessibility, Requires material component, extremely rare');
       expect(mod.value, -15);
     });
     test('Requires simple ritual', () {
@@ -407,11 +499,11 @@ main() {
       expect(mod.value, -10);
     });
     test('Only while moving (1 step/turn)', () {
-      var mod = mods.fetch('Accessibility, Only while moving (1 step/turn)');
+      var mod = mods.fetch('Accessibility, Only while moving 1 step/turn');
       expect(mod.value, -10);
     });
     test('Only while moving (half Move)', () {
-      var mod = mods.fetch('Accessibility, Only while moving (half Move)');
+      var mod = mods.fetch('Accessibility, Only while moving half Move');
       expect(mod.value, -20);
     });
     test('While conscious', () {
@@ -419,7 +511,7 @@ main() {
       expect(mod.value, -5);
     });
     test('Only while moving (full Move)', () {
-      var mod = mods.fetch('Accessibility, Only while moving (full Move)');
+      var mod = mods.fetch('Accessibility, Only while moving full Move');
       expect(mod.value, -30);
     });
     test('Only at day', () {
@@ -652,5 +744,196 @@ main() {
       expect(mod.value, -35);
       expect(() => mod.level = 5, throwsA(isA<RangeError>()));
     });
+
+    test('Maximum Duration', () {
+      var mod = mods.fetch('Maximum Duration') as VariableModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 2;
+      expect(mod.value, -10);
+      mod.level = 3;
+      expect(mod.value, -25);
+      mod.level = 4;
+      expect(mod.value, -50);
+      mod.level = 5;
+      expect(mod.value, -65);
+      mod.level = 6;
+      expect(mod.value, -75);
+      expect(() => mod.level = 7, throwsA(isA<RangeError>()));
+    });
+
+    //TODO: On an advantage that allows Always On, this limitation is worth at
+    // most -5% less than Always On; e.g., if Always On is -20%, Minimum
+    // Duration can’t go beyond -15%.
+    test('Minimum Duration', () {
+      var mod = mods.fetch('Minimum Duration') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 2;
+      expect(mod.value, -10);
+      mod.level = 6;
+      expect(mod.value, -30);
+      expect(() => mod.level = 7, throwsA(isA<RangeError>()));
+    });
+
+    //TODO: Nuisance Effect: variable, depends on the effect. Guidelines:
+    //// • Your ability earns a reaction penalty from those around you. Perhaps
+    ////   it makes you look disgusting, or requires you to perform some sort of
+    ////   distressing ritual. -5% per -1 to reactions (max -4). (Implemented.)
+    // • Your ability makes you obvious, limiting stealth and attracting
+    //   enemies. -5%.
+    // • Your ability physically inconveniences you – it attracts stinging
+    //   insects, causes your armor to rust, makes you ravenously hungry, etc.
+    //   -5%.
+    test('Nuisance Effect, Reaction penalty', () {
+      var mod =
+          mods.fetch('Nuisance Effect, Reaction penalty') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Onset', () {
+      var mod = mods.fetch('Onset') as LeveledModifier;
+      expect(mod.isAttackModifier, true);
+      expect(mod.level, 1);
+      expect(mod.value, -10);
+      mod.level = 4;
+      expect(mod.value, -40);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Exposure Time', () {
+      var mod = mods.fetch('Exposure Time') as LeveledModifier;
+      expect(mod.isAttackModifier, true);
+      expect(mod.level, 1);
+      expect(mod.value, -30);
+      mod.level = 4;
+      expect(mod.value, -60);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Periodic Recharge', () {
+      var mod = mods.fetch('Periodic Recharge') as VariableModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 2;
+      expect(mod.value, -10);
+      mod.level = 3;
+      expect(mod.value, -20);
+      mod.level = 4;
+      expect(mod.value, -40);
+      mod.level = 5;
+      expect(mod.value, -80);
+      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
+    });
+
+    test('Preparation Required', () {
+      var mod = mods.fetch('Preparation Required') as VariableModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -20);
+      mod.level = 2;
+      expect(mod.value, -30);
+      mod.level = 3;
+      expect(mod.value, -50);
+      mod.level = 4;
+      expect(mod.value, -60);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Preparation Required, Weakened', () {
+      var mod =
+          mods.fetch('Preparation Required, Weakened') as VariableModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -10);
+      mod.level = 2;
+      expect(mod.value, -15);
+      mod.level = 3;
+      expect(mod.value, -25);
+      mod.level = 4;
+      expect(mod.value, -30);
+      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+    });
+
+    test('Reduced Duration', () {
+      var mod = mods.fetch('Reduced Duration') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+      mod.level = 7;
+      expect(mod.value, -35);
+      expect(() => mod.level = 8, throwsA(isA<RangeError>()));
+    });
+
+    test('Requires Low Gravity', () {
+      var mod = mods.fetch('Requires Low Gravity') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+      mod.level = 10;
+      expect(mod.value, -50);
+      expect(() => mod.level = 11, throwsA(isA<RangeError>()));
+    });
+
+    //TODO: This limitation is only available for Innate Attacks that inflict
+    // fatigue or toxic damage. You must combine it with one of Blood Agent,
+    // Contact Agent, Follow-Up, Respiratory Agent, or Sense-Based.
+    test('Resistible', () {
+      var mod = mods.fetch('Resistible') as LeveledModifier;
+      expect(mod.isAttackModifier, true);
+      expect(mod.level, 1);
+      expect(mod.value, -5);
+      mod.level = 4;
+      expect(mod.value, -20);
+      mod.level = 10;
+      expect(mod.value, -50);
+    });
+
+    test('Short-Range', () {
+      var mod = mods.fetch('Short-Range') as LeveledModifier;
+      expect(mod.isAttackModifier, false);
+      expect(mod.level, 1);
+      expect(mod.value, -10);
+      mod.level = 3;
+      expect(mod.value, -30);
+      expect(() => mod.level = 4, throwsA(isA<RangeError>()));
+    });
   });
+
+  //TODO: Pact - The limitation value is numerically equivalent to the point
+  // cost of the required disadvantages; e.g., a -10-point Vow gives a -10%
+  // Pact limitation.
+
+  // TODO: a Power Modifier is a limitation or (rarely) enhancement shared by
+  // every ability in a power. For example, all psionic abilities share a -10%
+  // power modifier that makes them vulnerable to countermeasures and anti-psi.
+  // Similarly, Mana-Sensitive is usually repurposed as the power modifier for
+  // magical abilities. Any limitation from this book or the Basic Set could be
+  // used as or in a power modifier, as long as the limitation could legally be
+  // applied to every ability in that power.
+  //
+  // ! Plan is to create a "wrapper" modifier that contains other modifiers.
+
+  // TODO: Required Disadvantage - The limitation value is numerically
+  // equivalent to the point cost of the required disadvantages; e.g., a -15-
+  // point Addiction gives a -15% Required Disadvantage limitation.
+  //
+  // ! Wrapper
+
+  // TODO: Sense-Based, Reversed - This variant has the same value as normal
+  // Sense-Based, but works “in reverse” – through the user’s senses, that is,
+  // your senses. This variation is allowed as a limitation only on an
+  // advantage that’s normally unaffected by DR.
 }

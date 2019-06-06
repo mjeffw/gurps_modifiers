@@ -53,17 +53,17 @@ String modifierDataString = '''
         "value": -30
       },
       {
-        "name": "Accessibility, Only while moving (1 step/turn)",
+        "name": "Accessibility, Only while moving 1 step/turn",
         "type": "Simple",
         "value": -10
       },
       {
-        "name": "Accessibility, Only while moving (full Move)",
+        "name": "Accessibility, Only while moving full Move",
         "type": "Simple",
         "value": -30
       },
       {
-        "name": "Accessibility, Only while moving (half Move)",
+        "name": "Accessibility, Only while moving half Move",
         "type": "Simple",
         "value": -20
       },
@@ -103,7 +103,7 @@ String modifierDataString = '''
         "value": -10
       },
       {
-        "name": "Accessibility, Requires material component (extremely rare)",
+        "name": "Accessibility, Requires material component, extremely rare",
         "type": "Simple",
         "value": -15
       },
@@ -134,9 +134,67 @@ String modifierDataString = '''
         "valuePerLevel": 5
       },
       {
+        "name": "Resistible",
+        "type": "Leveled",
+        "isAttackModifier": true,
+        "valuePerLevel": -5
+      },
+      {
+        "name": "Requires Low Gravity",
+        "type": "Leveled",
+        "valuePerLevel": -5,
+        "maxLevel": 10
+      },
+      {
+        "name": "Short-Range",
+        "type": "Leveled",
+        "valuePerLevel": -10,
+        "maxLevel": 3
+      },
+      {
         "name": "Active Defense",
         "type": "Simple",
         "value": -40
+      },
+      {
+        "name": "Requires (Attribute) Roll, DX or IQ or HT",
+        "type": "Simple",
+        "value": -10
+      },
+      {
+        "name": "Requires (Attribute) Roll, Per or Will",
+        "type": "Simple",
+        "value": -5
+      },
+      {
+        "name": "Requires (Attribute) Roll, Quick Contest of DX or IQ or HT",
+        "type": "Simple",
+        "value": -20
+      },
+      {
+        "name": "Requires (Attribute) Roll, Quick Contest of Per or Will",
+        "type": "Simple",
+        "value": -15
+      },
+      {
+        "name": "Requires (Attribute) Roll, Quick Contest replaces Attribute roll",
+        "type": "Simple",
+        "value": -10
+      },
+      {
+        "name": "Requires (Skill) Roll, DX- or IQ- or HT-Based Easy",
+        "type": "Simple",
+        "value": -5
+      },
+      {
+        "name": "Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder",
+        "type": "Simple",
+        "value": -10
+      },
+      {
+        "name": "Requires (Skill) Roll, Per- or Will-Based Average or harder",
+        "type": "Simple",
+        "value": -5
       },
       {
         "name": "Active Defense, Independent",
@@ -184,6 +242,31 @@ String modifierDataString = '''
         "value": -40
       },
       {
+        "name": "Mitigator, Vulnerable",
+        "type": "Simple",
+        "value": -60
+      },
+      {
+        "name": "Mitigator, Daily",
+        "type": "Simple",
+        "value": -60
+      },
+      {
+        "name": "Mitigator, Monthly",
+        "type": "Simple",
+        "value": -70
+      },
+      {
+        "name": "Mitigator, Weekly",
+        "type": "Simple",
+        "value": -65
+      },
+      {
+        "name": "Mitigator, Horde Intelligence",
+        "type": "Simple",
+        "value": -60
+      },
+      {
         "name": "Always On, Physically Inconvenient",
         "type": "Simple",
         "value": -20
@@ -218,10 +301,52 @@ String modifierDataString = '''
         "valuePerLevel": 50
       },
       {
+        "name": "Nuisance Effect, Reaction penalty",
+        "type": "Leveled",
+        "valuePerLevel": -5,
+        "maxLevel": 4
+      },
+      {
+        "name": "Onset",
+        "type": "Leveled",
+        "valuePerLevel": -10,
+        "isAttackModifier": true,
+        "maxLevel": 4
+      },
+      {
+        "name": "Exposure Time",
+        "type": "Leveled",
+        "valuePerLevel": -10,
+        "baseValue": -20,
+        "isAttackModifier": true,
+        "maxLevel": 4
+      },
+      {
+        "name": "Reduced Duration",
+        "type": "Leveled",
+        "valuePerLevel": -5,
+        "maxLevel": 7
+      },
+      {
         "name": "Armor Divisor",
         "type": "Variable",
         "levelValues": [-70, -50, -30, 50, 100, 150, 200],
         "isAttackModifier": true
+      },
+      {
+        "name": "Periodic Recharge",
+        "type": "Variable",
+        "levelValues": [-5, -10, -20, -40, -80]
+      },
+      {
+        "name": "Preparation Required",
+        "type": "Variable",
+        "levelValues": [-20, -30, -50, -60]
+      },
+      {
+        "name": "Preparation Required, Weakened",
+        "type": "Variable",
+        "levelValues": [-10, -15, -25, -30]
       },
       {
         "name": "Aspected",
@@ -450,13 +575,13 @@ String modifierDataString = '''
         "isAttackModifier": true
       },
       {
-        "name": "Delay, Supernatural (fixed)",
+        "name": "Delay, Supernatural, fixed",
         "type": "Simple",
         "value": 50,
         "isAttackModifier": true
       },
       {
-        "name": "Delay, Supernatural (variable)",
+        "name": "Delay, Supernatural, variable",
         "type": "Simple",
         "value": 100,
         "isAttackModifier": true
@@ -468,13 +593,13 @@ String modifierDataString = '''
         "isAttackModifier": true
       },
       {
-        "name": "Delay, Variable (long)",
+        "name": "Delay, Variable, long",
         "type": "Simple",
         "value": 20,
         "isAttackModifier": true
       },
       {
-        "name": "Delay, Variable (short)",
+        "name": "Delay, Variable, short",
         "type": "Simple",
         "value": 10,
         "isAttackModifier": true
@@ -726,16 +851,16 @@ String modifierDataString = '''
         "valuePerLevel": -5
       },
       {
-        "name": "Incendiary (non-burn)",
-        "type": "Simple",
-        "value": 10,
-        "isAttackModifier": true
-      },
-      {
         "name": "Incendiary, Burning",
         "type": "Leveled",
         "isAttackModifier": true,
         "valuePerLevel": 10
+      },
+      {
+        "name": "Incendiary, Non-burning",
+        "type": "Simple",
+        "value": 10,
+        "isAttackModifier": true
       },
       {
         "name": "Increased Immunity",
@@ -861,10 +986,21 @@ String modifierDataString = '''
         "value": -10
       },
       {
+        "name": "Maximum Duration",
+        "type": "Variable",
+        "levelValues": [-5, -10, -25, -50, -65, -75]
+      },
+      {
         "name": "Mental Defense Only",
         "type": "Simple",
         "value": 250,
         "isAttackModifier": true
+      },
+      {
+        "name": "Minimum Duration",
+        "type": "Leveled",
+        "maxLevel": 6,
+        "valuePerLevel": -5
       },
       {
         "name": "Minimum Range, 1% Max",
@@ -1130,7 +1266,7 @@ String modifierDataString = '''
         "value": 0
       },
       {
-        "name": "Time-Spanning, Present plus (past or future)",
+        "name": "Time-Spanning, Past or future plus present",
         "type": "Simple",
         "value": 50
       },

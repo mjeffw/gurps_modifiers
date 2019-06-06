@@ -150,25 +150,25 @@ main() {
     });
 
     test('Delay, Supernatural (fixed)', () {
-      var mod = mods.fetch('Delay, Supernatural (fixed)');
+      var mod = mods.fetch('Delay, Supernatural, fixed');
       expect(mod.value, 50);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Supernatural (variable)', () {
-      var mod = mods.fetch('Delay, Supernatural (variable)');
+      var mod = mods.fetch('Delay, Supernatural, variable');
       expect(mod.value, 100);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Variable (short)', () {
-      var mod = mods.fetch('Delay, Variable (short)');
+      var mod = mods.fetch('Delay, Variable, short');
       expect(mod.value, 10);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Variable (long)', () {
-      var mod = mods.fetch('Delay, Variable (long)');
+      var mod = mods.fetch('Delay, Variable, long');
       expect(mod.value, 20);
       expect(mod.isAttackModifier, true);
     });
@@ -288,8 +288,8 @@ main() {
       expect(mod.isAttackModifier, true);
     });
 
-    test('Incendiary (non-burn)', () {
-      var mod = mods.fetch('Incendiary (non-burn)');
+    test('Incendiary, Non-burning', () {
+      var mod = mods.fetch('Incendiary, Non-burning');
       expect(mod.value, 10);
       expect(mod.isAttackModifier, true);
     });
@@ -582,9 +582,8 @@ main() {
       expect(mod.isAttackModifier, true);
     });
 
-    test('Time-Spanning, Present plus (past or future)', () {
-      var mod = mods.fetch('Time-Spanning, Present plus (past or future)');
-      expect(mod.name, 'Time-Spanning, Present plus (past or future)');
+    test('Time-Spanning, Past or future plus present', () {
+      var mod = mods.fetch('Time-Spanning, Past or future plus present');
       expect(mod.value, 50);
       expect(mod.isAttackModifier, false);
     });
