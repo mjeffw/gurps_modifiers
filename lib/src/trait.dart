@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:gurps_enhancers/src/modifier.dart';
+import 'package:gurps_modifiers/src/modifier.dart';
 
 ///
 /// Trait: An advantage, attribute, disadvantage, skill, or other character

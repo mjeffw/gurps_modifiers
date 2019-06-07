@@ -1,4 +1,4 @@
-import 'package:gurps_enhancers/src/modifiers.dart';
+import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
 
 main() {

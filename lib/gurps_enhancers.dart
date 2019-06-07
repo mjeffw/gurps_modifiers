@@ -1,6 +1,8 @@
 /// Support for doing something awesome.
 ///
 /// More dartdocs go here.
-library gurps_enhancers;
+library gurps_modifiers;
 
-// TODO: Export any libraries intended for clients of this package.
+export 'src/modifier.dart';
+export 'src/modifiers.dart';
+export 'src/trait.dart';

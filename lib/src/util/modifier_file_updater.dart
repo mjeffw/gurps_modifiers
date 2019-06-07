@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:gurps_enhancers/src/modifiers.dart';
+import 'package:gurps_modifiers/src/modifiers.dart';
 
 main() async {
   var contents = '''

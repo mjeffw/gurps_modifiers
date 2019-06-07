@@ -1,5 +1,5 @@
-import 'package:gurps_enhancers/src/trait.dart';
-import 'package:gurps_enhancers/src/modifier.dart';
+import 'package:gurps_modifiers/src/trait.dart';
+import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:test/test.dart';
 
 void main() {
