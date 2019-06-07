@@ -848,9 +848,8 @@ main() {
       expect(() => mod.level = 5, throwsA(isA<RangeError>()));
     });
 
-    test('Preparation Required, Weakened', () {
-      var mod =
-          mods.fetch('Preparation Required, Weakened') as VariableModifier;
+    test('Weakened Without Preparation', () {
+      var mod = mods.fetch('Weakened Without Preparation') as VariableModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.value, -10);
@@ -936,4 +935,11 @@ main() {
   // Sense-Based, but works “in reverse” – through the user’s senses, that is,
   // your senses. This variation is allowed as a limitation only on an
   // advantage that’s normally unaffected by DR.
+
+  // TODO: Weaponized is worth a base -50% if the victim’s DR has no effect,
+  // or -80% if his DR adds to his resistance roll, as for an Affliction. If
+  // the subject has a fixed penalty to his resistance roll, this adjusts the
+  // modifier value by +10% for every -1, to a maximum of -5. For example, a
+  // Neutralize ray that ignored DR and gave the subject a Will-3 roll to
+  // resist would have a net -20% limitation.
 }

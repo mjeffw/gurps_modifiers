@@ -1026,11 +1026,6 @@ String modifierDataString = '''
         "levelValues": [-20, -30, -50, -60]
       },
       {
-        "name": "Preparation Required, Weakened",
-        "type": "Variable",
-        "levelValues": [-10, -15, -25, -30]
-      },
-      {
         "name": "Radiation, Burning",
         "type": "Simple",
         "value": 100,
@@ -1343,6 +1338,11 @@ String modifierDataString = '''
         "type": "Simple",
         "value": 60,
         "isAttackModifier": true
+      },
+      {
+        "name": "Weakened Without Preparation",
+        "type": "Variable",
+        "levelValues": [-10, -15, -25, -30]
       },
       {
         "name": "World-Spanning, Others only",
