@@ -11,17 +11,17 @@ class Trait {
   ///
   /// cp: Character Points
   ///
-  final int baseCost;
+  final int _baseCost;
 
   final _modifiers = <Modifier>[];
 
-  Trait({this.baseCost});
+  Trait({int baseCost}) : _baseCost = baseCost;
 
   ///
   /// Find the net modifier, and then apply this modifier to the base cost of
   /// the trait. Round the resulting cost up to the next-highest whole number.
   ///
-  int get cost => (netModifier * 0.01 * baseCost).ceil() + baseCost;
+  int get cost => (netModifier * 0.01 * _baseCost).ceil() + _baseCost;
 
   ///
   /// Total the modifiers to find the net modifier. Modifiers can never reduce

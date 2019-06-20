@@ -6,7 +6,6 @@ void main() {
   group('trait', () {
     test('constructor and cost', () {
       var trait = Trait(baseCost: 10);
-      expect(trait.baseCost, 10);
       expect(trait.cost, 10);
       expect(trait.netModifier, 0);
     });
