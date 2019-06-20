@@ -17,6 +17,10 @@ class Trait {
 
   Trait({int baseCost}) : _baseCost = baseCost;
 
+  int get baseCost => _baseCost;
+
+  List<Modifier> get modifiers => List.unmodifiable(_modifiers);
+
   ///
   /// Find the net modifier, and then apply this modifier to the base cost of
   /// the trait. Round the resulting cost up to the next-highest whole number.
