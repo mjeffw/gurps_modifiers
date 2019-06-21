@@ -18,6 +18,8 @@ class Trait {
   ///
   final int baseCost;
 
+  final bool hasLevels;
+
   ///
   /// A modifier is a feature that you can add to a trait – usually an
   /// advantage – to change the way it works. You can apply any number of
@@ -25,8 +27,9 @@ class Trait {
   ///
   final List<Modifier> _modifiers;
 
-  const Trait({this.name, this.baseCost, List<Modifier> mods})
-      : _modifiers = mods ?? const <Modifier>[];
+  const Trait({this.name, this.baseCost, bool hasLevels, List<Modifier> mods})
+      : _modifiers = mods ?? const <Modifier>[],
+        this.hasLevels = hasLevels ?? false;
 
   List<Modifier> get modifiers => List.unmodifiable(_modifiers);
 
