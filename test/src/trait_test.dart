@@ -8,6 +8,8 @@ void main() {
       var trait = Trait(baseCost: 10);
       expect(trait.cost, 10);
       expect(trait.netModifier, 0);
+      expect(trait.baseCost, trait.cost);
+      expect(trait.modifiers, isEmpty);
     });
   });
 
@@ -19,6 +21,9 @@ void main() {
       var trait = Trait(baseCost: 20);
       trait.add(Modifier(value: 20, name: 'Foo'));
       expect(trait.cost, 24);
+      expect(trait.baseCost, 20);
+      expect(trait.modifiers, hasLength(1));
+      expect(trait.modifiers[0], Modifier(value: 20, name: 'Foo'));
     });
 
     test('limitation', () {

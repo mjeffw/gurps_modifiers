@@ -18,9 +18,11 @@ class Modifier {
 
   int get value => _value;
 
-  Modifier({int value = 0, @required this.name, this.isAttackModifier = false})
+  Modifier({int value = 0, @required this.name, bool isAttackModifier = false})
       : assert(name != null),
-        _value = value;
+        assert(isAttackModifier != null),
+        _value = value,
+        this.isAttackModifier = isAttackModifier;
 
   factory Modifier.fromJSON(Map<String, dynamic> json) {
     var type = json['type'];
@@ -36,7 +38,20 @@ class Modifier {
   }
 
   @override
-  String toString() => '${!value.isNegative ? "+" : ""}$value%';
+  int get hashCode =>
+      name.hashCode ^ _value.hashCode ^ isAttackModifier.hashCode;
+
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) return true;
+    return other is Modifier &&
+        this._value == other._value &&
+        this.name == other.name &&
+        this.isAttackModifier == other.isAttackModifier;
+  }
+
+  @override
+  String toString() => toJSON();
 
   String toJSON() {
     return '''      {
@@ -78,6 +93,17 @@ class _BaseLeveledModifier extends Modifier {
     }
     _level = level;
   }
+
+  @override
+  int get hashCode => super.hashCode ^ maxLevel.hashCode ^ _level;
+
+  @override
+  bool operator ==(dynamic other) {
+    return other is _BaseLeveledModifier &&
+        super == other &&
+        this._level == other._level &&
+        this.maxLevel == other.maxLevel;
+  }
 }
 
 ///
@@ -104,7 +130,7 @@ class LeveledModifier extends _BaseLeveledModifier {
       this.baseValue = 0,
       int maxLevel,
       int level = 1,
-      bool isAttackModifier})
+      bool isAttackModifier = false})
       : assert(valuePerLevel != null),
         super(
             maxLevel: maxLevel,
@@ -125,6 +151,17 @@ class LeveledModifier extends _BaseLeveledModifier {
         valuePerLevel: json['valuePerLevel'] as int,
         baseValue: (base ?? 0) as int,
         maxLevel: json['maxLevel'] as int);
+  }
+
+  @override
+  int get hashCode => super.hashCode ^ valuePerLevel.hashCode ^ baseValue;
+
+  @override
+  bool operator ==(dynamic other) {
+    return other is LeveledModifier &&
+        super == other &&
+        this.valuePerLevel == other.valuePerLevel &&
+        this.baseValue == other.baseValue;
   }
 
   @override
@@ -150,7 +187,7 @@ class LeveledModifier extends _BaseLeveledModifier {
 }
 
 ///
-/// Variable Modifiers have 'levels' but do not have a standard percentage
+/// Variable Modifiers have 'levels' but do not have a consistent percentage
 /// increment per level.
 ///
 class VariableModifier extends _BaseLeveledModifier {
@@ -189,4 +226,27 @@ class VariableModifier extends _BaseLeveledModifier {
 
   @override
   int get value => _levelValues[level - 1];
+
+  @override
+  int get hashCode {
+    return super.hashCode ^
+        _levelValues.reduce((a, b) => a.hashCode ^ b.hashCode);
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return other is VariableModifier &&
+        super == other &&
+        listEquals(this._levelValues, other._levelValues);
+  }
+}
+
+bool listEquals(List<dynamic> one, List<dynamic> other) {
+  if (identical(one, other)) return true;
+  if (one.runtimeType != other.runtimeType || one.length != other.length)
+    return false;
+  for (var i = 0; i < one.length; i++) {
+    if (one[i] != other[i]) return false;
+  }
+  return true;
 }
