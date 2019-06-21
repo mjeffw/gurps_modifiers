@@ -14,30 +14,49 @@ class Trait {
   final String name;
 
   ///
-  /// cp: Character Points
+  /// Unmodified character point cost.
+  ///
+  /// If the trait has levels, this is the cost per level. Otherwise it is the
+  /// flat cost of the trait.
   ///
   final int baseCost;
 
+  ///
+  /// True if this trait is leveled.
+  ///
   final bool hasLevels;
+
+  ///
+  /// If this trait has levels, the cost per level.
+  ///
+  final int numberOfLevels;
 
   ///
   /// A modifier is a feature that you can add to a trait – usually an
   /// advantage – to change the way it works. You can apply any number of
   /// modifiers to a trait.
   ///
-  final List<Modifier> _modifiers;
+  final List<Modifier> modifiers;
 
-  const Trait({this.name, this.baseCost, bool hasLevels, List<Modifier> mods})
-      : _modifiers = mods ?? const <Modifier>[],
+  const Trait(
+      {this.name,
+      this.baseCost,
+      bool hasLevels,
+      List<Modifier> mods,
+      this.numberOfLevels})
+      : modifiers = mods ?? const <Modifier>[],
         this.hasLevels = hasLevels ?? false;
 
-  List<Modifier> get modifiers => List.unmodifiable(_modifiers);
+  ///
+  /// Cost of the trait, including levels, but before applying modifiers
+  ///
+  int get unmodifiedCost => hasLevels ? baseCost * numberOfLevels : baseCost;
 
   ///
   /// Find the net modifier, and then apply this modifier to the base cost of
   /// the trait. Round the resulting cost up to the next-highest whole number.
   ///
-  int get cost => (netModifier * 0.01 * baseCost).ceil() + baseCost;
+  int get cost => (netModifier * 0.01 * unmodifiedCost).ceil() + unmodifiedCost;
 
   ///
   /// Total the modifiers to find the net modifier. Modifiers can never reduce
@@ -45,7 +64,7 @@ class Trait {
   ///
   int get netModifier => max(
       -80,
-      (_modifiers.isEmpty)
+      (modifiers.isEmpty)
           ? 0
-          : _modifiers.map((m) => m.value).reduce((a, b) => a + b));
+          : modifiers.map((m) => m.value).reduce((a, b) => a + b));
 }
