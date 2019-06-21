@@ -9,30 +9,32 @@ import 'package:gurps_modifiers/src/modifier.dart';
 ///
 class Trait {
   ///
+  /// Name of this trait.
+  ///
+  final String name;
+
+  ///
   /// cp: Character Points
   ///
-  final int _baseCost;
-
-  final List<Modifier> _modifiers;
-
-  const Trait({int baseCost, List<Modifier> mods})
-      : _baseCost = baseCost,
-        _modifiers = mods ?? const <Modifier>[];
-
-  int get baseCost => _baseCost;
+  final int baseCost;
 
   ///
   /// A modifier is a feature that you can add to a trait – usually an
   /// advantage – to change the way it works. You can apply any number of
   /// modifiers to a trait.
   ///
+  final List<Modifier> _modifiers;
+
+  const Trait({this.name, this.baseCost, List<Modifier> mods})
+      : _modifiers = mods ?? const <Modifier>[];
+
   List<Modifier> get modifiers => List.unmodifiable(_modifiers);
 
   ///
   /// Find the net modifier, and then apply this modifier to the base cost of
   /// the trait. Round the resulting cost up to the next-highest whole number.
   ///
-  int get cost => (netModifier * 0.01 * _baseCost).ceil() + _baseCost;
+  int get cost => (netModifier * 0.01 * baseCost).ceil() + baseCost;
 
   ///
   /// Total the modifiers to find the net modifier. Modifiers can never reduce
