@@ -233,11 +233,11 @@ class VariableModifier extends _BaseLeveledModifier {
   bool operator ==(dynamic other) {
     return other is VariableModifier &&
         super == other &&
-        listEquals(this._levelValues, other._levelValues);
+        _listEquals(this._levelValues, other._levelValues);
   }
 }
 
-bool listEquals(List<dynamic> one, List<dynamic> other) {
+bool _listEquals(List<dynamic> one, List<dynamic> other) {
   if (identical(one, other)) return true;
   if (one.runtimeType != other.runtimeType || one.length != other.length) {
     return false;

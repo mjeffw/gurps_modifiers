@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:gurps_modifiers/src/modifier.dart';
-
 import 'modifier_data.dart';
 
 final modifiers = _Modifiers();
