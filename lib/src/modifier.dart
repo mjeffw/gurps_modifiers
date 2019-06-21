@@ -239,8 +239,9 @@ class VariableModifier extends _BaseLeveledModifier {
 
 bool listEquals(List<dynamic> one, List<dynamic> other) {
   if (identical(one, other)) return true;
-  if (one.runtimeType != other.runtimeType || one.length != other.length)
+  if (one.runtimeType != other.runtimeType || one.length != other.length) {
     return false;
+  }
   for (var i = 0; i < one.length; i++) {
     if (one[i] != other[i]) return false;
   }
