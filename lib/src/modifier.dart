@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 ///
 /// A modifier is a feature that you can add to a trait – usually an advantage
 /// – to change the way it works. You can apply any number of modifiers to a
@@ -18,7 +16,7 @@ class Modifier {
 
   int get value => _value;
 
-  Modifier({int value = 0, @required this.name, bool isAttackModifier = false})
+  Modifier({int value = 0, this.name, bool isAttackModifier = false})
       : assert(name != null),
         assert(isAttackModifier != null),
         _value = value,
@@ -125,8 +123,8 @@ class LeveledModifier extends _BaseLeveledModifier {
   final int valuePerLevel;
 
   LeveledModifier(
-      {@required String name,
-      @required this.valuePerLevel,
+      {String name,
+      this.valuePerLevel,
       this.baseValue = 0,
       int maxLevel,
       int level = 1,
@@ -194,9 +192,7 @@ class VariableModifier extends _BaseLeveledModifier {
   final List<int> _levelValues;
 
   VariableModifier(
-      {@required List<int> levelValues,
-      @required String name,
-      bool isAttackModifier = false})
+      {List<int> levelValues, String name, bool isAttackModifier = false})
       : _levelValues = List.unmodifiable(levelValues),
         super(
             maxLevel: levelValues.length,
