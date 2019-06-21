@@ -44,7 +44,7 @@ class Trait {
       bool hasLevels,
       List<Modifier> modifiers,
       this.numberOfLevels})
-      : modifiers = mods ?? const <Modifier>[],
+      : modifiers = modifiers ?? const <Modifier>[],
         this.hasLevels = hasLevels ?? false;
 
   ///
