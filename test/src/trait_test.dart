@@ -18,8 +18,7 @@ void main() {
       // Enhancements increase the cost, while limitations reduce the cost.
       // This is expressed as a percentage. For instance, a +20% enhancement
       // would increase the point cost of an advantage by 1/5 its base cost.
-      var trait = Trait(baseCost: 20);
-      trait.add(Modifier(value: 20, name: 'Foo'));
+      var trait = Trait(baseCost: 20, mods: [Modifier(value: 20, name: 'Foo')]);
       expect(trait.cost, 24);
       expect(trait.baseCost, 20);
       expect(trait.modifiers, hasLength(1));
@@ -29,8 +28,8 @@ void main() {
     test('limitation', () {
       // ... while limitations reduce the cost. For instance, ... a -50%
       // limitation would reduce it by half its base cost.
-      var trait = Trait(baseCost: 20);
-      trait.add(Modifier(value: -50, name: 'Foo'));
+      var trait =
+          Trait(baseCost: 20, mods: [Modifier(value: -50, name: 'Foo')]);
       expect(trait.cost, 10);
     });
 
@@ -39,11 +38,12 @@ void main() {
       // limitation, and a -45% limitation would give a net modifier of -25%.
       // This would reduce the cost of a 10-point advantage to 7.5 points,
       // which would round up to 8 points.
-      var trait = Trait(baseCost: 10);
-      trait.add(Modifier(value: 10, name: 'Foo'));
-      trait.add(Modifier(value: 40, name: 'Foo'));
-      trait.add(Modifier(value: -30, name: 'Foo'));
-      trait.add(Modifier(value: -45, name: 'Foo'));
+      var trait = Trait(baseCost: 10, mods: [
+        Modifier(value: 10, name: 'Foo'),
+        Modifier(value: 40, name: 'Foo'),
+        Modifier(value: -30, name: 'Foo'),
+        Modifier(value: -45, name: 'Foo'),
+      ]);
       expect(trait.netModifier, -25);
       expect(trait.cost, 8);
     });
@@ -53,13 +53,14 @@ void main() {
       /// modifier of -80% or worse as -80%. Thus, no matter how many
       /// limitations you take, you cannot lower the cost of a trait to less
       /// than 1/5 its base cost.
-      var trait = Trait(baseCost: 10);
-      trait.add(Modifier(value: 10, name: 'Foo'));
-      trait.add(Modifier(value: 40, name: 'Foo'));
-      trait.add(Modifier(value: -30, name: 'Foo'));
-      trait.add(Modifier(value: -20, name: 'Foo'));
-      trait.add(Modifier(value: -45, name: 'Foo'));
-      trait.add(Modifier(value: -45, name: 'Foo'));
+      var trait = Trait(baseCost: 10, mods: [
+        Modifier(value: 10, name: 'Foo'),
+        Modifier(value: 40, name: 'Foo'),
+        Modifier(value: -30, name: 'Foo'),
+        Modifier(value: -20, name: 'Foo'),
+        Modifier(value: -45, name: 'Foo'),
+        Modifier(value: -45, name: 'Foo')
+      ]);
       expect(trait.netModifier, -80);
       expect(trait.cost, 2);
     });

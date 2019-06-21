@@ -13,12 +13,19 @@ class Trait {
   ///
   final int _baseCost;
 
-  final _modifiers = <Modifier>[];
+  final List<Modifier> _modifiers;
 
-  Trait({int baseCost}) : _baseCost = baseCost;
+  const Trait({int baseCost, List<Modifier> mods})
+      : _baseCost = baseCost,
+        _modifiers = mods ?? const <Modifier>[];
 
   int get baseCost => _baseCost;
 
+  ///
+  /// A modifier is a feature that you can add to a trait – usually an
+  /// advantage – to change the way it works. You can apply any number of
+  /// modifiers to a trait.
+  ///
   List<Modifier> get modifiers => List.unmodifiable(_modifiers);
 
   ///
@@ -36,13 +43,4 @@ class Trait {
       (_modifiers.isEmpty)
           ? 0
           : _modifiers.map((m) => m.value).reduce((a, b) => a + b));
-
-  ///
-  /// A modifier is a feature that you can add to a trait – usually an
-  /// advantage – to change the way it works. You can apply any number of
-  /// modifiers to a trait.
-  ///
-  void add(Modifier mod) {
-    _modifiers.add(mod);
-  }
 }
