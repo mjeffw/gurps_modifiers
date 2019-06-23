@@ -8,19 +8,16 @@ class Modifier {
   /// Modifiers adjust the base cost of a trait in proportion to their effects.
   /// This is expressed as a percentage.
   ///
-  final int _value;
+  final int value;
 
   final String name;
 
   final bool isAttackModifier;
 
-  int get value => _value;
-
-  Modifier({int value = 0, this.name, bool isAttackModifier = false})
+  Modifier({this.value = 0, this.name, this.isAttackModifier = false})
       : assert(name != null),
         assert(isAttackModifier != null),
-        _value = value,
-        this.isAttackModifier = isAttackModifier;
+        assert(value != null);
 
   factory Modifier.fromJSON(Map<String, dynamic> json) {
     var type = json['type'];
@@ -37,13 +34,13 @@ class Modifier {
 
   @override
   int get hashCode =>
-      name.hashCode ^ _value.hashCode ^ isAttackModifier.hashCode;
+      name.hashCode ^ value.hashCode ^ isAttackModifier.hashCode;
 
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     return other is Modifier &&
-        this._value == other._value &&
+        this.value == other.value &&
         this.name == other.name &&
         this.isAttackModifier == other.isAttackModifier;
   }
