@@ -6,237 +6,237 @@ main() {
   var mods = modifiers;
   group('Simple enhancers', () {
     test('Affects Insubstantial', () {
-      Modifier mod = mods.fetch('Affects Insubstantial');
-      expect(mod.value, 20);
+      SimpleModifier mod = mods.fetch('Affects Insubstantial');
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Affects Insubstantial, Selective', () {
-      Modifier mod = mods.fetch('Affects Insubstantial, Selective');
-      expect(mod.value, 30);
+      SimpleModifier mod = mods.fetch('Affects Insubstantial, Selective');
+      expect(mod.percentage, 30);
       expect(mod.isAttackModifier, false);
     });
 
     test('Affects Substantial', () {
-      Modifier mod = mods.fetch('Affects Substantial');
-      expect(mod.value, 40);
+      SimpleModifier mod = mods.fetch('Affects Substantial');
+      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
 
     test('Affects Substantial, Selective', () {
-      Modifier mod = mods.fetch('Affects Substantial, Selective');
-      expect(mod.value, 50);
+      SimpleModifier mod = mods.fetch('Affects Substantial, Selective');
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('AP Ammo, Huge piercing', () {
-      Modifier mod = mods.fetch('AP Ammo, Huge piercing');
-      expect(mod.value, 35);
+      SimpleModifier mod = mods.fetch('AP Ammo, Huge piercing');
+      expect(mod.percentage, 35);
       expect(mod.isAttackModifier, true);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('AP Ammo, Large piercing', () {
-      Modifier mod = mods.fetch('AP Ammo, Large piercing');
-      expect(mod.value, 45);
+      SimpleModifier mod = mods.fetch('AP Ammo, Large piercing');
+      expect(mod.percentage, 45);
       expect(mod.isAttackModifier, true);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('AP Ammo, Piercing', () {
-      Modifier mod = mods.fetch('AP Ammo, Piercing');
-      expect(mod.value, 20);
+      SimpleModifier mod = mods.fetch('AP Ammo, Piercing');
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Aura', () {
       var mod = mods.fetch('Aura');
-      expect(mod.value, 80);
+      expect(mod.percentage, 80);
       expect(mod.isAttackModifier, true);
     });
 
     test('Based on (Attribute)', () {
       var mod = mods.fetch('Based On');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Based on (Attribute), Own Roll', () {
       var mod = mods.fetch('Based On, Own Roll');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Avoiding drawbacks', () {
       var mod = mods.fetch('Cosmic, Avoiding drawbacks');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Defensive', () {
       var mod = mods.fetch('Cosmic, Defensive');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Irresistible attack', () {
       var mod = mods.fetch('Cosmic, Irresistible attack');
-      expect(mod.value, 300);
+      expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Lingering effect', () {
       var mod = mods.fetch('Cosmic, Lingering effect');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, No active defense allowed', () {
       var mod = mods.fetch('Cosmic, No active defense allowed');
-      expect(mod.value, 300);
+      expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, No die roll required', () {
       var mod = mods.fetch('Cosmic, No die roll required');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, No Rule of 16', () {
       var mod = mods.fetch('Cosmic, No Rule of 16');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Privileged attack', () {
       var mod = mods.fetch('Cosmic, Privileged attack');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Unhealing damage', () {
       var mod = mods.fetch('Cosmic, Unhealing damage');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
     });
 
     test('Cosmic, Unrestricted powers', () {
       var mod = mods.fetch('Cosmic, Unrestricted powers');
-      expect(mod.value, 300);
+      expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
     });
 
     test('Decreased Immunity 0', () {
       var mod = mods.fetch('Decreased Immunity 0');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Dehydration', () {
       var mod = mods.fetch('Dehydration');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Fixed', () {
       var mod = mods.fetch('Delay, Fixed');
-      expect(mod.value, 0);
+      expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Supernatural (fixed)', () {
       var mod = mods.fetch('Delay, Supernatural, fixed');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Supernatural (variable)', () {
       var mod = mods.fetch('Delay, Supernatural, variable');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Variable (short)', () {
       var mod = mods.fetch('Delay, Variable, short');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Variable (long)', () {
       var mod = mods.fetch('Delay, Variable, long');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Delay, Triggered', () {
       var mod = mods.fetch('Delay, Triggered');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
 
     test('Destructive Parry', () {
       var mod = mods.fetch('Destructive Parry');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
     test('Double Blunt Trauma', () {
       var mod = mods.fetch('Double Blunt Trauma');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Double Knockback', () {
       var mod = mods.fetch('Double Knockback');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     //TODO: Mobile is mutually exclusive with Drifting.
     test('Drifting', () {
       var mod = mods.fetch('Drifting');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Drowning', () {
       var mod = mods.fetch('Drowning');
-      expect(mod.value, 0);
+      expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
     });
 
     test('Dual', () {
       var mod = mods.fetch('Dual');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
     test('Erosive', () {
       var mod = mods.fetch('Erosive');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
     test('Extended Duration, Permanent', () {
       var mod = mods.fetch('Extended Duration, Permanent');
-      expect(mod.value, 300);
+      expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
     });
 
     test('Extended Duration, Permanent, dispellable', () {
       var mod = mods.fetch('Extended Duration, Permanent, dispellable');
-      expect(mod.value, 150);
+      expect(mod.percentage, 150);
       expect(mod.isAttackModifier, false);
     });
 
     test('Fixed Duration', () {
       var mod = mods.fetch('Fixed Duration');
-      expect(mod.value, 0);
+      expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
     });
 
@@ -246,7 +246,7 @@ main() {
     // other penetration modifiers (although the carrier attack can have them).
     test('Follow-Up, Natural weapon', () {
       var mod = mods.fetch('Follow-Up, Natural weapon');
-      expect(mod.value, 0);
+      expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
     });
 
@@ -254,103 +254,103 @@ main() {
     // combine it with other penetration modifiers.
     test('Follow-Up, Universal', () {
       var mod = mods.fetch('Follow-Up, Universal');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Force Field', () {
       var mod = mods.fetch('Force Field');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Freezing', () {
       var mod = mods.fetch('Freezing');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Game Time', () {
       var mod = mods.fetch('Game Time');
-      expect(mod.value, 0);
+      expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
     });
 
     test('Guided', () {
       var mod = mods.fetch('Guided');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
 
     test('Heat', () {
       var mod = mods.fetch('Heat');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Incendiary, Non-burning', () {
       var mod = mods.fetch('Incendiary, Non-burning');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Piercing', () {
-      Modifier mod = mods.fetch('HP Ammo, Piercing');
-      expect(mod.value, 20);
+      SimpleModifier mod = mods.fetch('HP Ammo, Piercing');
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Large piercing', () {
-      Modifier mod = mods.fetch('HP Ammo, Large piercing');
-      expect(mod.value, 20);
+      SimpleModifier mod = mods.fetch('HP Ammo, Large piercing');
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Small piercing', () {
-      Modifier mod = mods.fetch('HP Ammo, Small piercing');
-      expect(mod.value, 40);
+      SimpleModifier mod = mods.fetch('HP Ammo, Small piercing');
+      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
     test('Independent', () {
       var mod = mods.fetch('Independent');
-      expect(mod.value, 40);
+      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
 
     test('Independent, Simultaneous uses', () {
       var mod = mods.fetch('Independent, Simultaneous uses');
-      expect(mod.value, 70);
+      expect(mod.percentage, 70);
       expect(mod.isAttackModifier, false);
     });
 
     test('Jet', () {
       var mod = mods.fetch('Jet');
-      expect(mod.value, 0);
+      expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
     });
 
     test('Link, Independent', () {
       var mod = mods.fetch('Link, Independent');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Link, Permanent', () {
       var mod = mods.fetch('Link, Permanent');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
     });
 
     test('Low Signature', () {
       var mod = mods.fetch('Low Signature');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
@@ -360,7 +360,7 @@ main() {
     test('Malediction, -1 per yard', () {
       var mod = mods.fetch('Malediction, -1 per yard');
       expect(mod.isAttackModifier, true);
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
     });
 
     //TODO: Malediction is a "penetration modifier"; you cannot combine it with
@@ -369,7 +369,7 @@ main() {
     test('Malediction, Long-Distance Modifiers', () {
       var mod = mods.fetch('Malediction, Long-Distance Modifiers');
       expect(mod.isAttackModifier, true);
-      expect(mod.value, 200);
+      expect(mod.percentage, 200);
     });
 
     //TODO: Malediction is a "penetration modifier"; you cannot combine it with
@@ -378,18 +378,18 @@ main() {
     test('Malediction, Size and Speed/Range Table', () {
       var mod = mods.fetch('Malediction, Size and Speed/Range Table');
       expect(mod.isAttackModifier, true);
-      expect(mod.value, 150);
+      expect(mod.percentage, 150);
     });
 
     test('Mental Defense Only', () {
       var mod = mods.fetch('Mental Defense Only');
-      expect(mod.value, 250);
+      expect(mod.percentage, 250);
       expect(mod.isAttackModifier, true);
     });
 
     test('Missed Sleep', () {
       var mod = mods.fetch('Missed Sleep');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
 
@@ -397,7 +397,7 @@ main() {
     // between ammo types.
     test('Multi-Ammo, Large piercing', () {
       var mod = mods.fetch('Multi-Ammo, Large piercing');
-      expect(mod.value, 65);
+      expect(mod.percentage, 65);
       expect(mod.isAttackModifier, true);
     });
 
@@ -405,49 +405,49 @@ main() {
     // between ammo types.
     test('Multi-Ammo, Piercing', () {
       var mod = mods.fetch('Multi-Ammo, Piercing');
-      expect(mod.value, 40);
+      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
     test('No Signature', () {
       var mod = mods.fetch('No Signature');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Once On, Stays On', () {
       var mod = mods.fetch('Once On, Stays On');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Overhead', () {
       var mod = mods.fetch('Overhead');
-      expect(mod.value, 30);
+      expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
     });
 
     test('Persistent', () {
       var mod = mods.fetch('Persistent');
-      expect(mod.value, 40);
+      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
     test('Radiation, Toxic', () {
       var mod = mods.fetch('Radiation, Toxic');
-      expect(mod.value, 25);
+      expect(mod.percentage, 25);
       expect(mod.isAttackModifier, true);
     });
 
     test('Radiation, Burning', () {
       var mod = mods.fetch('Radiation, Burning');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
     });
 
     test('Ranged', () {
       var mod = mods.fetch('Ranged');
-      expect(mod.value, 40);
+      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
 
@@ -456,7 +456,7 @@ main() {
     test('Reflexive', () {
       var mod = mods.fetch('Reflexive');
       expect(mod.name, 'Reflexive');
-      expect(mod.value, 40);
+      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
 
@@ -468,14 +468,14 @@ main() {
     test('Respiratory Agent', () {
       var mod = mods.fetch('Respiratory Agent');
       expect(mod.name, 'Respiratory Agent');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
 
     test('Ricochet', () {
       var mod = mods.fetch('Ricochet');
       expect(mod.name, 'Ricochet');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
@@ -483,21 +483,21 @@ main() {
     test('Selective Area', () {
       var mod = mods.fetch('Selective Area');
       expect(mod.name, 'Selective Area');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Selective Effect', () {
       var mod = mods.fetch('Selective Effect');
       expect(mod.name, 'Selective Effect');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Selectivity', () {
       var mod = mods.fetch('Selectivity');
       expect(mod.name, 'Selectivity');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
     });
 
@@ -509,7 +509,7 @@ main() {
     test('ST-Based', () {
       var mod = mods.fetch('ST-Based');
       expect(mod.name, 'ST-Based');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
     });
 
@@ -522,139 +522,139 @@ main() {
     test('ST-Based, Limited', () {
       var mod = mods.fetch('ST-Based, Limited');
       expect(mod.name, 'ST-Based, Limited');
-      expect(mod.value, 30);
+      expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
     });
 
     test('Starvation', () {
       var mod = mods.fetch('Starvation');
       expect(mod.name, 'Starvation');
-      expect(mod.value, 40);
+      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
     test('Suffocation', () {
       var mod = mods.fetch('Suffocation');
       expect(mod.name, 'Suffocation');
-      expect(mod.value, 0);
+      expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
     });
 
     test('Super Attribute', () {
       var mod = mods.fetch('Super Attribute');
       expect(mod.name, 'Super Attribute');
-      expect(mod.value, 25);
+      expect(mod.percentage, 25);
       expect(mod.isAttackModifier, false);
     });
 
     test('Surge', () {
       var mod = mods.fetch('Surge');
       expect(mod.name, 'Surge');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Surge, Arcing', () {
       var mod = mods.fetch('Surge, Arcing');
       expect(mod.name, 'Surge, Arcing');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
     });
 
     test('Surprise Attack', () {
       var mod = mods.fetch('Surprise Attack');
       expect(mod.name, 'Surprise Attack');
-      expect(mod.value, 150);
+      expect(mod.percentage, 150);
       expect(mod.isAttackModifier, true);
     });
 
     test('Switchable', () {
       var mod = mods.fetch('Switchable');
       expect(mod.name, 'Switchable');
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
     });
 
     test('Thrusting Blade', () {
       var mod = mods.fetch('Thrusting Blade');
       expect(mod.name, 'Thrusting Blade');
-      expect(mod.value, 15);
+      expect(mod.percentage, 15);
       expect(mod.isAttackModifier, true);
     });
 
     test('Time-Spanning, Past or future plus present', () {
       var mod = mods.fetch('Time-Spanning, Past or future plus present');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Time-Spanning, Universal', () {
       var mod = mods.fetch('Time-Spanning, Universal');
       expect(mod.name, 'Time-Spanning, Universal');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
     });
 
     test('Time-Spanning, Past and future only', () {
       var mod = mods.fetch('Time-Spanning, Past and future only');
       expect(mod.name, 'Time-Spanning, Past and future only');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Time-Spanning, Past or future only', () {
       var mod = mods.fetch('Time-Spanning, Past or future only');
       expect(mod.name, 'Time-Spanning, Past or future only');
-      expect(mod.value, 0);
+      expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
     });
 
     test('Underwater', () {
       var mod = mods.fetch('Underwater');
       expect(mod.name, 'Underwater');
-      expect(mod.value, 20);
+      expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Usually On', () {
       var mod = mods.fetch('Usually On');
       expect(mod.name, 'Usually On');
-      expect(mod.value, 5);
+      expect(mod.percentage, 5);
       expect(mod.isAttackModifier, false);
     });
 
     test('Variable', () {
       var mod = mods.fetch('Variable');
       expect(mod.name, 'Variable');
-      expect(mod.value, 5);
+      expect(mod.percentage, 5);
       expect(mod.isAttackModifier, true);
     });
 
     test('Wall, Fixed shape', () {
       var mod = mods.fetch('Wall, Fixed shape');
       expect(mod.name, 'Wall, Fixed shape');
-      expect(mod.value, 30);
+      expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
     });
 
     test('Wall, Variable shape', () {
       var mod = mods.fetch('Wall, Variable shape');
       expect(mod.name, 'Wall, Variable shape');
-      expect(mod.value, 60);
+      expect(mod.percentage, 60);
       expect(mod.isAttackModifier, true);
     });
 
     test('World-Spanning, Others only', () {
       var mod = mods.fetch('World-Spanning, Others only');
       expect(mod.name, 'World-Spanning, Others only');
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('World-Spanning, Others plus current', () {
       var mod = mods.fetch('World-Spanning, Others plus current');
       expect(mod.name, 'World-Spanning, Others plus current');
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
     });
   });
@@ -664,27 +664,28 @@ main() {
       var mod = mods.fetch('Accurate') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 5);
-      mod.level = 3;
-      expect(mod.value, 15);
+      expect(mod.percentage, 5);
+      var m = LeveledModifier.copyOf(mod, level: 3);
+
+      expect(m.percentage, 15);
     });
 
     test('Affects Others', () {
       var mod = mods.fetch('Affects Others') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 50);
-      mod.level = 3;
-      expect(mod.value, 150);
+      expect(mod.percentage, 50);
+      var m = LeveledModifier.copyOf(mod, level: 3);
+      expect(m.percentage, 150);
     });
 
     test('Area Effect', () {
       var mod = mods.fetch('Area Effect') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 50);
-      mod.level = 3;
-      expect(mod.value, 150);
+      expect(mod.percentage, 50);
+      var m = LeveledModifier.copyOf(mod, level: 3);
+      expect(m.percentage, 150);
     });
 
     //TODO: You cannot combine Cone with Area Effect, Aura, Jet, Melee Attack,
@@ -693,131 +694,126 @@ main() {
       var mod = mods.fetch('Cone') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 60);
-      mod.level = 3;
-      expect(mod.value, 80);
+      expect(mod.percentage, 60);
+      var m = LeveledModifier.copyOf(mod, level: 3);
+      expect(m.percentage, 80);
     });
 
     test('Decreased Immunity', () {
       var mod = mods.fetch('Decreased Immunity') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 50);
-      mod.level = 4;
-      expect(mod.value, 200);
-      expect(() => mod.level = 5, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 50);
+      var m = LeveledModifier.copyOf(mod, level: 4);
+      expect(m.percentage, 200);
+      expect(() => LeveledModifier.copyOf(mod, level: 5),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Explosion', () {
       var mod = mods.fetch('Explosion') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 50);
-      mod.level = 3;
-      expect(mod.value, 150);
+      expect(mod.percentage, 50);
+      var m = LeveledModifier.copyOf(mod, level: 3);
+      expect(m.percentage, 150);
     });
 
     test('Extended Duration', () {
       var mod = mods.fetch('Extended Duration') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 20);
-      mod.level = 14;
-      expect(mod.value, 280);
-      expect(() => mod.level = 15, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 20);
+      var m = LeveledModifier.copyOf(mod, level: 3);
+      expect(m.percentage, 60);
+      expect(() => LeveledModifier.copyOf(mod, level: 15),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Extra Passes', () {
       var mod = mods.fetch('Extra Passes') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 10);
-      mod.level = 3;
-      expect(mod.value, 30);
+      expect(mod.percentage, 10);
+      expect(LeveledModifier.copyOf(mod, level: 3).percentage, 30);
     });
 
     test('Fragmentation, Cutting', () {
       var mod = mods.fetch('Fragmentation, Cutting') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 15);
-      mod.level = 3;
-      expect(mod.value, 45);
+      expect(mod.percentage, 15);
+      expect(LeveledModifier.copyOf(mod, level: 3).percentage, 45);
     });
 
     test('Fragmentation, Hot', () {
       var mod = mods.fetch('Fragmentation, Hot') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 15);
-      mod.level = 3;
-      expect(mod.value, 45);
+      expect(mod.percentage, 15);
+      expect(LeveledModifier.copyOf(mod, level: 3).percentage, 45);
     });
 
     test('Fragmentation, Impaling', () {
       var mod = mods.fetch('Fragmentation, Impaling') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 20);
-      mod.level = 3;
-      expect(mod.value, 60);
+      expect(mod.percentage, 20);
+      expect(LeveledModifier.copyOf(mod, level: 3).percentage, 60);
     });
 
     test('Fragmentation, Large Piercing', () {
       var mod = mods.fetch('Fragmentation, Large Piercing') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 15);
-      mod.level = 3;
-      expect(mod.value, 45);
+      expect(mod.percentage, 15);
+      expect(LeveledModifier.copyOf(mod, level: 3).percentage, 45);
     });
 
     test('Incendiary, Burning', () {
       var mod = mods.fetch('Incendiary, Burning') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 10);
-      mod.level = 3;
-      expect(mod.value, 30);
+      expect(mod.percentage, 10);
+      expect(LeveledModifier.copyOf(mod, level: 3).percentage, 30);
     });
 
     test('Increased Range', () {
       var mod = mods.fetch('Increased Range') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 10);
-      mod.level = 3;
-      expect(mod.value, 30);
+      expect(mod.percentage, 10);
+      expect(LeveledModifier.copyOf(mod, level: 3).percentage, 30);
     });
 
     test('Long-Range', () {
       var mod = mods.fetch('Long-Range') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 50);
-      mod.level = 3;
-      expect(mod.value, 150);
-      expect(() => mod.level = 4, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 50);
+      expect(LeveledModifier.copyOf(mod, level: 3).percentage, 150);
+      expect(() => LeveledModifier.copyOf(mod, level: 4),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Low Psychic Signature', () {
       var mod = mods.fetch('Low Psychic Signature') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 5);
-      mod.level = 5;
-      expect(mod.value, 25);
-      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 5);
+      expect(LeveledModifier.copyOf(mod, level: 5).percentage, 25);
+      expect(() => LeveledModifier.copyOf(mod, level: 6),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Low Signature, Variable', () {
       var mod = mods.fetch('Low Signature, Variable') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 5);
-      mod.level = 5;
-      expect(mod.value, 25);
-      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 5);
+      expect(LeveledModifier.copyOf(mod, level: 5).percentage, 25);
+      expect(() => LeveledModifier.copyOf(mod, level: 6),
+          throwsA(isA<AssertionError>()));
     });
 
     //TODO: You may only add this enhancement to an attack that has both Area
@@ -827,18 +823,16 @@ main() {
       var mod = mods.fetch('Mobile') as LeveledModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 40);
-      mod.level = 5;
-      expect(mod.value, 200);
+      expect(mod.percentage, 40);
+      expect(LeveledModifier.copyOf(mod, level: 5).percentage, 200);
     });
 
     test('Reduced Fatigue Cost', () {
       var mod = mods.fetch('Reduced Fatigue Cost') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 20);
-      mod.level = 5;
-      expect(mod.value, 100);
+      expect(mod.percentage, 20);
+      expect(LeveledModifier.copyOf(mod, level: 5).percentage, 100);
     });
 
     //TODO: You cannot add Reduced Time to attack powers, to traits that list
@@ -847,19 +841,18 @@ main() {
       var mod = mods.fetch('Reduced Time') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 20);
-      mod.level = 5;
-      expect(mod.value, 100);
+      expect(mod.percentage, 20);
+      expect(LeveledModifier.copyOf(mod, level: 5).percentage, 100);
     });
 
     test('Reliable', () {
       var mod = mods.fetch('Reliable') as LeveledModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 5);
-      mod.level = 10;
-      expect(mod.value, 50);
-      expect(() => mod.level = 11, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 5);
+      expect(LeveledModifier.copyOf(mod, level: 10).percentage, 50);
+      expect(() => LeveledModifier.copyOf(mod, level: 11),
+          throwsA(isA<AssertionError>()));
     });
   });
 
@@ -868,118 +861,89 @@ main() {
       var mod = mods.fetch('Armor Divisor') as VariableModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, -70);
-      mod.level = 2;
-      expect(mod.value, -50);
-      mod.level = 3;
-      expect(mod.value, -30);
-      mod.level = 4;
-      expect(mod.value, 50);
-      mod.level = 5;
-      expect(mod.value, 100);
-      mod.level = 6;
-      expect(mod.value, 150);
-      mod.level = 7;
-      expect(mod.value, 200);
-      expect(() => mod.level = 8, throwsA(isA<RangeError>()));
+      expect(mod.percentage, -70);
+      expect(VariableModifier.copyOf(mod, level: 2).percentage, -50);
+      expect(VariableModifier.copyOf(mod, level: 3).percentage, -30);
+      expect(VariableModifier.copyOf(mod, level: 4).percentage, 50);
+      expect(VariableModifier.copyOf(mod, level: 5).percentage, 100);
+      expect(VariableModifier.copyOf(mod, level: 6).percentage, 150);
+      expect(VariableModifier.copyOf(mod, level: 7).percentage, 200);
+      expect(() => VariableModifier.copyOf(mod, level: 8),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Can Carry Objects', () {
       var mod = mods.fetch('Can Carry Objects') as VariableModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 10);
-      mod.level = 2;
-      expect(mod.value, 20);
-      mod.level = 3;
-      expect(mod.value, 50);
-      mod.level = 4;
-      expect(mod.value, 100);
-      mod.level = 5;
-      expect(mod.value, 150);
-      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 10);
+      expect(VariableModifier.copyOf(mod, level: 2).percentage, 20);
+      expect(VariableModifier.copyOf(mod, level: 3).percentage, 50);
+      expect(VariableModifier.copyOf(mod, level: 4).percentage, 100);
+      expect(VariableModifier.copyOf(mod, level: 5).percentage, 150);
+      expect(() => VariableModifier.copyOf(mod, level: 6),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Cyclic', () {
       var mod = mods.fetch('Cyclic') as VariableModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 10);
-      mod.level = 2;
-      expect(mod.value, 20);
-      mod.level = 3;
-      expect(mod.value, 40);
-      mod.level = 4;
-      expect(mod.value, 50);
-      mod.level = 5;
-      expect(mod.value, 100);
-      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 10);
+      expect(VariableModifier.copyOf(mod, level: 2).percentage, 20);
+      expect(VariableModifier.copyOf(mod, level: 3).percentage, 40);
+      expect(VariableModifier.copyOf(mod, level: 4).percentage, 50);
+      expect(VariableModifier.copyOf(mod, level: 5).percentage, 100);
+      expect(() => VariableModifier.copyOf(mod, level: 6),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Increased Range, LOS', () {
       var mod = mods.fetch('Increased Range, LOS') as VariableModifier;
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
-      expect(mod.value, 90);
-      mod.level = 2;
-      expect(mod.value, 80);
-      mod.level = 3;
-      expect(mod.value, 70);
-      mod.level = 4;
-      expect(mod.value, 60);
-      mod.level = 5;
-      expect(mod.value, 50);
-      mod.level = 6;
-      expect(mod.value, 40);
-      mod.level = 7;
-      expect(mod.value, 30);
-      mod.level = 8;
-      expect(mod.value, 20);
-      mod.level = 9;
-      expect(mod.value, 10);
-      mod.level = 10;
-      expect(mod.value, 0);
-      expect(() => mod.level = 11, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 90);
+      expect(VariableModifier.copyOf(mod, level: 2).percentage, 80);
+      expect(VariableModifier.copyOf(mod, level: 3).percentage, 70);
+      expect(VariableModifier.copyOf(mod, level: 4).percentage, 60);
+      expect(VariableModifier.copyOf(mod, level: 5).percentage, 50);
+      expect(VariableModifier.copyOf(mod, level: 6).percentage, 40);
+      expect(VariableModifier.copyOf(mod, level: 7).percentage, 30);
+      expect(VariableModifier.copyOf(mod, level: 8).percentage, 20);
+      expect(VariableModifier.copyOf(mod, level: 9).percentage, 10);
+      expect(VariableModifier.copyOf(mod, level: 10).percentage, 0);
+      expect(() => VariableModifier.copyOf(mod, level: 11),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Rapid Fire', () {
       var mod = mods.fetch('Rapid Fire') as VariableModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 40);
-      mod.level = 2;
-      expect(mod.value, 50);
-      mod.level = 3;
-      expect(mod.value, 70);
-      mod.level = 4;
-      expect(mod.value, 100);
-      mod.level = 5;
-      expect(mod.value, 150);
-      mod.level = 6;
-      expect(mod.value, 200);
-      mod.level = 7;
-      expect(mod.value, 250);
-      mod.level = 8;
-      expect(mod.value, 300);
-      expect(() => mod.level = 9, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 40);
+      expect(VariableModifier.copyOf(mod, level: 2).percentage, 50);
+      expect(VariableModifier.copyOf(mod, level: 3).percentage, 70);
+      expect(VariableModifier.copyOf(mod, level: 4).percentage, 100);
+      expect(VariableModifier.copyOf(mod, level: 5).percentage, 150);
+      expect(VariableModifier.copyOf(mod, level: 6).percentage, 200);
+      expect(VariableModifier.copyOf(mod, level: 7).percentage, 250);
+      expect(VariableModifier.copyOf(mod, level: 8).percentage, 300);
+      expect(() => VariableModifier.copyOf(mod, level: 9),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Rapid Fire, Selective', () {
       var mod = mods.fetch('Rapid Fire, Selective') as VariableModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
-      expect(mod.value, 80);
-      mod.level = 2;
-      expect(mod.value, 110);
-      mod.level = 3;
-      expect(mod.value, 160);
-      mod.level = 4;
-      expect(mod.value, 210);
-      mod.level = 5;
-      expect(mod.value, 260);
-      mod.level = 6;
-      expect(mod.value, 310);
-      expect(() => mod.level = 7, throwsA(isA<RangeError>()));
+      expect(mod.percentage, 80);
+      expect(VariableModifier.copyOf(mod, level: 2).percentage, 110);
+      expect(VariableModifier.copyOf(mod, level: 3).percentage, 160);
+      expect(VariableModifier.copyOf(mod, level: 4).percentage, 210);
+      expect(VariableModifier.copyOf(mod, level: 5).percentage, 260);
+      expect(VariableModifier.copyOf(mod, level: 6).percentage, 310);
+      expect(() => VariableModifier.copyOf(mod, level: 7),
+          throwsA(isA<AssertionError>()));
     });
   });
 

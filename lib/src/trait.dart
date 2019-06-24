@@ -36,15 +36,15 @@ class Trait {
   /// advantage – to change the way it works. You can apply any number of
   /// modifiers to a trait.
   ///
-  final List<Modifier> modifiers;
+  final List<SimpleModifier> modifiers;
 
   const Trait(
       {this.name,
       this.baseCost,
       bool hasLevels,
-      List<Modifier> modifiers,
+      List<SimpleModifier> modifiers,
       this.numberOfLevels})
-      : modifiers = modifiers ?? const <Modifier>[],
+      : modifiers = modifiers ?? const <SimpleModifier>[],
         this.hasLevels = hasLevels ?? false;
 
   ///
@@ -66,5 +66,5 @@ class Trait {
       -80,
       (modifiers.isEmpty)
           ? 0
-          : modifiers.map((m) => m.value).reduce((a, b) => a + b));
+          : modifiers.map((m) => m.percentage).reduce((a, b) => a + b));
 }

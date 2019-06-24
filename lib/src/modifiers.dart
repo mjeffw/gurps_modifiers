@@ -13,14 +13,14 @@ class _Factory {
 
 class _Modifiers {
   static Map<String, Function> _constructors = {
-    'Simple': (x) => Modifier.fromJSON(x),
+    'Simple': (x) => SimpleModifier.fromJSON(x),
     'Leveled': (x) => LeveledModifier.fromJSON(x),
     'Variable': (x) => VariableModifier.fromJSON(x)
   };
 
   static Map<String, _Factory> _map = {};
 
-  Modifier fetch(String name) {
+  BaseModifier fetch(String name) {
     var myFactory = _map[name];
     return myFactory.builder.call(myFactory.data);
   }
@@ -41,15 +41,12 @@ class _Modifiers {
   String printSourceData() {
     var keys = _map.keys.toList();
     keys.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    var data = keys.map((f) => fetch(f).toJSON()).toList();
+    var data = keys.map((f) => fetch(f).toJSON(template: true)).toList();
     var line = data.reduce((x, y) => '$x,\n$y');
 
-    return '''
-{
-  "modifiers":
-    [
-$line
-    ]
-}''';
+    return '{ "modifiers": [\n'
+        '$line\n'
+        ']\n'
+        '}';
   }
 }

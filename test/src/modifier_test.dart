@@ -4,39 +4,46 @@ import 'package:test/test.dart';
 void main() {
   group('Modifier', () {
     test('Constructor and percentage (default)', () {
-      var mod = Modifier(name: 'bar');
-      expect(mod.value, 0);
+      var mod = SimpleModifier(name: 'bar');
+      expect(mod.percentage, 0);
       expect(mod.name, 'bar');
     });
 
     test('Positive percentage', () {
-      var mod = Modifier(value: 20, name: 'foo');
-      expect(mod.value, 20);
+      var mod = SimpleModifier(percentage: 20, name: 'foo');
+      expect(mod.percentage, 20);
       expect(mod.name, 'foo');
       expect(mod.toString(), equals(mod.toJSON()));
     });
 
     test('Negative percentage', () {
-      var mod = Modifier(value: -50, name: 'baz');
-      expect(mod.value, -50);
+      var mod = SimpleModifier(percentage: -50, name: 'baz');
+      expect(mod.percentage, -50);
     });
 
     test('null name', () {
-      expect(
-          () => Modifier(name: null, value: 0), throwsA(isA<AssertionError>()));
+      expect(() => SimpleModifier(name: null, percentage: 0),
+          throwsA(isA<AssertionError>()));
     });
 
     test('null isAttackModifier', () {
-      expect(() => Modifier(name: 'null', value: 0, isAttackModifier: null),
+      expect(
+          () => SimpleModifier(
+              name: 'null', percentage: 0, isAttackModifier: null),
           throwsA(isA<AssertionError>()));
     });
 
     test('equals and hashCode', () {
-      var one = Modifier(name: 'test', isAttackModifier: true, value: 10);
-      var two = Modifier(name: 'test', isAttackModifier: true, value: 10);
-      var three = Modifier(name: 'test', isAttackModifier: true, value: 9);
-      var four = Modifier(name: 'test', isAttackModifier: false, value: 10);
-      var five = Modifier(name: 'foo', isAttackModifier: true, value: 10);
+      var one =
+          SimpleModifier(name: 'test', isAttackModifier: true, percentage: 10);
+      var two =
+          SimpleModifier(name: 'test', isAttackModifier: true, percentage: 10);
+      var three =
+          SimpleModifier(name: 'test', isAttackModifier: true, percentage: 9);
+      var four =
+          SimpleModifier(name: 'test', isAttackModifier: false, percentage: 10);
+      var five =
+          SimpleModifier(name: 'foo', isAttackModifier: true, percentage: 10);
 
       expect(one, equals(one));
       expect(one == two, true);
@@ -54,20 +61,18 @@ void main() {
   group('leveled enhancer ', () {
     test('defaults', () {
       var mod = LeveledModifier(valuePerLevel: 5, name: 'Baz');
-      expect(mod, isA<Modifier>());
+      expect(mod, isA<BaseModifier>());
       expect(mod.baseValue, 0);
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 1);
-      expect(mod.value, 5);
+      expect(mod.percentage, 5);
       expect(mod.toString(), equals(mod.toJSON()));
     });
 
     test('negative valuePerLevel in constructor', () {
       var mod = LeveledModifier(valuePerLevel: -1, level: 1, name: 'Baz');
       expect(mod.valuePerLevel, -1);
-      expect(mod.value, -1);
-      mod.level = 3;
-      expect(mod.value, -3);
+      expect(mod.percentage, -1);
     });
 
     test('negative level in constructor', () {
@@ -75,32 +80,20 @@ void main() {
           throwsA(isA<AssertionError>()));
     });
 
-    test('null', () {
-      var mod = LeveledModifier(valuePerLevel: 5, name: 'Baz');
-      expect(() => mod.level = -1, throwsA(isA<RangeError>()));
-    });
-
-    test('negative level in setter', () {
-      var mod = LeveledModifier(valuePerLevel: 5, name: 'Baz');
-      expect(() => mod.level = -1, throwsA(isA<RangeError>()));
-    });
-
     test('level greater than 1', () {
       var mod = LeveledModifier(valuePerLevel: 5, level: 3, name: 'Baz');
-      expect(mod, isA<Modifier>());
+      expect(mod, isA<BaseModifier>());
       expect(mod.baseValue, 0);
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 3);
-      expect(mod.value, 15);
+      expect(mod.percentage, 15);
     });
 
     test('max level', () {
-      var mod = LeveledModifier(valuePerLevel: 5, maxLevel: 4, name: 'Baz');
-
-      mod.level = 4;
-      expect(mod.level, 4);
-
-      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
+      expect(
+          () => LeveledModifier(
+              valuePerLevel: 5, maxLevel: 4, name: 'Baz', level: 6),
+          throwsA(isA<AssertionError>()));
     });
 
     test('valuePerLevel null', () {
@@ -162,30 +155,33 @@ void main() {
     test('constructor', () {
       var mod = VariableModifier(
           name: 'Bar', levelValues: <int>[10, 20, 40, 50, 100]);
-      expect(mod, isA<Modifier>());
+      expect(mod, isA<BaseModifier>());
       expect(mod.level, 1);
-      expect(mod.value, 10);
+      expect(mod.percentage, 10);
       expect(mod.toString(), equals(mod.toJSON()));
     });
 
     test('set level inside range', () {
-      var mod =
-          VariableModifier(levelValues: [10, 20, 40, 50, 100], name: 'Aaz');
-
-      mod.level = 4;
+      var mod = VariableModifier(
+          levelValues: [10, 20, 40, 50, 100], name: 'Aaz', level: 4);
       expect(mod.level, 4);
-      expect(mod.value, 50);
+      expect(mod.percentage, 50);
 
-      mod.level = 5;
+      mod = VariableModifier(
+          levelValues: [10, 20, 40, 50, 100], name: 'Aaz', level: 5);
       expect(mod.level, 5);
-      expect(mod.value, 100);
+      expect(mod.percentage, 100);
     });
 
     test('set level outside range', () {
-      var mod =
-          VariableModifier(levelValues: [10, 20, 40, 50, 100], name: 'Aaz');
-      expect(() => mod.level = 6, throwsA(isA<RangeError>()));
-      expect(() => mod.level = 0, throwsA(isA<RangeError>()));
+      expect(
+          () => VariableModifier(
+              levelValues: [10, 20, 40, 50, 100], name: 'Aaz', level: 6),
+          throwsA(isA<AssertionError>()));
+      expect(
+          () => VariableModifier(
+              levelValues: [10, 20, 40, 50, 100], name: 'Aaz', level: 0),
+          throwsA(isA<AssertionError>()));
     });
 
     test('equals and hashCode -- name', () {

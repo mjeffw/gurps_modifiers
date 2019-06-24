@@ -3,64 +3,106 @@
 /// – to change the way it works. You can apply any number of modifiers to a
 /// trait.
 ///
-class Modifier {
+abstract class BaseModifier {
+  final String name;
+  final bool isAttackModifier;
+
   ///
   /// Modifiers adjust the base cost of a trait in proportion to their effects.
   /// This is expressed as a percentage.
   ///
-  final int value;
+  int get percentage;
 
-  final String name;
-
-  final bool isAttackModifier;
-
-  Modifier({this.value = 0, this.name, this.isAttackModifier = false})
+  const BaseModifier({this.name, this.isAttackModifier})
       : assert(name != null),
-        assert(isAttackModifier != null),
-        assert(value != null);
+        assert(isAttackModifier != null);
 
-  factory Modifier.fromJSON(Map<String, dynamic> json) {
-    var type = json['type'];
-    assert(type == 'Simple');
-
-    var isAttack = json['isAttackModifier'];
-    var percent = json['value'];
-
-    return Modifier(
-        value: (percent ?? 0) as int,
-        name: json['name'],
-        isAttackModifier: (isAttack ?? false) as bool);
-  }
-
-  @override
-  int get hashCode =>
-      name.hashCode ^ value.hashCode ^ isAttackModifier.hashCode;
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    return other is Modifier &&
-        this.value == other.value &&
-        this.name == other.name &&
-        this.isAttackModifier == other.isAttackModifier;
-  }
+  ///
+  /// Export as JSON.
+  ///
+  String toJSON({bool template = false});
 
   @override
   String toString() => toJSON();
 
-  String toJSON() {
-    return '''      {
-        "name": "$name",
-        "type": "Simple",
-        "value": $value${isAttackModifier ? ',\n        "isAttackModifier": true' : ''}
-      }''';
+  @override
+  int get hashCode => name.hashCode ^ isAttackModifier.hashCode;
+
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) return true;
+    return other is BaseModifier &&
+        this.name == other.name &&
+        this.isAttackModifier == other.isAttackModifier;
+  }
+}
+
+///
+/// Simple modifiers have just a flat percentage.
+///
+class SimpleModifier extends BaseModifier {
+  final int percentage;
+
+  const SimpleModifier(
+      {this.percentage = 0, String name, bool isAttackModifier = false})
+      : assert(name != null),
+        assert(isAttackModifier != null),
+        assert(percentage != null),
+        super(name: name, isAttackModifier: isAttackModifier);
+
+  ///
+  /// Create a SimpleModifier from a JSON map.
+  ///
+  factory SimpleModifier.fromJSON(Map<String, dynamic> json) {
+    var type = json['type'];
+    assert(type == 'Simple');
+    return SimpleModifier(
+        percentage: (json['percentage'] ?? 0) as int,
+        name: json['name'],
+        isAttackModifier: (json['isAttackModifier'] ?? false) as bool);
+  }
+
+  ///
+  /// Create a copy of the given modifier with one or more fields overridden.
+  ///
+  factory SimpleModifier.copyOf(SimpleModifier modifier,
+      {int value, String name, bool isAttackModifier}) {
+    return SimpleModifier(
+        percentage: value ?? modifier.percentage,
+        name: name ?? modifier.name,
+        isAttackModifier: isAttackModifier ?? modifier.isAttackModifier);
+  }
+
+  ///
+  /// Return the JSON String representation.
+  ///
+  @override
+  String toJSON({bool template = false}) {
+    List<String> strings = [
+      '"type": "Simple"',
+      '"name": "$name"',
+      '"percentage": $percentage',
+      '"isAttackModifier": $isAttackModifier',
+    ];
+    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
+  }
+
+  @override
+  int get hashCode => super.hashCode ^ percentage.hashCode;
+
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) return true;
+    return other is SimpleModifier &&
+        super == other &&
+        this.percentage == other.percentage;
   }
 }
 
 ///
 /// Base class to represent all modifiers that have 'levels'.
 ///
-class _BaseLeveledModifier extends Modifier {
+abstract class _BaseLeveledModifier extends BaseModifier {
   ///
   /// The maximum level value.
   ///
@@ -69,34 +111,26 @@ class _BaseLeveledModifier extends Modifier {
   ///
   /// Current level value.
   ///
-  int _level;
+  final int level;
 
-  _BaseLeveledModifier(
+  const _BaseLeveledModifier(
       {this.maxLevel,
       int level = 1,
       String name,
       bool isAttackModifier = false})
-      : assert(level > 0),
-        _level = level,
-        super(name: name, value: null, isAttackModifier: isAttackModifier);
-
-  int get level => _level;
-
-  set level(int level) {
-    if (level < 1 || (maxLevel != null && level > maxLevel)) {
-      throw RangeError('level is outside range');
-    }
-    _level = level;
-  }
+      : assert((level ?? 1) > 0),
+        assert((level ?? 1) <= (maxLevel ?? 1000000)),
+        this.level = level,
+        super(name: name, isAttackModifier: isAttackModifier);
 
   @override
-  int get hashCode => super.hashCode ^ maxLevel.hashCode ^ _level;
+  int get hashCode => super.hashCode ^ maxLevel.hashCode ^ level;
 
   @override
   bool operator ==(dynamic other) {
     return other is _BaseLeveledModifier &&
         super == other &&
-        this._level == other._level &&
+        this.level == other.level &&
         this.maxLevel == other.maxLevel;
   }
 }
@@ -119,34 +153,76 @@ class LeveledModifier extends _BaseLeveledModifier {
   ///
   final int valuePerLevel;
 
-  LeveledModifier(
+  const LeveledModifier(
       {String name,
-      this.valuePerLevel,
       this.baseValue = 0,
+      this.valuePerLevel,
       int maxLevel,
       int level = 1,
       bool isAttackModifier = false})
       : assert(valuePerLevel != null),
+        assert(baseValue != null),
         super(
             maxLevel: maxLevel,
             level: level,
             name: name,
             isAttackModifier: isAttackModifier);
 
+  ///
+  /// Create a SimpleModifier from a JSON map.
+  ///
   factory LeveledModifier.fromJSON(Map<String, dynamic> json) {
     var type = json['type'];
     assert(type == 'Leveled');
-
-    var isAttack = json['isAttackModifier'];
-    var base = json['baseValue'];
-
     return LeveledModifier(
         name: json['name'],
-        isAttackModifier: (isAttack ?? false) as bool,
+        isAttackModifier: (json['isAttackModifier'] ?? false) as bool,
         valuePerLevel: json['valuePerLevel'] as int,
-        baseValue: (base ?? 0) as int,
+        baseValue: (json['baseValue'] ?? 0) as int,
         maxLevel: json['maxLevel'] as int);
   }
+
+  ///
+  /// Create a copy of the given modifier with one or more fields overridden.
+  ///
+  factory LeveledModifier.copyOf(LeveledModifier modifier,
+      {String name,
+      int valuePerLevel,
+      int baseValue,
+      int maxLevel,
+      int level,
+      bool isAttackModifier}) {
+    return LeveledModifier(
+        name: name ?? modifier.name,
+        valuePerLevel: valuePerLevel ?? modifier.valuePerLevel,
+        baseValue: baseValue ?? modifier.baseValue,
+        maxLevel: maxLevel ?? modifier.maxLevel,
+        level: level ?? modifier.level,
+        isAttackModifier: isAttackModifier ?? modifier.isAttackModifier);
+  }
+
+  ///
+  /// Return the JSON String representation.
+  ///
+  @override
+  String toJSON({bool template = false}) {
+    List<String> strings = [
+      '"type": "Leveled"',
+      '"name": "$name"',
+      if (isAttackModifier) '"isAttackModifier": ${isAttackModifier}',
+      '"baseValue": $baseValue',
+      '"valuePerLevel": $valuePerLevel',
+      if (maxLevel != null) '"maxLevel": $maxLevel',
+      if (!template) '"level": $level',
+    ];
+    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
+  }
+
+  ///
+  /// Percentage is basePercentage + (valuePerLevel * _level).
+  ///
+  @override
+  int get percentage => baseValue + valuePerLevel * level;
 
   @override
   int get hashCode => super.hashCode ^ valuePerLevel.hashCode ^ baseValue;
@@ -158,27 +234,6 @@ class LeveledModifier extends _BaseLeveledModifier {
         this.valuePerLevel == other.valuePerLevel &&
         this.baseValue == other.baseValue;
   }
-
-  @override
-  String toJSON() {
-    var lead = '        ';
-    var baseText = baseValue != 0 ? '\n$lead"baseValue": ${baseValue},' : '';
-    var attkText = isAttackModifier
-        ? '\n$lead"isAttackModifier": ${isAttackModifier},'
-        : '';
-    var maxText = maxLevel == null ? '' : '\n$lead"maxLevel": $maxLevel,';
-    return '''      {
-        "name": "$name",
-        "type": "Leveled",$baseText$attkText$maxText
-        "valuePerLevel": $valuePerLevel
-      }''';
-  }
-
-  ///
-  /// Percentage is basePercentage + (valuePerLevel * _level).
-  ///
-  @override
-  int get value => baseValue + valuePerLevel * _level;
 }
 
 ///
@@ -186,12 +241,19 @@ class LeveledModifier extends _BaseLeveledModifier {
 /// increment per level.
 ///
 class VariableModifier extends _BaseLeveledModifier {
+  ///
+  /// The cost of each level.
+  ///
   final List<int> _levelValues;
 
-  VariableModifier(
-      {List<int> levelValues, String name, bool isAttackModifier = false})
-      : _levelValues = List.unmodifiable(levelValues),
+  const VariableModifier(
+      {List<int> levelValues,
+      String name,
+      bool isAttackModifier = false,
+      int level = 1})
+      : _levelValues = levelValues,
         super(
+            level: level,
             maxLevel: levelValues.length,
             name: name,
             isAttackModifier: isAttackModifier);
@@ -199,32 +261,39 @@ class VariableModifier extends _BaseLeveledModifier {
   factory VariableModifier.fromJSON(Map<String, dynamic> json) {
     var type = json['type'];
     assert(type == 'Variable');
-
-    var isAttack = json['isAttackModifier'];
-    var array = List<int>.from(json['levelValues'] as List);
     return VariableModifier(
-        levelValues: array,
-        isAttackModifier: (isAttack ?? false) as bool,
+        levelValues: List<int>.from(json['levelValues'] as List),
+        isAttackModifier: (json['isAttackModifier'] ?? false) as bool,
         name: json['name']);
   }
 
-  @override
-  String toJSON() {
-    return '''      {
-        "name": "$name",
-        "type": "Variable",
-        "levelValues": $_levelValues${isAttackModifier ? ',\n        "isAttackModifier": true' : ''}
-      }''';
+  factory VariableModifier.copyOf(VariableModifier modifier,
+      {List<int> levelValues, String name, bool isAttackModifier, int level}) {
+    return VariableModifier(
+        name: name ?? modifier.name,
+        levelValues: levelValues ?? modifier._levelValues,
+        level: level ?? modifier.level,
+        isAttackModifier: isAttackModifier ?? modifier.isAttackModifier);
   }
 
   @override
-  int get value => _levelValues[level - 1];
+  String toJSON({bool template = false}) {
+    List<String> strings = [
+      '"type": "Variable"',
+      '"name": "$name"',
+      if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
+      '"levelValues": $_levelValues',
+      if (!template) '"level": $level',
+    ];
+    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
+  }
 
   @override
-  int get hashCode {
-    return super.hashCode ^
-        _levelValues.reduce((a, b) => a.hashCode ^ b.hashCode);
-  }
+  int get percentage => _levelValues[level - 1];
+
+  @override
+  int get hashCode =>
+      super.hashCode ^ _levelValues.reduce((a, b) => a.hashCode ^ b.hashCode);
 
   @override
   bool operator ==(dynamic other) {
@@ -234,6 +303,10 @@ class VariableModifier extends _BaseLeveledModifier {
   }
 }
 
+///
+/// Regrettable that we have to do this because this project is pure Dart.
+/// Flutter has a collection utility package with this method.
+///
 bool _listEquals(List<dynamic> one, List<dynamic> other) {
   if (identical(one, other)) return true;
   if (one.runtimeType != other.runtimeType || one.length != other.length) {
