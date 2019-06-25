@@ -36,7 +36,7 @@ class Trait {
   /// advantage – to change the way it works. You can apply any number of
   /// modifiers to a trait.
   ///
-  final List<SimpleModifier> modifiers;
+  final List<Modifier> modifiers;
 
   const Trait(
       {this.name,
@@ -44,7 +44,7 @@ class Trait {
       bool hasLevels,
       List<SimpleModifier> modifiers,
       this.numberOfLevels})
-      : modifiers = modifiers ?? const <SimpleModifier>[],
+      : modifiers = modifiers ?? const <Modifier>[],
         this.hasLevels = hasLevels ?? false;
 
   ///

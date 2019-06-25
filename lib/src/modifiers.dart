@@ -20,7 +20,7 @@ class _Modifiers {
 
   static Map<String, _Factory> _map = {};
 
-  BaseModifier fetch(String name) {
+  Modifier fetch(String name) {
     var myFactory = _map[name];
     return myFactory.builder.call(myFactory.data);
   }

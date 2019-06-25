@@ -61,7 +61,7 @@ void main() {
   group('leveled enhancer ', () {
     test('defaults', () {
       var mod = LeveledModifier(valuePerLevel: 5, name: 'Baz');
-      expect(mod, isA<BaseModifier>());
+      expect(mod, isA<Modifier>());
       expect(mod.baseValue, 0);
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 1);
@@ -82,7 +82,7 @@ void main() {
 
     test('level greater than 1', () {
       var mod = LeveledModifier(valuePerLevel: 5, level: 3, name: 'Baz');
-      expect(mod, isA<BaseModifier>());
+      expect(mod, isA<Modifier>());
       expect(mod.baseValue, 0);
       expect(mod.valuePerLevel, 5);
       expect(mod.level, 3);
@@ -155,7 +155,7 @@ void main() {
     test('constructor', () {
       var mod = VariableModifier(
           name: 'Bar', levelValues: <int>[10, 20, 40, 50, 100]);
-      expect(mod, isA<BaseModifier>());
+      expect(mod, isA<Modifier>());
       expect(mod.level, 1);
       expect(mod.percentage, 10);
       expect(mod.toString(), equals(mod.toJSON()));

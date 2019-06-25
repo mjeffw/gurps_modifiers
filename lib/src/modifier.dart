@@ -3,7 +3,7 @@
 /// – to change the way it works. You can apply any number of modifiers to a
 /// trait.
 ///
-abstract class BaseModifier {
+abstract class Modifier {
   final String name;
   final bool isAttackModifier;
 
@@ -13,7 +13,7 @@ abstract class BaseModifier {
   ///
   int get percentage;
 
-  const BaseModifier({this.name, this.isAttackModifier})
+  const Modifier({this.name, this.isAttackModifier})
       : assert(name != null),
         assert(isAttackModifier != null);
 
@@ -31,7 +31,7 @@ abstract class BaseModifier {
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
-    return other is BaseModifier &&
+    return other is Modifier &&
         this.name == other.name &&
         this.isAttackModifier == other.isAttackModifier;
   }
@@ -40,7 +40,7 @@ abstract class BaseModifier {
 ///
 /// Simple modifiers have just a flat percentage.
 ///
-class SimpleModifier extends BaseModifier {
+class SimpleModifier extends Modifier {
   final int percentage;
 
   const SimpleModifier(
@@ -102,7 +102,7 @@ class SimpleModifier extends BaseModifier {
 ///
 /// Base class to represent all modifiers that have 'levels'.
 ///
-abstract class _BaseLeveledModifier extends BaseModifier {
+abstract class _BaseLeveledModifier extends Modifier {
   ///
   /// The maximum level value.
   ///
