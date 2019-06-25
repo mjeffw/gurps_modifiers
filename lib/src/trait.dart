@@ -42,7 +42,7 @@ class Trait {
       {this.name,
       this.baseCost,
       bool hasLevels,
-      List<SimpleModifier> modifiers,
+      List<Modifier> modifiers,
       this.numberOfLevels})
       : modifiers = modifiers ?? const <Modifier>[],
         this.hasLevels = hasLevels ?? false;
