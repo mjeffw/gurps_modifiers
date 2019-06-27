@@ -4,11 +4,11 @@ import 'modifier_data.dart';
 
 final modifiers = _Modifiers();
 
-class _Factory {
+class ModifierFactory {
   Function builder;
   Map<String, dynamic> data;
 
-  _Factory({this.data, this.builder});
+  ModifierFactory({this.data, this.builder});
 }
 
 class _Modifiers {
@@ -18,12 +18,14 @@ class _Modifiers {
     'Variable': (x) => VariableModifier.fromJSON(x)
   };
 
-  static Map<String, _Factory> _map = {};
+  static Map<String, ModifierFactory> _map = {};
 
   Modifier fetch(String name) {
     var myFactory = _map[name];
     return myFactory.builder.call(myFactory.data);
   }
+
+  List<MapEntry<String, ModifierFactory>> get fetchEntries => _Modifiers._map.entries;
 
   _Modifiers() {
     if (_map.isEmpty) {
@@ -33,7 +35,7 @@ class _Modifiers {
       list.forEach((a) {
         var name = a['name'];
         var m = _constructors[a['type']];
-        _map[name] = _Factory(builder: m, data: a);
+        _map[name] = ModifierFactory(builder: m, data: a);
       });
     }
   }
