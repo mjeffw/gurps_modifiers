@@ -25,7 +25,7 @@ class _Modifiers {
     return myFactory.builder.call(myFactory.data);
   }
 
-  Iterable<MapEntry<String, ModifierFactory>> get fetchEntries =>
+  Iterable<MapEntry<String, ModifierFactory>> fetchEntries() =>
       _Modifiers._map.entries;
 
   _Modifiers() {
