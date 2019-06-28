@@ -25,8 +25,7 @@ class _Modifiers {
     return myFactory.builder.call(myFactory.data);
   }
 
-  Iterable<MapEntry<String, ModifierFactory>> fetchEntries() =>
-      _Modifiers._map.entries;
+  Iterable<String> fetchEntries() => _Modifiers._map.keys;
 
   _Modifiers() {
     if (_map.isEmpty) {
