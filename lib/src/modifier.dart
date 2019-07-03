@@ -4,7 +4,10 @@
 /// trait.
 ///
 abstract class Modifier {
+  /// Name of the modifier.
   final String name;
+
+  /// True if this is an attack modifier.
   final bool isAttackModifier;
 
   ///
@@ -12,6 +15,9 @@ abstract class Modifier {
   /// This is expressed as a percentage.
   ///
   int get percentage;
+
+  /// Canonical name of the modifier.
+  String get canonicalName => name;
 
   const Modifier({this.name, this.isAttackModifier})
       : assert(name != null),
@@ -152,6 +158,9 @@ class LeveledModifier extends _BaseLeveledModifier {
   /// The multiplicative percentage per level.
   ///
   final int valuePerLevel;
+
+  @override
+  String get canonicalName => '${this.name} ${this.level}';
 
   const LeveledModifier(
       {String name,
