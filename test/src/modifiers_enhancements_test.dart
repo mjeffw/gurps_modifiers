@@ -686,6 +686,7 @@ main() {
       expect(mod.percentage, 50);
       var m = LeveledModifier.copyOf(mod, level: 3);
       expect(m.percentage, 150);
+      expect(m.canonicalName, 'Area Effect, 8 yards');
     });
 
     //TODO: You cannot combine Cone with Area Effect, Aura, Jet, Melee Attack,

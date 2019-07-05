@@ -1,3 +1,5 @@
+import 'dart:math';
+
 ///
 /// A modifier is a feature that you can add to a trait – usually an advantage
 /// – to change the way it works. You can apply any number of modifiers to a
@@ -141,6 +143,54 @@ abstract class _BaseLeveledModifier extends Modifier {
   }
 }
 
+abstract class LevelTextFormatter {
+  String format(String name, int level);
+  const LevelTextFormatter();
+
+  factory LevelTextFormatter.fromJSON(Map<String, dynamic> json) {
+    String type = json['type'];
+    if (type == 'Exponential')
+      return ExponentialLevelTextFormatter.fromJSON(json);
+  }
+}
+
+class BasicLevelTextFormatter extends LevelTextFormatter {
+  static const LevelTextFormatter instance = const BasicLevelTextFormatter();
+
+  const BasicLevelTextFormatter();
+
+  @override
+  String format(String name, int level) {
+    return '$name $level';
+  }
+}
+
+class ExponentialLevelTextFormatter extends LevelTextFormatter {
+  final int a;
+  final int b;
+  final String template;
+
+  const ExponentialLevelTextFormatter({this.a, this.b, this.template})
+      : assert(a != null),
+        assert(b != null),
+        assert(template != null);
+
+  factory ExponentialLevelTextFormatter.fromJSON(Map<String, dynamic> json) {
+    return ExponentialLevelTextFormatter(
+        a: int.parse(json['a']),
+        b: int.parse(json['b']),
+        template: json['template']);
+  }
+
+  @override
+  String format(String name, int level) {
+    int f = a * pow(b, level);
+    var replaceAll2 = template.replaceAll(r'$name', name);
+    var replaceAll = replaceAll2.replaceAll(r'$f', f.toString());
+    return replaceAll;
+  }
+}
+
 ///
 /// A Modifier that has levels with a fixed percentage per level and
 /// potentially a maximum level.
@@ -159,8 +209,10 @@ class LeveledModifier extends _BaseLeveledModifier {
   ///
   final int valuePerLevel;
 
+  final LevelTextFormatter formatter;
+
   @override
-  String get canonicalName => '${this.name} ${this.level}';
+  String get canonicalName => formatter.format(name, level);
 
   const LeveledModifier(
       {String name,
@@ -168,9 +220,11 @@ class LeveledModifier extends _BaseLeveledModifier {
       this.valuePerLevel,
       int maxLevel,
       int level = 1,
+      LevelTextFormatter formatter,
       bool isAttackModifier = false})
       : assert(valuePerLevel != null),
         assert(baseValue != null),
+        this.formatter = formatter ?? BasicLevelTextFormatter.instance,
         super(
             maxLevel: maxLevel,
             level: level,
@@ -188,7 +242,10 @@ class LeveledModifier extends _BaseLeveledModifier {
         isAttackModifier: (json['isAttackModifier'] ?? false) as bool,
         valuePerLevel: json['valuePerLevel'] as int,
         baseValue: (json['baseValue'] ?? 0) as int,
-        maxLevel: json['maxLevel'] as int);
+        maxLevel: json['maxLevel'] as int,
+        formatter: json['formatter'] == null
+            ? null
+            : LevelTextFormatter.fromJSON(json['formatter']));
   }
 
   ///
@@ -200,14 +257,16 @@ class LeveledModifier extends _BaseLeveledModifier {
       int baseValue,
       int maxLevel,
       int level,
-      bool isAttackModifier}) {
+      bool isAttackModifier,
+      LevelTextFormatter formatter}) {
     return LeveledModifier(
         name: name ?? modifier.name,
         valuePerLevel: valuePerLevel ?? modifier.valuePerLevel,
         baseValue: baseValue ?? modifier.baseValue,
         maxLevel: maxLevel ?? modifier.maxLevel,
         level: level ?? modifier.level,
-        isAttackModifier: isAttackModifier ?? modifier.isAttackModifier);
+        isAttackModifier: isAttackModifier ?? modifier.isAttackModifier,
+        formatter: formatter ?? modifier.formatter);
   }
 
   ///

@@ -215,7 +215,14 @@ String modifierDataString = '''
         "name": "Area Effect",
         "type": "Leveled",
         "isAttackModifier": true,
-        "valuePerLevel": 50
+        "valuePerLevel": 50,
+        "formatter": {
+          "type": "Exponential",
+          "a": "1",
+          "b": "2",
+          "x": "%level",
+          "template": "\$name, \$f yards"
+        }
       },
       {
         "name": "Armor Divisor",
