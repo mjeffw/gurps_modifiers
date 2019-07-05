@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'level_text_formatter.dart';
 
 ///
 /// A modifier is a feature that you can add to a trait – usually an advantage
@@ -121,14 +121,21 @@ abstract class _BaseLeveledModifier extends Modifier {
   ///
   final int level;
 
+  final LevelTextFormatter formatter;
+
+  @override
+  String get canonicalName => formatter.format(name, level);
+
   const _BaseLeveledModifier(
       {this.maxLevel,
       int level = 1,
       String name,
+      LevelTextFormatter formatter,
       bool isAttackModifier = false})
       : assert((level ?? 1) > 0),
         assert((level ?? 1) <= (maxLevel ?? 1000000)),
         this.level = level,
+        this.formatter = formatter ?? BasicLevelTextFormatter.instance,
         super(name: name, isAttackModifier: isAttackModifier);
 
   @override
@@ -140,54 +147,6 @@ abstract class _BaseLeveledModifier extends Modifier {
         super == other &&
         this.level == other.level &&
         this.maxLevel == other.maxLevel;
-  }
-}
-
-abstract class LevelTextFormatter {
-  String format(String name, int level);
-  const LevelTextFormatter();
-
-  factory LevelTextFormatter.fromJSON(Map<String, dynamic> json) {
-    String type = json['type'];
-    if (type == 'Exponential')
-      return ExponentialLevelTextFormatter.fromJSON(json);
-  }
-}
-
-class BasicLevelTextFormatter extends LevelTextFormatter {
-  static const LevelTextFormatter instance = const BasicLevelTextFormatter();
-
-  const BasicLevelTextFormatter();
-
-  @override
-  String format(String name, int level) {
-    return '$name $level';
-  }
-}
-
-class ExponentialLevelTextFormatter extends LevelTextFormatter {
-  final int a;
-  final int b;
-  final String template;
-
-  const ExponentialLevelTextFormatter({this.a, this.b, this.template})
-      : assert(a != null),
-        assert(b != null),
-        assert(template != null);
-
-  factory ExponentialLevelTextFormatter.fromJSON(Map<String, dynamic> json) {
-    return ExponentialLevelTextFormatter(
-        a: int.parse(json['a']),
-        b: int.parse(json['b']),
-        template: json['template']);
-  }
-
-  @override
-  String format(String name, int level) {
-    int f = a * pow(b, level);
-    var replaceAll2 = template.replaceAll(r'$name', name);
-    var replaceAll = replaceAll2.replaceAll(r'$f', f.toString());
-    return replaceAll;
   }
 }
 
@@ -209,11 +168,6 @@ class LeveledModifier extends _BaseLeveledModifier {
   ///
   final int valuePerLevel;
 
-  final LevelTextFormatter formatter;
-
-  @override
-  String get canonicalName => formatter.format(name, level);
-
   const LeveledModifier(
       {String name,
       this.baseValue = 0,
@@ -224,12 +178,12 @@ class LeveledModifier extends _BaseLeveledModifier {
       bool isAttackModifier = false})
       : assert(valuePerLevel != null),
         assert(baseValue != null),
-        this.formatter = formatter ?? BasicLevelTextFormatter.instance,
         super(
             maxLevel: maxLevel,
             level: level,
             name: name,
-            isAttackModifier: isAttackModifier);
+            isAttackModifier: isAttackModifier,
+            formatter: formatter);
 
   ///
   /// Create a SimpleModifier from a JSON map.
@@ -282,6 +236,7 @@ class LeveledModifier extends _BaseLeveledModifier {
       '"valuePerLevel": $valuePerLevel',
       if (maxLevel != null) '"maxLevel": $maxLevel',
       if (!template) '"level": $level',
+      if (formatter != null) '"formatter":${formatter.toJSON()}'
     ];
     return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
   }
@@ -318,10 +273,12 @@ class VariableModifier extends _BaseLeveledModifier {
       {List<int> levelValues,
       String name,
       bool isAttackModifier = false,
+      LevelTextFormatter formatter,
       int level = 1})
       : _levelValues = levelValues,
         super(
             level: level,
+            formatter: formatter,
             maxLevel: levelValues.length,
             name: name,
             isAttackModifier: isAttackModifier);
@@ -332,16 +289,24 @@ class VariableModifier extends _BaseLeveledModifier {
     return VariableModifier(
         levelValues: List<int>.from(json['levelValues'] as List),
         isAttackModifier: (json['isAttackModifier'] ?? false) as bool,
-        name: json['name']);
+        name: json['name'],
+        formatter: json['formatter'] == null
+            ? null
+            : LevelTextFormatter.fromJSON(json['formatter']));
   }
 
   factory VariableModifier.copyOf(VariableModifier modifier,
-      {List<int> levelValues, String name, bool isAttackModifier, int level}) {
+      {List<int> levelValues,
+      String name,
+      bool isAttackModifier,
+      int level,
+      LevelTextFormatter formatter}) {
     return VariableModifier(
         name: name ?? modifier.name,
         levelValues: levelValues ?? modifier._levelValues,
         level: level ?? modifier.level,
-        isAttackModifier: isAttackModifier ?? modifier.isAttackModifier);
+        isAttackModifier: isAttackModifier ?? modifier.isAttackModifier,
+        formatter: formatter ?? modifier.formatter);
   }
 
   @override
@@ -352,6 +317,7 @@ class VariableModifier extends _BaseLeveledModifier {
       if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
       '"levelValues": $_levelValues',
       if (!template) '"level": $level',
+      if (this.formatter != null) '"formatter":${formatter.toJSON()}'
     ];
     return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
   }

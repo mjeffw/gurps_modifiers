@@ -220,15 +220,19 @@ String modifierDataString = '''
           "type": "Exponential",
           "a": "1",
           "b": "2",
-          "x": "%level",
-          "template": "\$name, \$f yards"
+          "template": "%name, %f yards"
         }
       },
       {
         "name": "Armor Divisor",
         "type": "Variable",
         "levelValues": [-70, -50, -30, 50, 100, 150, 200],
-        "isAttackModifier": true
+        "isAttackModifier": true,
+        "formatter": {
+          "type": "Array",
+          "array": ["(0.1)", "(0.2)", "(0.5)", "(2)", "(3)", "(5)", "(10)"],
+          "template": "%name %f"
+        }
       },
       {
         "name": "Aspected",

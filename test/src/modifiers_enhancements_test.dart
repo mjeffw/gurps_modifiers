@@ -684,6 +684,7 @@ main() {
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 50);
+      expect(mod.canonicalName, 'Area Effect, 2 yards');
       var m = LeveledModifier.copyOf(mod, level: 3);
       expect(m.percentage, 150);
       expect(m.canonicalName, 'Area Effect, 8 yards');
@@ -696,7 +697,9 @@ main() {
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 60);
+      expect(mod.canonicalName, 'Cone 1');
       var m = LeveledModifier.copyOf(mod, level: 3);
+      expect(m.canonicalName, 'Cone 3');
       expect(m.percentage, 80);
     });
 
@@ -863,12 +866,32 @@ main() {
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, -70);
-      expect(VariableModifier.copyOf(mod, level: 2).percentage, -50);
-      expect(VariableModifier.copyOf(mod, level: 3).percentage, -30);
-      expect(VariableModifier.copyOf(mod, level: 4).percentage, 50);
-      expect(VariableModifier.copyOf(mod, level: 5).percentage, 100);
-      expect(VariableModifier.copyOf(mod, level: 6).percentage, 150);
-      expect(VariableModifier.copyOf(mod, level: 7).percentage, 200);
+      expect(mod.canonicalName, 'Armor Divisor (0.1)');
+
+      var m2 = VariableModifier.copyOf(mod, level: 2);
+      expect(m2.percentage, -50);
+      expect(m2.canonicalName, 'Armor Divisor (0.2)');
+
+      var m3 = VariableModifier.copyOf(mod, level: 3);
+      expect(m3.percentage, -30);
+      expect(m3.canonicalName, 'Armor Divisor (0.5)');
+
+      var m4 = VariableModifier.copyOf(mod, level: 4);
+      expect(m4.percentage, 50);
+      expect(m4.canonicalName, 'Armor Divisor (2)');
+
+      var m5 = VariableModifier.copyOf(mod, level: 5);
+      expect(m5.percentage, 100);
+      expect(m5.canonicalName, 'Armor Divisor (3)');
+
+      var m6 = VariableModifier.copyOf(mod, level: 6);
+      expect(m6.percentage, 150);
+      expect(m6.canonicalName, 'Armor Divisor (5)');
+
+      var modifier = VariableModifier.copyOf(mod, level: 7);
+      expect(modifier.percentage, 200);
+      expect(modifier.canonicalName, 'Armor Divisor (10)');
+
       expect(() => VariableModifier.copyOf(mod, level: 8),
           throwsA(isA<AssertionError>()));
     });
