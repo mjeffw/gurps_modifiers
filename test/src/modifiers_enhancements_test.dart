@@ -917,58 +917,80 @@ main() {
       expect(mod.percentage, 10);
       expect(mod.numberOfCycles, 2);
       expect(mod.resistible, false);
-      expect(mod.contagion, ContagionType.none);
+      expect(mod.contagion, ContagionType.None);
+      expect(mod.canonicalName, 'Cyclic, 1 day, 2 cycles');
 
       var m2 = CyclicModifier.copyOf(mod, interval: 2);
       expect(m2.level, 2);
       expect(m2.percentage, 20);
+      expect(m2.canonicalName, 'Cyclic, 1 hour, 2 cycles');
+
       // Resistible cuts percentage in half.
-      expect(CyclicModifier.copyOf(m2, resistible: true).percentage, 10);
+      var temp = CyclicModifier.copyOf(m2, resistible: true);
+      expect(temp.percentage, 10);
+      expect(temp.canonicalName, 'Cyclic, 1 hour, 2 cycles, Resistible');
 
       // Number of Cycles increases percentage by percentage x (n - 1).
-      expect(CyclicModifier.copyOf(m2, numberOfCycles: 3).percentage, 40);
-      expect(CyclicModifier.copyOf(m2, numberOfCycles: 4).percentage, 60);
+      temp = CyclicModifier.copyOf(m2, numberOfCycles: 3);
+      expect(temp.percentage, 40);
+      expect(temp.canonicalName, 'Cyclic, 1 hour, 3 cycles');
+
+      temp = CyclicModifier.copyOf(m2, numberOfCycles: 4);
+      expect(temp.percentage, 60);
+      expect(temp.canonicalName, 'Cyclic, 1 hour, 4 cycles');
 
       // test both number of cycles and resistible.
-      expect(
-          CyclicModifier.copyOf(m2, numberOfCycles: 3, resistible: true)
-              .percentage,
-          20);
+      temp = CyclicModifier.copyOf(m2, numberOfCycles: 3, resistible: true);
+      expect(temp.percentage, 20);
+      expect(temp.canonicalName, 'Cyclic, 1 hour, 3 cycles, Resistible');
 
       // Mildly contagious adds +20.
-      expect(
-          CyclicModifier.copyOf(mod, contagion: ContagionType.mildly)
-              .percentage,
-          30);
-      expect(
-          CyclicModifier.copyOf(mod,
-                  interval: 2, contagion: ContagionType.mildly)
-              .percentage,
-          40);
+      temp = CyclicModifier.copyOf(mod, contagion: ContagionType.Mildly);
+      expect(temp.percentage, 30);
+      expect(temp.canonicalName, 'Cyclic, 1 day, 2 cycles, Mildly Contagious');
+
+      temp = CyclicModifier.copyOf(mod,
+          interval: 2, contagion: ContagionType.Mildly);
+      expect(temp.percentage, 40);
+      expect(temp.canonicalName, 'Cyclic, 1 hour, 2 cycles, Mildly Contagious');
+
+      temp = CyclicModifier.copyOf(mod,
+          interval: 2, contagion: ContagionType.Mildly, resistible: true);
+      expect(temp.percentage, 30);
+      expect(temp.canonicalName,
+          'Cyclic, 1 hour, 2 cycles, Resistible, Mildly Contagious');
 
       // Highly contagious adds +50.
-      expect(
-          CyclicModifier.copyOf(m2,
-                  numberOfCycles: 3, contagion: ContagionType.highly)
-              .percentage,
-          90);
-      expect(
-          CyclicModifier.copyOf(m2,
-                  numberOfCycles: 4, contagion: ContagionType.highly)
-              .percentage,
-          110);
+      temp = CyclicModifier.copyOf(m2,
+          numberOfCycles: 3, contagion: ContagionType.Highly);
+      expect(temp.percentage, 90);
+      expect(temp.canonicalName, 'Cyclic, 1 hour, 3 cycles, Highly Contagious');
+
+      temp = CyclicModifier.copyOf(m2,
+          numberOfCycles: 4, contagion: ContagionType.Highly);
+      expect(temp.percentage, 110);
+      expect(temp.canonicalName, 'Cyclic, 1 hour, 4 cycles, Highly Contagious');
+
+      temp = CyclicModifier.copyOf(m2,
+          numberOfCycles: 4, contagion: ContagionType.Highly, resistible: true);
+      expect(temp.percentage, 80);
+      expect(temp.canonicalName,
+          'Cyclic, 1 hour, 4 cycles, Resistible, Highly Contagious');
 
       var m3 = CyclicModifier.copyOf(mod, interval: 3);
       expect(m3.level, 3);
       expect(m3.percentage, 40);
+      expect(m3.canonicalName, 'Cyclic, 1 minute, 2 cycles');
 
       var m4 = CyclicModifier.copyOf(mod, interval: 4);
       expect(m4.level, 4);
       expect(m4.percentage, 50);
+      expect(m4.canonicalName, 'Cyclic, 10 seconds, 2 cycles');
 
       var m5 = CyclicModifier.copyOf(mod, interval: 5);
       expect(m5.level, 5);
       expect(m5.percentage, 100);
+      expect(m5.canonicalName, 'Cyclic, 1 second, 2 cycles');
 
       expect(() => CyclicModifier.copyOf(mod, interval: 6),
           throwsA(isA<AssertionError>()));

@@ -337,13 +337,24 @@ class VariableModifier extends _BaseLeveledModifier {
   }
 }
 
-enum ContagionType { none, mildly, highly }
+enum ContagionType { None, Mildly, Highly }
 
 ///
 /// Cyclic is a variable modifier with several more factors: resistible,
 /// contagious, number of cycles.
 ///
 class CyclicModifier extends VariableModifier {
+  static const intervalText = [
+    "1 day",
+    "1 hour",
+    "1 minute",
+    "10 seconds",
+    "1 second"
+  ];
+
+  static String _unqualifiedStringValue(ContagionType contagion) =>
+      contagion.toString().split(r'.')[1];
+
   ///
   /// Number of cycles applied to this attack.
   ///
@@ -355,17 +366,23 @@ class CyclicModifier extends VariableModifier {
   ///
   final bool resistible;
 
+  ///
+  /// How cantagious the attack is.
+  ///
   final ContagionType contagion;
 
+  ///
+  /// Size of the interval.
+  ///
   int get interval => super.level;
 
   const CyclicModifier({
     int interval,
     int numberOfCycles = 2,
     bool resistible,
-    ContagionType contagion = ContagionType.none,
+    ContagionType contagion = ContagionType.None,
   })  : assert((numberOfCycles ?? 2) > 1),
-        this.contagion = contagion ?? ContagionType.none,
+        this.contagion = contagion ?? ContagionType.None,
         this.numberOfCycles = numberOfCycles ?? 2,
         this.resistible = resistible ?? false,
         super(
@@ -378,8 +395,9 @@ class CyclicModifier extends VariableModifier {
     String c = json['contagion'];
 
     var firstWhere = (c == null)
-        ? ContagionType.none
-        : ContagionType.values.firstWhere((e) => e.toString() == c);
+        ? ContagionType.None
+        : ContagionType.values
+            .firstWhere((e) => _unqualifiedStringValue(e) == c);
 
     return CyclicModifier(
         interval: json['interval'],
@@ -404,14 +422,19 @@ class CyclicModifier extends VariableModifier {
   int get percentage {
     int percentage =
         (super.percentage * (numberOfCycles - 1)) ~/ (resistible ? 2 : 1);
-    if (contagion == ContagionType.mildly) {
+    if (contagion == ContagionType.Mildly) {
       percentage += 20;
-    } else if (contagion == ContagionType.highly) {
+    } else if (contagion == ContagionType.Highly) {
       percentage += 50;
     }
 
     return percentage;
   }
+
+  String get canonicalName =>
+      'Cyclic, ${intervalText[interval - 1]}, $numberOfCycles cycles'
+      '${resistible ? ", Resistible" : ""}'
+      '${contagion == ContagionType.None ? "" : ", " + _unqualifiedStringValue(contagion) + " Contagious"}';
 }
 
 ///
