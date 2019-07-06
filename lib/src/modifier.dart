@@ -134,7 +134,7 @@ abstract class _BaseLeveledModifier extends Modifier {
       bool isAttackModifier = false})
       : assert((level ?? 1) > 0),
         assert((level ?? 1) <= (maxLevel ?? 1000000)),
-        this.level = level,
+        this.level = level ?? 1,
         this.formatter = formatter ?? BasicLevelTextFormatter.instance,
         super(name: name, isAttackModifier: isAttackModifier);
 
@@ -334,6 +334,83 @@ class VariableModifier extends _BaseLeveledModifier {
     return other is VariableModifier &&
         super == other &&
         _listEquals(this._levelValues, other._levelValues);
+  }
+}
+
+enum ContagionType { none, mildly, highly }
+
+///
+/// Cyclic is a variable modifier with several more factors: resistible,
+/// contagious, number of cycles.
+///
+class CyclicModifier extends VariableModifier {
+  ///
+  /// Number of cycles applied to this attack.
+  ///
+  final int numberOfCycles;
+
+  ///
+  /// True if the cyclic attack is resistible: the target gets a resistance
+  /// roll each cycle to cancel the rest of the attack.
+  ///
+  final bool resistible;
+
+  final ContagionType contagion;
+
+  int get interval => super.level;
+
+  const CyclicModifier({
+    int interval,
+    int numberOfCycles = 2,
+    bool resistible,
+    ContagionType contagion = ContagionType.none,
+  })  : assert((numberOfCycles ?? 2) > 1),
+        this.contagion = contagion ?? ContagionType.none,
+        this.numberOfCycles = numberOfCycles ?? 2,
+        this.resistible = resistible ?? false,
+        super(
+            name: 'Cyclic',
+            levelValues: const <int>[10, 20, 40, 50, 100],
+            isAttackModifier: true,
+            level: interval);
+
+  factory CyclicModifier.fromJSON(Map<String, dynamic> json) {
+    String c = json['contagion'];
+
+    var firstWhere = (c == null)
+        ? ContagionType.none
+        : ContagionType.values.firstWhere((e) => e.toString() == c);
+
+    return CyclicModifier(
+        interval: json['interval'],
+        numberOfCycles: json['numberOfCycles'],
+        resistible: json['resistible'],
+        contagion: firstWhere);
+  }
+
+  factory CyclicModifier.copyOf(CyclicModifier original,
+      {int interval,
+      int numberOfCycles,
+      bool resistible,
+      ContagionType contagion}) {
+    return CyclicModifier(
+        interval: interval ?? original.interval,
+        numberOfCycles: numberOfCycles ?? original.numberOfCycles,
+        resistible: resistible ?? original.resistible,
+        contagion: contagion ?? original.contagion);
+  }
+
+  @override
+  int get percentage {
+    int percentage =
+        (super.percentage * (numberOfCycles - 1)) ~/ (resistible ? 2 : 1);
+    if (contagion == ContagionType.mildly) {
+      percentage += 20;
+    } else if (contagion == ContagionType.highly) {
+      percentage += 50;
+    }
+
+    return percentage;
   }
 }
 

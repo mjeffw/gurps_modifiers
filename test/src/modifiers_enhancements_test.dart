@@ -909,16 +909,68 @@ main() {
           throwsA(isA<AssertionError>()));
     });
 
+    // TODO Update with number of cycles, Resistable, Contagious
     test('Cyclic', () {
-      var mod = mods.fetch('Cyclic') as VariableModifier;
+      var mod = mods.fetch('Cyclic') as CyclicModifier;
       expect(mod.isAttackModifier, true);
       expect(mod.level, 1);
       expect(mod.percentage, 10);
-      expect(VariableModifier.copyOf(mod, level: 2).percentage, 20);
-      expect(VariableModifier.copyOf(mod, level: 3).percentage, 40);
-      expect(VariableModifier.copyOf(mod, level: 4).percentage, 50);
-      expect(VariableModifier.copyOf(mod, level: 5).percentage, 100);
-      expect(() => VariableModifier.copyOf(mod, level: 6),
+      expect(mod.numberOfCycles, 2);
+      expect(mod.resistible, false);
+      expect(mod.contagion, ContagionType.none);
+
+      var m2 = CyclicModifier.copyOf(mod, interval: 2);
+      expect(m2.level, 2);
+      expect(m2.percentage, 20);
+      // Resistible cuts percentage in half.
+      expect(CyclicModifier.copyOf(m2, resistible: true).percentage, 10);
+
+      // Number of Cycles increases percentage by percentage x (n - 1).
+      expect(CyclicModifier.copyOf(m2, numberOfCycles: 3).percentage, 40);
+      expect(CyclicModifier.copyOf(m2, numberOfCycles: 4).percentage, 60);
+
+      // test both number of cycles and resistible.
+      expect(
+          CyclicModifier.copyOf(m2, numberOfCycles: 3, resistible: true)
+              .percentage,
+          20);
+
+      // Mildly contagious adds +20.
+      expect(
+          CyclicModifier.copyOf(mod, contagion: ContagionType.mildly)
+              .percentage,
+          30);
+      expect(
+          CyclicModifier.copyOf(mod,
+                  interval: 2, contagion: ContagionType.mildly)
+              .percentage,
+          40);
+
+      // Highly contagious adds +50.
+      expect(
+          CyclicModifier.copyOf(m2,
+                  numberOfCycles: 3, contagion: ContagionType.highly)
+              .percentage,
+          90);
+      expect(
+          CyclicModifier.copyOf(m2,
+                  numberOfCycles: 4, contagion: ContagionType.highly)
+              .percentage,
+          110);
+
+      var m3 = CyclicModifier.copyOf(mod, interval: 3);
+      expect(m3.level, 3);
+      expect(m3.percentage, 40);
+
+      var m4 = CyclicModifier.copyOf(mod, interval: 4);
+      expect(m4.level, 4);
+      expect(m4.percentage, 50);
+
+      var m5 = CyclicModifier.copyOf(mod, interval: 5);
+      expect(m5.level, 5);
+      expect(m5.percentage, 100);
+
+      expect(() => CyclicModifier.copyOf(mod, interval: 6),
           throwsA(isA<AssertionError>()));
     });
 

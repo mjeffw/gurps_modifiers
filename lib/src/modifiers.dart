@@ -15,7 +15,8 @@ class _Modifiers {
   static Map<String, Function> _constructors = {
     'Simple': (x) => SimpleModifier.fromJSON(x),
     'Leveled': (x) => LeveledModifier.fromJSON(x),
-    'Variable': (x) => VariableModifier.fromJSON(x)
+    'Variable': (x) => VariableModifier.fromJSON(x),
+    'Cyclic': (x) => CyclicModifier.fromJSON(x)
   };
 
   static Map<String, ModifierFactory> _map = {};

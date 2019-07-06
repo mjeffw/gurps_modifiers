@@ -433,9 +433,7 @@ String modifierDataString = '''
       },
       {
         "name": "Cyclic",
-        "type": "Variable",
-        "levelValues": [10, 20, 40, 50, 100],
-        "isAttackModifier": true
+        "type": "Cyclic"
       },
       {
         "name": "Decreased Immunity",
