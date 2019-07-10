@@ -220,7 +220,8 @@ String modifierDataString = '''
           "type": "Exponential",
           "a": "1",
           "b": "2",
-          "template": "%name, %f yards"
+          "template": "%name, %f yards",
+          "prompt": "Radius"
         }
       },
       {
@@ -231,7 +232,8 @@ String modifierDataString = '''
         "formatter": {
           "type": "Array",
           "array": ["(0.1)", "(0.2)", "(0.5)", "(2)", "(3)", "(5)", "(10)"],
-          "template": "%name %f"
+          "template": "%name %f",
+          "prompt": "Divisor"
         }
       },
       {
