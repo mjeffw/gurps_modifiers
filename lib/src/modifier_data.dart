@@ -221,7 +221,7 @@ String modifierDataString = '''
           "a": "1",
           "b": "2",
           "template": "%name, %f yards",
-          "prompt": "Radius"
+          "prompt": "Radius (yards)"
         }
       },
       {
