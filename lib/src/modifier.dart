@@ -168,16 +168,20 @@ class LeveledModifier extends _BaseLeveledModifier {
   ///
   final int valuePerLevel;
 
+  final String _levelPrompt;
+
   const LeveledModifier(
       {String name,
       this.baseValue = 0,
       this.valuePerLevel,
       int maxLevel,
       int level = 1,
+      String levelPrompt,
       LevelTextFormatter formatter,
       bool isAttackModifier = false})
       : assert(valuePerLevel != null),
         assert(baseValue != null),
+        this._levelPrompt = levelPrompt,
         super(
             maxLevel: maxLevel,
             level: level,
@@ -197,6 +201,7 @@ class LeveledModifier extends _BaseLeveledModifier {
         valuePerLevel: json['valuePerLevel'] as int,
         baseValue: (json['baseValue'] ?? 0) as int,
         maxLevel: json['maxLevel'] as int,
+        levelPrompt: json['levelPrompt'],
         formatter: json['formatter'] == null
             ? null
             : LevelTextFormatter.fromJSON(json['formatter']));
@@ -212,6 +217,7 @@ class LeveledModifier extends _BaseLeveledModifier {
       int maxLevel,
       int level,
       bool isAttackModifier,
+      String levelPrompt,
       LevelTextFormatter formatter}) {
     return LeveledModifier(
         name: name ?? modifier.name,
@@ -220,6 +226,7 @@ class LeveledModifier extends _BaseLeveledModifier {
         maxLevel: maxLevel ?? modifier.maxLevel,
         level: level ?? modifier.level,
         isAttackModifier: isAttackModifier ?? modifier.isAttackModifier,
+        levelPrompt: levelPrompt ?? modifier._levelPrompt,
         formatter: formatter ?? modifier.formatter);
   }
 
@@ -246,6 +253,8 @@ class LeveledModifier extends _BaseLeveledModifier {
   ///
   @override
   int get percentage => baseValue + valuePerLevel * level;
+
+  String get levelPrompt => _levelPrompt ?? 'Level';
 
   @override
   int get hashCode => super.hashCode ^ valuePerLevel.hashCode ^ baseValue;

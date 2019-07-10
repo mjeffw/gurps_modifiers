@@ -216,12 +216,12 @@ String modifierDataString = '''
         "type": "Leveled",
         "isAttackModifier": true,
         "valuePerLevel": 50,
+        "levelPrompt": "Radius (yards)",
         "formatter": {
           "type": "Exponential",
           "a": "1",
           "b": "2",
-          "template": "%name, %f yards",
-          "prompt": "Radius (yards)"
+          "template": "%name, %f yards"
         }
       },
       {
