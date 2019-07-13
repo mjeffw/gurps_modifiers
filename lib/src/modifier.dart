@@ -6,10 +6,14 @@ import 'level_text_formatter.dart';
 /// trait.
 ///
 abstract class Modifier {
+  ///
   /// Name of the modifier.
+  ///
   final String name;
 
+  ///
   /// True if this is an attack modifier.
+  ///
   final bool isAttackModifier;
 
   ///
@@ -18,9 +22,14 @@ abstract class Modifier {
   ///
   int get percentage;
 
+  ///
   /// Canonical name of the modifier.
+  ///
   String get canonicalName => name;
 
+  ///
+  /// Constructor
+  ///
   const Modifier({this.name, this.isAttackModifier})
       : assert(name != null),
         assert(isAttackModifier != null);
@@ -49,13 +58,17 @@ abstract class Modifier {
 /// Simple modifiers have just a flat percentage.
 ///
 class SimpleModifier extends Modifier {
+  ///
+  /// Percentage cost of the Modifier
+  ///
   final int percentage;
 
+  ///
+  /// Create a Simple Modifier
+  ///
   const SimpleModifier(
       {this.percentage = 0, String name, bool isAttackModifier = false})
-      : assert(name != null),
-        assert(isAttackModifier != null),
-        assert(percentage != null),
+      : assert(percentage != null),
         super(name: name, isAttackModifier: isAttackModifier);
 
   ///
@@ -121,6 +134,9 @@ abstract class _BaseLeveledModifier extends Modifier {
   ///
   final int level;
 
+  ///
+  /// The formatter for this modifier.
+  ///
   final LevelTextFormatter formatter;
 
   @override
@@ -135,7 +151,7 @@ abstract class _BaseLeveledModifier extends Modifier {
       : assert((level ?? 1) > 0),
         assert((level ?? 1) <= (maxLevel ?? 1000000)),
         this.level = level ?? 1,
-        this.formatter = formatter ?? BasicLevelTextFormatter.instance,
+        this.formatter = formatter ?? LevelTextFormatter.instance,
         super(name: name, isAttackModifier: isAttackModifier);
 
   @override

@@ -13,3 +13,4 @@ test/.test_coverage.dart
 coverage/lcov.info
 coverage_badge.svg
 coverage.json
+coverage/badge.svg

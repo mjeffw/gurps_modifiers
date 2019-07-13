@@ -455,7 +455,7 @@ main() {
       expect(mod.percentage, -10);
       expect(mod.isAttackModifier, false);
     });
-  });
+  }, skip: true);
 
   //TODO: This is the catch-all limitation. Must provide someway to enter
   // limitation information (and potentially save it).
@@ -564,7 +564,7 @@ main() {
       var mod = mods.fetch('Accessibility, Useless under stress');
       expect(mod.percentage, -60);
     });
-  });
+  }, skip: true);
 
   group('Leveled limitations', () {
     test('Cardiac Stress', () {
@@ -882,7 +882,7 @@ main() {
       expect(() => LeveledModifier.copyOf(mod, level: 4),
           throwsA(isA<AssertionError>()));
     });
-  });
+  }, skip: true);
 
   //TODO: Pact - The limitation value is numerically equivalent to the point
   // cost of the required disadvantages; e.g., a -10-point Vow gives a -10%
