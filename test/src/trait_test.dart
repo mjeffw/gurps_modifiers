@@ -11,7 +11,7 @@ void main() {
       expect(trait.baseCost, trait.cost);
       expect(trait.modifiers, isEmpty);
     });
-  }, skip: true);
+  }, skip: false);
 
   group('trait with modifier', () {
     test('enhancement', () {

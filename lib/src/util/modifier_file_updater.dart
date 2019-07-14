@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:gurps_modifiers/src/modifiers.dart';
 
 main() async {
+  Modifiers modifiers = Modifiers.instance();
   var contents = '''
 String modifierDataString = \'\'\'
   ${modifiers.printSourceData()}

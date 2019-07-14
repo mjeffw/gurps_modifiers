@@ -219,8 +219,8 @@ String modifierDataString = '''
         "levelPrompt": "Radius (yards)",
         "formatter": {
           "type": "Exponential",
-          "a": "1",
-          "b": "2",
+          "a": 1,
+          "b": 2,
           "template": "%name, %f yards"
         }
       },

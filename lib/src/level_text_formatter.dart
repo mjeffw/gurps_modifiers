@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:gurps_modifiers/src/modifier.dart';
+
 ///
 /// Data driven object that creates printable description of a Leveled Modifier
 /// of a set level.
@@ -9,7 +11,7 @@ import 'dart:math';
 /// from the similarly named methods.
 ///
 class LevelTextFormatter {
-  static const LevelTextFormatter instance = const LevelTextFormatter();
+  static const LevelTextFormatter instance = LevelTextFormatter();
 
   ///
   /// Template used by the formatter.
@@ -38,7 +40,7 @@ class LevelTextFormatter {
   ///
   /// Given a level, return the value to use to replace the %f token.
   ///
-  String f_value(int level) {
+  String _f_value(int level) {
     return level.toString();
   }
 
@@ -49,7 +51,7 @@ class LevelTextFormatter {
   String format(String name, int level) {
     return template
         .replaceFirst('%name', this.name(name))
-        .replaceFirst('%f', f_value(level));
+        .replaceFirst('%f', _f_value(level));
   }
 
   ///
@@ -65,6 +67,14 @@ class LevelTextFormatter {
   String toJSON() {
     return '{ "template": "$template" }';
   }
+
+  @override
+  bool operator ==(dynamic other) {
+    return other is LevelTextFormatter && this.template == other.template;
+  }
+
+  @override
+  int get hashCode => super.hashCode ^ template.hashCode;
 }
 
 ///
@@ -110,7 +120,7 @@ class _ArrayFormatter extends LevelTextFormatter {
   }
 
   @override
-  String f_value(int level) {
+  String _f_value(int level) {
     return array[level - 1];
   }
 
@@ -123,6 +133,8 @@ class _ArrayFormatter extends LevelTextFormatter {
     "template": "$template"
   }''';
   }
+
+  // TODO add equals and hashcode
 }
 
 ///
@@ -153,13 +165,11 @@ class _ExponentialFormatter extends LevelTextFormatter {
 
   factory _ExponentialFormatter.fromJSON(Map<String, dynamic> json) {
     return _ExponentialFormatter(
-        a: int.parse(json['a']),
-        b: int.parse(json['b']),
-        template: json['template']);
+        a: json['a'], b: json['b'], template: json['template']);
   }
 
   @override
-  String f_value(int level) {
+  String _f_value(int level) {
     return (a * pow(b, level)).toString();
   }
 
@@ -167,9 +177,11 @@ class _ExponentialFormatter extends LevelTextFormatter {
   String toJSON() {
     return ''' {
     "type": "Exponential",
-    "a": "$a",
-    "b": "$b",
+    "a": $a,
+    "b": $b,
     "template": "$template"
   }''';
   }
+
+  // TODO add equals and hashcode
 }

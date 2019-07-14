@@ -2,16 +2,29 @@ import 'dart:convert';
 import 'package:gurps_modifiers/src/modifier.dart';
 import 'modifier_data.dart';
 
-final modifiers = _Modifiers();
+abstract class Modifiers {
+  Modifier fetch(String name);
+  Iterable<String> fetchKeys();
+  String printSourceData();
 
-class ModifierFactory {
+  factory Modifiers.instance() {
+    if (_Modifiers._instance == null) {
+      _Modifiers._instance = _Modifiers();
+    }
+    return _Modifiers._instance;
+  }
+}
+
+class _ModifierFactory {
   Function builder;
   Map<String, dynamic> data;
 
-  ModifierFactory({this.data, this.builder});
+  _ModifierFactory({this.data, this.builder});
 }
 
-class _Modifiers {
+class _Modifiers implements Modifiers {
+  static _Modifiers _instance;
+
   static Map<String, Function> _constructors = {
     'Simple': (x) => SimpleModifier.fromJSON(x),
     'Leveled': (x) => LeveledModifier.fromJSON(x),
@@ -19,9 +32,10 @@ class _Modifiers {
     'Cyclic': (x) => CyclicModifier.fromJSON(x)
   };
 
-  static Map<String, ModifierFactory> _map = {};
+  static Map<String, _ModifierFactory> _map = {};
 
   Modifier fetch(String name) {
+    print("fetch");
     var myFactory = _map[name];
     return myFactory.builder.call(myFactory.data);
   }
@@ -29,6 +43,7 @@ class _Modifiers {
   Iterable<String> fetchKeys() => _Modifiers._map.keys;
 
   _Modifiers() {
+    print("create");
     if (_map.isEmpty) {
       var temp = json.decode(modifierDataString);
       var list = temp['modifiers'] as List;
@@ -36,7 +51,7 @@ class _Modifiers {
       list.forEach((a) {
         var name = a['name'];
         var m = _constructors[a['type']];
-        _map[name] = ModifierFactory(builder: m, data: a);
+        _map[name] = _ModifierFactory(builder: m, data: a);
       });
     }
   }
