@@ -10,6 +10,7 @@ build/
 # Directory created by dartdoc
 doc/api/
 test/.test_coverage.dart
+coverage
 coverage/lcov.info
 coverage_badge.svg
 coverage.json
