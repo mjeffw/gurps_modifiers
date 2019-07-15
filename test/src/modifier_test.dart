@@ -419,13 +419,34 @@ void main() {
     }, skip: false);
 
     group('variable modifier', () {
-      test('constructor', () {
+      var source = VariableModifier(
+          name: 'Bar', levelValues: <int>[10, 20, 40, 50, 100]);
+
+      test('constructor: minimal', () {
         var mod = VariableModifier(
             name: 'Bar', levelValues: <int>[10, 20, 40, 50, 100]);
         expect(mod, isA<Modifier>());
         expect(mod.level, 1);
         expect(mod.percentage, 10);
+        expect(mod.isAttackModifier, false);
         expect(mod.toString(), equals(mod.toJSON()));
+        expect(mod.canonicalName, 'Bar 1');
+      });
+
+      test('constructor + isAttackModifier', () {
+        var mod = VariableModifier(
+            name: 'Bar',
+            levelValues: <int>[10, 20, 40, 50, 100],
+            isAttackModifier: true);
+        expect(mod.isAttackModifier, true);
+      });
+
+      test('constructor + LevelTextFormatter', () {
+        var mod = VariableModifier(
+            name: 'Bar',
+            levelValues: <int>[10, 20, 40, 50, 100],
+            formatter: LevelTextFormatter(template: '%f %name'));
+        expect(mod.canonicalName, '1 Bar');
       });
 
       test('set level inside range', () {
@@ -474,6 +495,41 @@ void main() {
         expect(one.hashCode, equals(two.hashCode));
         expect(one, isNot(equals(three)));
         expect(one.hashCode, isNot(equals(three.hashCode)));
+      });
+
+      test('copyOf', () {
+        expect(VariableModifier.copyOf(source), equals(source));
+      });
+
+      test('copyOf + name', () {
+        expect(source.name, 'Bar');
+        var copy = VariableModifier.copyOf(source, name: 'Foo');
+        expect(copy.name, 'Foo');
+      });
+
+      test('copyOf + levelValues', () {
+        expect(source.percentage, 10);
+        var copy = VariableModifier.copyOf(source, levelValues: [3, 2, 1]);
+        expect(copy.percentage, 3);
+      });
+
+      test('copyOf + isAttackModifier', () {
+        expect(source.isAttackModifier, false);
+        var copy = VariableModifier.copyOf(source, isAttackModifier: true);
+        expect(copy.isAttackModifier, true);
+      });
+
+      test('copyOf + level', () {
+        expect(source.level, 1);
+        var copy = VariableModifier.copyOf(source, level: 3);
+        expect(copy.level, 3);
+      });
+
+      test('copyOf + formatter', () {
+        expect(source.formatter, LevelTextFormatter(template: '%name %f'));
+        var copy = VariableModifier.copyOf(source,
+            formatter: LevelTextFormatter(template: ''));
+        expect(copy.formatter, LevelTextFormatter(template: ''));
       });
     }, skip: false);
   }, skip: false);
