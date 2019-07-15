@@ -7,14 +7,14 @@ main() {
       var m1 = Modifiers.instance().fetch('Accurate');
       var m2 = Modifiers.instance().fetch('Accurate');
       expect(m1, isNot(same(m2)));
-    }, skip: true);
+    }, skip: false);
 
     test('printSourceData', () {
       print(Modifiers.instance().printSourceData());
-    }, skip: true);
+    }, skip: false);
 
     test('fetchKeys', () {
       expect(Modifiers.instance().fetchKeys(), contains('Accurate'));
     });
-  }, skip: true);
+  }, skip: false);
 }

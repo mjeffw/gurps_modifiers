@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:gurps_modifiers/src/modifier.dart';
-
 ///
 /// Data driven object that creates printable description of a Leveled Modifier
 /// of a set level.

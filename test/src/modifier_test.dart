@@ -416,6 +416,14 @@ void main() {
         var m = LeveledModifier.fromJSON(json.decode(source));
         expect(m.formatter, LevelTextFormatter(template: "Boo-Ya"));
       });
+
+      test('fromJSON -- level', () {
+        var source = '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7,
+            "level": 3 }''';
+        var m = LeveledModifier.fromJSON(json.decode(source));
+        expect(m.level, 3);
+        expect(m.percentage, 21);
+      });
     }, skip: false);
 
     group('variable modifier', () {
@@ -530,6 +538,73 @@ void main() {
         var copy = VariableModifier.copyOf(source,
             formatter: LevelTextFormatter(template: ''));
         expect(copy.formatter, LevelTextFormatter(template: ''));
+      });
+
+      test('fromJSON - no type', () {
+        var source = "{}";
+        expect(() => VariableModifier.fromJSON(json.decode(source)),
+            throwsA(isA<AssertionError>()));
+      });
+
+      test('fromJSON - bad type', () {
+        var source = '''{ "type": "dummy"}''';
+        expect(() => VariableModifier.fromJSON(json.decode(source)),
+            throwsA(isA<AssertionError>()));
+      });
+
+      test('fromJSON - only type', () {
+        var source = '''{ "type": "Variable"}''';
+        expect(() => VariableModifier.fromJSON(json.decode(source)),
+            throwsA(isA<Error>()));
+      });
+
+      test('fromJSON - missing name', () {
+        var source = '''{ "type": "Variable", "levelValues": [1,2,3]}''';
+        expect(() => VariableModifier.fromJSON(json.decode(source)),
+            throwsA(isA<AssertionError>()));
+      });
+
+      test('fromJSON - missing levelValues', () {
+        var source = '''{ "type": "Variable", "name": "Foo" }''';
+        expect(() => VariableModifier.fromJSON(json.decode(source)),
+            throwsA(isA<Error>()));
+      });
+
+      test('fromJSON - minimal good', () {
+        var source =
+            '''{ "type": "Variable", "name": "Foo", "levelValues": [1,2,3] }''';
+        var m = VariableModifier.fromJSON(json.decode(source));
+        expect(m.name, 'Foo');
+        expect(m.isAttackModifier, false);
+        expect(m.level, 1);
+        expect(m.maxLevel, 3);
+        expect(m.percentage, 1);
+        expect(m.canonicalName, "Foo 1");
+        expect(m.formatter, LevelTextFormatter(template: '%name %f'));
+      });
+
+      test('fromJSON - isAttackModifier', () {
+        var source =
+            '''{ "type": "Variable", "name": "Foo", "levelValues": [1,2,3], "isAttackModifier": true }''';
+        var m = VariableModifier.fromJSON(json.decode(source));
+        expect(m.isAttackModifier, true);
+      });
+
+      test('fromJSON - formatter', () {
+        var source =
+            '''{ "type": "Variable", "name": "Bar", "levelValues": [1,2,3], 
+            "formatter": { "template": "%f %name" } }''';
+        var m = VariableModifier.fromJSON(json.decode(source));
+        expect(m.canonicalName, '1 Bar');
+      });
+
+      test('fromJSON - level', () {
+        var source =
+            '''{ "type": "Variable", "name": "Bar", "levelValues": [10,20,30], 
+            "level": 3 }''';
+        var m = VariableModifier.fromJSON(json.decode(source));
+        expect(m.level, 3);
+        expect(m.percentage, 30);
       });
     }, skip: false);
   }, skip: false);

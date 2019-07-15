@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
@@ -668,7 +670,7 @@ main() {
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
     });
-  }, skip: true);
+  }, skip: false);
 
   group('Leveled enhancers', () {
     test('Accurate', () {
@@ -880,7 +882,7 @@ main() {
       expect(() => LeveledModifier.copyOf(mod, level: 11),
           throwsA(isA<AssertionError>()));
     });
-  }, skip: true);
+  }, skip: false);
 
   group('Variable enhancers', () {
     test('Armor Divisor', () {
@@ -1056,6 +1058,67 @@ main() {
         expect(temp.canonicalName,
             'Cyclic, 10 seconds, 4 cycles, Resistible, Highly Contagious');
       });
+
+      test('fromJSON - empty', () {
+        var source = '''{}''';
+        var m = CyclicModifier.fromJSON(json.decode(source));
+        expect(m.contagion, ContagionType.None);
+        expect(m.name, 'Cyclic');
+        expect(m.level, 1);
+        expect(m.interval, m.level);
+        expect(m.isAttackModifier, true);
+        expect(m.maxLevel, 5);
+        expect(m.canonicalName, 'Cyclic, 1 day, 2 cycles');
+        expect(m.resistible, false);
+        expect(m.percentage, 10);
+        expect(m.numberOfCycles, 2);
+      });
+
+      test('fromJSON + interval', () {
+        var source = '''{ "interval": 5 }''';
+        var m = CyclicModifier.fromJSON(json.decode(source));
+        expect(m.interval, 5);
+        expect(m.percentage, 100);
+        expect(m.canonicalName, 'Cyclic, 1 second, 2 cycles');
+      });
+
+      test('fromJSON + number of cycles', () {
+        var source = '''{ "numberOfCycles": 7 }''';
+        var m = CyclicModifier.fromJSON(json.decode(source));
+        expect(m.interval, 1);
+        expect(m.percentage, 60);
+        expect(m.canonicalName, 'Cyclic, 1 day, 7 cycles');
+      });
+
+      test('fromJSON + resistible', () {
+        var source = '''{ "resistible": true }''';
+        var m = CyclicModifier.fromJSON(json.decode(source));
+        expect(m.resistible, true);
+        expect(m.percentage, 5);
+        expect(m.canonicalName, 'Cyclic, 1 day, 2 cycles, Resistible');
+      });
+
+      test('fromJSON + mildly contagious', () {
+        var source = '''{ "contagion": "Mildly" }''';
+        var m = CyclicModifier.fromJSON(json.decode(source));
+        expect(m.contagion, ContagionType.Mildly);
+        expect(m.percentage, 30);
+        expect(m.canonicalName, 'Cyclic, 1 day, 2 cycles, Mildly Contagious');
+      });
+
+      test('fromJSON + highly contagious', () {
+        var source = '''{ "contagion": "Highly" }''';
+        var m = CyclicModifier.fromJSON(json.decode(source));
+        expect(m.contagion, ContagionType.Highly);
+        expect(m.percentage, 60);
+        expect(m.canonicalName, 'Cyclic, 1 day, 2 cycles, Highly Contagious');
+      });
+
+      test('fromJSON + bad contagion value', () {
+        var source = '''{ "contagion": "bad" }''';
+        expect(() => CyclicModifier.fromJSON(json.decode(source)),
+            throwsA(isA<Error>()));
+      });
     });
 
     test('Increased Range, LOS', () {
@@ -1107,7 +1170,7 @@ main() {
       expect(() => VariableModifier.copyOf(mod, level: 7),
           throwsA(isA<AssertionError>()));
     });
-  }, skip: true);
+  }, skip: false);
 
   //TODO: Blood Agent: -40% limitation UNLESS combined with Area Effect or
   // Cone, in which case it is a 100% enhancement. This is a “penetration

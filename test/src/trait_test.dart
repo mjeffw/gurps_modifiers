@@ -67,5 +67,5 @@ void main() {
       expect(trait.netModifier, -80);
       expect(trait.cost, 2);
     });
-  }, skip: true);
+  }, skip: false);
 }

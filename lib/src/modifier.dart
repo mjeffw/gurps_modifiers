@@ -243,6 +243,7 @@ class LeveledModifier extends _BaseLeveledModifier {
         baseValue: (json['baseValue'] ?? 0) as int,
         maxLevel: json['maxLevel'] as int,
         levelPrompt: json['levelPrompt'],
+        level: json['level'] as int ?? 1,
         formatter: json['formatter'] == null
             ? null
             : LevelTextFormatter.fromJSON(json['formatter']));
@@ -336,6 +337,7 @@ class VariableModifier extends _BaseLeveledModifier {
         levelValues: List<int>.from(json['levelValues'] as List),
         isAttackModifier: (json['isAttackModifier'] ?? false) as bool,
         name: json['name'],
+        level: json['level'] as int ?? 1,
         formatter: json['formatter'] == null
             ? null
             : LevelTextFormatter.fromJSON(json['formatter']));
