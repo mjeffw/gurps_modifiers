@@ -1,13 +1,13 @@
 import 'dart:convert';
-import 'package:gurps_modifiers/src/modifier.dart';
+import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'modifier_data.dart';
 
-abstract class Modifiers {
-  Modifier fetch(String name);
+abstract class ModifierTemplates {
+  ModifierTemplate fetch(String name);
   Iterable<String> fetchKeys();
   String printSourceData();
 
-  factory Modifiers.instance() {
+  factory ModifierTemplates.instance() {
     if (_Modifiers._instance == null) {
       _Modifiers._instance = _Modifiers();
     }
@@ -22,19 +22,19 @@ class _ModifierFactory {
   _ModifierFactory({this.data, this.builder});
 }
 
-class _Modifiers implements Modifiers {
+class _Modifiers implements ModifierTemplates {
   static _Modifiers _instance;
 
   static Map<String, Function> _constructors = {
-    'Simple': (x) => SimpleModifier.fromJSON(x),
-    'Leveled': (x) => LeveledModifier.fromJSON(x),
-    'Variable': (x) => VariableModifier.fromJSON(x),
-    'Cyclic': (x) => CyclicModifier.fromJSON(x)
+    'Simple': (x) => SimpleModifierTemplate.fromJSON(x),
+    'Leveled': (x) => LeveledModifierTemplate.fromJSON(x),
+    'Variable': (x) => VariableLeveledModifierTemplate.fromJSON(x),
+    'Cyclic': (x) => CyclicModifierTemplate.fromJSON(x)
   };
 
   static Map<String, _ModifierFactory> _map = {};
 
-  Modifier fetch(String name) {
+  ModifierTemplate fetch(String name) {
     print("fetch");
     var myFactory = _map[name];
     return myFactory.builder.call(myFactory.data);
@@ -59,7 +59,7 @@ class _Modifiers implements Modifiers {
   String printSourceData() {
     var keys = _map.keys.toList();
     keys.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    var data = keys.map((f) => fetch(f).toJSON(template: true)).toList();
+    var data = keys.map((f) => fetch(f).toJSON()).toList();
     var line = data.reduce((x, y) => '$x,\n$y');
 
     return '{ "modifiers": [\n'

@@ -1,4 +1,4 @@
-import 'package:gurps_modifiers/src/modifier.dart';
+import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:test/test.dart';
 
 import 'trait.dart';
@@ -21,11 +21,11 @@ void main() {
       // would increase the point cost of an advantage by 1/5 its base cost.
       var trait = Trait(
           baseCost: 20,
-          modifiers: [SimpleModifier(percentage: 20, name: 'Foo')]);
+          modifiers: [SimpleModifierTemplate(percentage: 20, name: 'Foo')]);
       expect(trait.cost, 24);
       expect(trait.baseCost, 20);
       expect(trait.modifiers, hasLength(1));
-      expect(trait.modifiers[0], SimpleModifier(percentage: 20, name: 'Foo'));
+      expect(trait.modifiers[0], SimpleModifierTemplate(percentage: 20, name: 'Foo'));
     });
 
     test('limitation', () {
@@ -33,7 +33,7 @@ void main() {
       // limitation would reduce it by half its base cost.
       var trait = Trait(
           baseCost: 20,
-          modifiers: [SimpleModifier(percentage: -50, name: 'Foo')]);
+          modifiers: [SimpleModifierTemplate(percentage: -50, name: 'Foo')]);
       expect(trait.cost, 10);
     });
 
@@ -43,10 +43,10 @@ void main() {
       // This would reduce the cost of a 10-point advantage to 7.5 points,
       // which would round up to 8 points.
       var trait = Trait(baseCost: 10, modifiers: [
-        SimpleModifier(percentage: 10, name: 'Foo'),
-        SimpleModifier(percentage: 40, name: 'Foo'),
-        SimpleModifier(percentage: -30, name: 'Foo'),
-        SimpleModifier(percentage: -45, name: 'Foo'),
+        SimpleModifierTemplate(percentage: 10, name: 'Foo'),
+        SimpleModifierTemplate(percentage: 40, name: 'Foo'),
+        SimpleModifierTemplate(percentage: -30, name: 'Foo'),
+        SimpleModifierTemplate(percentage: -45, name: 'Foo'),
       ]);
       expect(trait.netModifier, -25);
       expect(trait.cost, 8);
@@ -58,12 +58,12 @@ void main() {
       /// limitations you take, you cannot lower the cost of a trait to less
       /// than 1/5 its base cost.
       var trait = Trait(baseCost: 10, modifiers: [
-        SimpleModifier(percentage: 10, name: 'Foo'),
-        SimpleModifier(percentage: 40, name: 'Foo'),
-        SimpleModifier(percentage: -30, name: 'Foo'),
-        SimpleModifier(percentage: -20, name: 'Foo'),
-        SimpleModifier(percentage: -45, name: 'Foo'),
-        SimpleModifier(percentage: -45, name: 'Foo')
+        SimpleModifierTemplate(percentage: 10, name: 'Foo'),
+        SimpleModifierTemplate(percentage: 40, name: 'Foo'),
+        SimpleModifierTemplate(percentage: -30, name: 'Foo'),
+        SimpleModifierTemplate(percentage: -20, name: 'Foo'),
+        SimpleModifierTemplate(percentage: -45, name: 'Foo'),
+        SimpleModifierTemplate(percentage: -45, name: 'Foo')
       ]);
       expect(trait.netModifier, -80);
       expect(trait.cost, 2);

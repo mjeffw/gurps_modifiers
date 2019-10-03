@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:gurps_modifiers/src/modifier.dart';
+import 'package:gurps_modifiers/src/modifier_template.dart';
 
 ///
 /// Trait: An advantage, attribute, disadvantage, skill, or other character
@@ -36,15 +36,15 @@ class Trait {
   /// advantage – to change the way it works. You can apply any number of
   /// modifiers to a trait.
   ///
-  final List<Modifier> modifiers;
+  final List<ModifierTemplate> modifiers;
 
   const Trait(
       {this.name,
       this.baseCost,
       bool hasLevels,
-      List<Modifier> modifiers,
+      List<ModifierTemplate> modifiers,
       this.numberOfLevels})
-      : modifiers = modifiers ?? const <Modifier>[],
+      : modifiers = modifiers ?? const <ModifierTemplate>[],
         this.hasLevels = hasLevels ?? false;
 
   ///
