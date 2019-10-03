@@ -156,7 +156,8 @@ String modifierDataString = '''
       {
         "name": "Affects Others",
         "type": "Leveled",
-        "valuePerLevel": 50
+        "valuePerLevel": 50,
+        "levelPrompt": "Number affected"
       },
       {
         "name": "Affects Substantial",

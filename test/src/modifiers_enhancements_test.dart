@@ -688,6 +688,7 @@ main() {
       expect(mod.isAttackModifier, false);
       expect(mod.level, 1);
       expect(mod.percentage, 50);
+      expect(mod.levelPrompt, 'Number affected');
       var m = LeveledModifier.copyOf(mod, level: 3);
       expect(m.percentage, 150);
     });
