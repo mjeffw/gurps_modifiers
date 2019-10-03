@@ -1,6 +1,7 @@
-import 'package:gurps_modifiers/src/trait.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:test/test.dart';
+
+import 'trait.dart';
 
 void main() {
   group('trait', () {
