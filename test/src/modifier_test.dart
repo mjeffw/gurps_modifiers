@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:gurps_modifiers/src/level_text_formatter.dart';
 import 'package:gurps_modifiers/src/modifier_template.dart';
+import 'package:gurps_modifiers/src/template_subtypes.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -131,7 +132,7 @@ void main() {
 
     group('leveled enhancer ', () {
       test('defaults', () {
-        var mod = LeveledModifierTemplate(valuePerLevel: 5, name: 'Baz');
+        var mod = LeveledTemplate(valuePerLevel: 5, name: 'Baz');
         expect(mod, isA<ModifierTemplate>());
         expect(mod.baseValue, 0);
         expect(mod.valuePerLevel, 5);
@@ -140,13 +141,13 @@ void main() {
       });
 
       test('negative valuePerLevel in constructor', () {
-        var mod = LeveledModifierTemplate(valuePerLevel: -1, name: 'Baz');
+        var mod = LeveledTemplate(valuePerLevel: -1, name: 'Baz');
         expect(mod.valuePerLevel, -1);
         expect(mod.levelPercentage(1), -1);
       });
 
       test('level greater than 1', () {
-        var mod = LeveledModifierTemplate(valuePerLevel: 5, name: 'Baz');
+        var mod = LeveledTemplate(valuePerLevel: 5, name: 'Baz');
         expect(mod, isA<ModifierTemplate>());
         expect(mod.baseValue, 0);
         expect(mod.valuePerLevel, 5);
@@ -154,22 +155,21 @@ void main() {
       });
 
       test('valuePerLevel null', () {
-        expect(() => LeveledModifierTemplate(name: 'foo', valuePerLevel: null),
+        expect(() => LeveledTemplate(name: 'foo', valuePerLevel: null),
             throwsA(isA<AssertionError>()));
       });
 
       test('baseValue null', () {
         expect(
-            LeveledModifierTemplate(
-                    name: 'foo', valuePerLevel: -5, baseValue: null)
+            LeveledTemplate(name: 'foo', valuePerLevel: -5, baseValue: null)
                 .baseValue,
             0);
       });
 
       test('hashCode -- name & valuePerLevel', () {
-        var one = LeveledModifierTemplate(name: 'bar', valuePerLevel: 5);
-        var two = LeveledModifierTemplate(name: 'bar', valuePerLevel: 5);
-        var three = LeveledModifierTemplate(name: 'bar', valuePerLevel: -5);
+        var one = LeveledTemplate(name: 'bar', valuePerLevel: 5);
+        var two = LeveledTemplate(name: 'bar', valuePerLevel: 5);
+        var three = LeveledTemplate(name: 'bar', valuePerLevel: -5);
 
         expect(one, isNot(same(true)));
         expect(one, equals(two));
@@ -179,9 +179,9 @@ void main() {
       });
 
       test('hashCode -- name', () {
-        var one = LeveledModifierTemplate(name: 'bar', valuePerLevel: 5);
-        var two = LeveledModifierTemplate(name: 'bar', valuePerLevel: 5);
-        var three = LeveledModifierTemplate(name: 'foo', valuePerLevel: 5);
+        var one = LeveledTemplate(name: 'bar', valuePerLevel: 5);
+        var two = LeveledTemplate(name: 'bar', valuePerLevel: 5);
+        var three = LeveledTemplate(name: 'foo', valuePerLevel: 5);
 
         expect(one, isNot(same(two)));
         expect(one, equals(two));
@@ -191,12 +191,9 @@ void main() {
       });
 
       test('hashCode -- maxLevel', () {
-        var one =
-            LeveledModifierTemplate(name: 'bar', valuePerLevel: 5, maxLevel: 5);
-        var two =
-            LeveledModifierTemplate(name: 'bar', valuePerLevel: 5, maxLevel: 5);
-        var three =
-            LeveledModifierTemplate(name: 'bar', valuePerLevel: 5, maxLevel: 4);
+        var one = LeveledTemplate(name: 'bar', valuePerLevel: 5, maxLevel: 5);
+        var two = LeveledTemplate(name: 'bar', valuePerLevel: 5, maxLevel: 5);
+        var three = LeveledTemplate(name: 'bar', valuePerLevel: 5, maxLevel: 4);
 
         expect(one, isNot(same(true)));
         expect(one, equals(two));
@@ -206,12 +203,10 @@ void main() {
       });
 
       test('hashCode -- baseValue', () {
-        var one = LeveledModifierTemplate(
-            name: 'bar', valuePerLevel: 5, baseValue: 5);
-        var two = LeveledModifierTemplate(
-            name: 'bar', valuePerLevel: 5, baseValue: 5);
-        var three = LeveledModifierTemplate(
-            name: 'bar', valuePerLevel: 5, baseValue: 4);
+        var one = LeveledTemplate(name: 'bar', valuePerLevel: 5, baseValue: 5);
+        var two = LeveledTemplate(name: 'bar', valuePerLevel: 5, baseValue: 5);
+        var three =
+            LeveledTemplate(name: 'bar', valuePerLevel: 5, baseValue: 4);
 
         expect(one, equals(one));
         expect(one, isNot(same(true)));
@@ -222,32 +217,32 @@ void main() {
       });
       test('fromJSON -- null type', () {
         var source = '''{}''';
-        expect(() => LeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => LeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- wrong type', () {
         var source = ''' { "type": "null"  }''';
-        expect(() => LeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => LeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- missing name', () {
         var source = '''{ "type": "Leveled" }''';
-        expect(() => LeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => LeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- missing valuePerLevel', () {
         var source = '''{ "type": "Leveled", "name": "Foo" }''';
-        expect(() => LeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => LeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- minimal', () {
         var source =
             '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7 }''';
-        var m = LeveledModifierTemplate.fromJSON(json.decode(source));
+        var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.name, 'Foo');
         expect(m.isAttackModifier, false);
         expect(m.maxLevel, isNull);
@@ -258,42 +253,42 @@ void main() {
       test('fromJSON -- isAttackModifier', () {
         var source = '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7,
             "isAttackModifier": true }''';
-        var m = LeveledModifierTemplate.fromJSON(json.decode(source));
+        var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.isAttackModifier, true);
       });
 
       test('fromJSON -- baseValue', () {
         var source = '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7,
             "baseValue": 13 }''';
-        var m = LeveledModifierTemplate.fromJSON(json.decode(source));
+        var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.baseValue, 13);
       });
 
       test('fromJSON -- maxLevel', () {
         var source = '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7,
             "maxLevel": 3 }''';
-        var m = LeveledModifierTemplate.fromJSON(json.decode(source));
+        var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.maxLevel, 3);
       });
 
       test('fromJSON -- levelPrompt', () {
         var source = '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7,
             "levelPrompt": "bar" }''';
-        var m = LeveledModifierTemplate.fromJSON(json.decode(source));
+        var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.levelPrompt, 'bar');
       });
 
       test('fromJSON -- formatter', () {
         var source = '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7,
             "formatter": {"template": "Boo-Ya"} }''';
-        var m = LeveledModifierTemplate.fromJSON(json.decode(source));
+        var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.formatter, LevelTextFormatter(template: "Boo-Ya"));
       });
     }, skip: false);
 
     group('variable modifier', () {
       test('constructor: minimal', () {
-        var mod = VariableLeveledModifierTemplate(
+        var mod = VariableLeveledTemplate(
             name: 'Bar', levelValues: <int>[10, 20, 40, 50, 100]);
         expect(mod, isA<ModifierTemplate>());
         expect(mod.levelPercentage(1), 10);
@@ -302,7 +297,7 @@ void main() {
       });
 
       test('constructor + isAttackModifier', () {
-        var mod = VariableLeveledModifierTemplate(
+        var mod = VariableLeveledTemplate(
             name: 'Bar',
             levelValues: <int>[10, 20, 40, 50, 100],
             isAttackModifier: true);
@@ -310,12 +305,10 @@ void main() {
       });
 
       test('equals and hashCode -- name', () {
-        var one = VariableLeveledModifierTemplate(
-            levelValues: [1, 2, 3], name: 'foo');
-        var two = VariableLeveledModifierTemplate(
-            levelValues: [1, 2, 3], name: 'foo');
-        var three = VariableLeveledModifierTemplate(
-            levelValues: [1, 2, 3], name: 'bar');
+        var one = VariableLeveledTemplate(levelValues: [1, 2, 3], name: 'foo');
+        var two = VariableLeveledTemplate(levelValues: [1, 2, 3], name: 'foo');
+        var three =
+            VariableLeveledTemplate(levelValues: [1, 2, 3], name: 'bar');
 
         expect(one, isNot(same(two)));
         expect(one, equals(two));
@@ -325,12 +318,10 @@ void main() {
       });
 
       test('equals and hashCode -- levelValues', () {
-        var one = VariableLeveledModifierTemplate(
-            levelValues: [1, 2, 3], name: 'foo');
-        var two = VariableLeveledModifierTemplate(
-            levelValues: [1, 2, 3], name: 'foo');
-        var three = VariableLeveledModifierTemplate(
-            levelValues: [1, 2, 4], name: 'foo');
+        var one = VariableLeveledTemplate(levelValues: [1, 2, 3], name: 'foo');
+        var two = VariableLeveledTemplate(levelValues: [1, 2, 3], name: 'foo');
+        var three =
+            VariableLeveledTemplate(levelValues: [1, 2, 4], name: 'foo');
 
         expect(one, equals(one));
         expect(one, isNot(same(two)));
@@ -342,43 +333,38 @@ void main() {
 
       test('fromJSON - no type', () {
         var source = "{}";
-        expect(
-            () => VariableLeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => VariableLeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON - bad type', () {
         var source = '''{ "type": "dummy"}''';
-        expect(
-            () => VariableLeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => VariableLeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON - only type', () {
         var source = '''{ "type": "Variable"}''';
-        expect(
-            () => VariableLeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => VariableLeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<Error>()));
       });
 
       test('fromJSON - missing name', () {
         var source = '''{ "type": "Variable", "levelValues": [1,2,3]}''';
-        expect(
-            () => VariableLeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => VariableLeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON - missing levelValues', () {
         var source = '''{ "type": "Variable", "name": "Foo" }''';
-        expect(
-            () => VariableLeveledModifierTemplate.fromJSON(json.decode(source)),
+        expect(() => VariableLeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<Error>()));
       });
 
       test('fromJSON - minimal good', () {
         var source =
             '''{ "type": "Variable", "name": "Foo", "levelValues": [1,2,3] }''';
-        var m = VariableLeveledModifierTemplate.fromJSON(json.decode(source));
+        var m = VariableLeveledTemplate.fromJSON(json.decode(source));
         expect(m.name, 'Foo');
         expect(m.isAttackModifier, false);
         expect(m.maxLevel, 3);
@@ -389,7 +375,7 @@ void main() {
       test('fromJSON - isAttackModifier', () {
         var source =
             '''{ "type": "Variable", "name": "Foo", "levelValues": [1,2,3], "isAttackModifier": true }''';
-        var m = VariableLeveledModifierTemplate.fromJSON(json.decode(source));
+        var m = VariableLeveledTemplate.fromJSON(json.decode(source));
         expect(m.isAttackModifier, true);
       });
 
@@ -397,8 +383,8 @@ void main() {
         var source =
             '''{ "type": "Variable", "name": "Bar", "levelValues": [1,2,3], 
             "formatter": { "template": "%f %name" } }''';
-        VariableLeveledModifierTemplate m =
-            VariableLeveledModifierTemplate.fromJSON(json.decode(source));
+        BaseLeveledTemplate m =
+            VariableLeveledTemplate.fromJSON(json.decode(source));
         expect(m.levelName(1), '1 Bar');
       });
     }, skip: false);

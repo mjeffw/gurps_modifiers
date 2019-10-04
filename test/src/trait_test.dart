@@ -1,4 +1,4 @@
-import 'package:gurps_modifiers/src/modifier_template.dart';
+import 'package:gurps_modifiers/src/template_subtypes.dart';
 import 'package:test/test.dart';
 
 import 'trait.dart';
@@ -25,7 +25,8 @@ void main() {
       expect(trait.cost, 24);
       expect(trait.baseCost, 20);
       expect(trait.modifiers, hasLength(1));
-      expect(trait.modifiers[0], SimpleModifierTemplate(percentage: 20, name: 'Foo'));
+      expect(trait.modifiers[0],
+          SimpleModifierTemplate(percentage: 20, name: 'Foo'));
     });
 
     test('limitation', () {

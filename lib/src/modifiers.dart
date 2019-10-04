@@ -1,6 +1,8 @@
 import 'dart:convert';
-import 'package:gurps_modifiers/src/modifier_template.dart';
+
 import 'modifier_data.dart';
+import 'modifier_template.dart';
+import 'template_subtypes.dart';
 
 abstract class ModifierTemplates {
   ModifierTemplate fetch(String name);
@@ -27,8 +29,8 @@ class _Modifiers implements ModifierTemplates {
 
   static Map<String, Function> _constructors = {
     'Simple': (x) => SimpleModifierTemplate.fromJSON(x),
-    'Leveled': (x) => LeveledModifierTemplate.fromJSON(x),
-    'Variable': (x) => VariableLeveledModifierTemplate.fromJSON(x),
+    'Leveled': (x) => LeveledTemplate.fromJSON(x),
+    'Variable': (x) => VariableLeveledTemplate.fromJSON(x),
     'Cyclic': (x) => CyclicModifierTemplate.fromJSON(x)
   };
 

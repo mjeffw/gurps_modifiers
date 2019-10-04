@@ -1,5 +1,4 @@
 import 'package:dart_utils/dart_utils.dart';
-import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
 import 'level_text_formatter.dart';
@@ -31,13 +30,12 @@ abstract class ModifierTemplate {
   /// Modifiers adjust the base cost of a trait in proportion to their effects.
   /// This is expressed as a percentage.
   ///
-  final int percentage;
+  int get percentage;
 
   ///
   /// Constructor
   ///
-  const ModifierTemplate(
-      {this.name, this.isAttackModifier, this.detail, this.percentage})
+  const ModifierTemplate({this.name, this.isAttackModifier, this.detail})
       : assert(name != null),
         assert(isAttackModifier != null);
 
@@ -62,63 +60,9 @@ abstract class ModifierTemplate {
 }
 
 ///
-/// Simple modifiers have just a flat percentage.
-///
-class SimpleModifierTemplate extends ModifierTemplate {
-  ///
-  /// Create a Simple Modifier Template
-  ///
-  const SimpleModifierTemplate(
-      {int percentage = 0, String name, bool isAttackModifier = false})
-      : assert(percentage != null),
-        super(
-            name: name,
-            isAttackModifier: isAttackModifier,
-            percentage: percentage);
-
-  ///
-  /// Create a SimpleModifier from a JSON map.
-  ///
-  factory SimpleModifierTemplate.fromJSON(Map<String, dynamic> json) {
-    var type = json['type'];
-    assert(type == 'Simple');
-    return SimpleModifierTemplate(
-        percentage: (json['percentage'] ?? 0) as int,
-        name: json['name'],
-        isAttackModifier: (json['isAttackModifier'] ?? false) as bool);
-  }
-
-  ///
-  /// Return the JSON String representation.
-  ///
-  @override
-  String toJSON() {
-    List<String> strings = [
-      '"type": "Simple"',
-      '"name": "$name"',
-      '"percentage": $percentage',
-      '"isAttackModifier": $isAttackModifier',
-    ];
-    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  }
-
-  @override
-  int get hashCode => Hashes.finish(
-      Hashes.combine(super.hashCode, Hashes.combine(percentage.hashCode, 0)));
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    return other is SimpleModifierTemplate &&
-        super == other &&
-        this.percentage == other.percentage;
-  }
-}
-
-///
 /// Base class to represent all modifiers that have 'levels'.
 ///
-abstract class _BaseLeveledModifierTemplate extends ModifierTemplate {
+abstract class BaseLeveledTemplate extends ModifierTemplate {
   ///
   /// The maximum level value.
   ///
@@ -134,13 +78,19 @@ abstract class _BaseLeveledModifierTemplate extends ModifierTemplate {
   ///
   String levelName(int level) => formatter.format(name, level);
 
+  ///
+  /// Calculate the percentage for a given level of the modifier.
+  ///
   int levelPercentage(int level);
 
-  const _BaseLeveledModifierTemplate(
+  final String levelPrompt;
+
+  const BaseLeveledTemplate(
       {this.maxLevel,
       String name,
       LevelTextFormatter formatter,
-      bool isAttackModifier = false})
+      bool isAttackModifier = false,
+      this.levelPrompt})
       : assert(1 <= (maxLevel ?? 1000000)),
         this.formatter = formatter ?? LevelTextFormatter.instance,
         super(name: name, isAttackModifier: isAttackModifier);
@@ -151,100 +101,10 @@ abstract class _BaseLeveledModifierTemplate extends ModifierTemplate {
 
   @override
   bool operator ==(dynamic other) {
-    return other is _BaseLeveledModifierTemplate &&
+    return other is BaseLeveledTemplate &&
         super == other &&
         this.maxLevel == other.maxLevel &&
         this.formatter == other.formatter;
-  }
-}
-
-///
-/// A Modifier that has levels with a fixed percentage per level and
-/// potentially a maximum level.
-///
-/// The percentage is calculated as:
-///  base percentage + (value per level × level).
-///
-class LeveledModifierTemplate extends _BaseLeveledModifierTemplate {
-  ///
-  /// The base percentage of the Modifier.
-  ///
-  final int baseValue;
-
-  ///
-  /// The multiplicative percentage per level.
-  ///
-  final int valuePerLevel;
-
-  final String levelPrompt;
-
-  @override
-  int levelPercentage(int level) => level * valuePerLevel + baseValue;
-
-  const LeveledModifierTemplate(
-      {String name,
-      int baseValue = 0,
-      this.valuePerLevel,
-      int maxLevel,
-      String levelPrompt,
-      LevelTextFormatter formatter,
-      bool isAttackModifier = false})
-      : assert(valuePerLevel != null),
-        baseValue = baseValue ?? 0,
-        this.levelPrompt = levelPrompt ?? 'Level',
-        super(
-            maxLevel: maxLevel,
-            name: name,
-            isAttackModifier: isAttackModifier,
-            formatter: formatter);
-
-  ///
-  /// Create a LeveledModifierTemplate from a JSON map.
-  ///
-  factory LeveledModifierTemplate.fromJSON(Map<String, dynamic> json) {
-    var type = json['type'];
-    assert(type == 'Leveled');
-    return LeveledModifierTemplate(
-        name: json['name'],
-        isAttackModifier: (json['isAttackModifier'] ?? false) as bool,
-        valuePerLevel: json['valuePerLevel'] as int,
-        baseValue: (json['baseValue'] ?? 0) as int,
-        maxLevel: json['maxLevel'] as int,
-        levelPrompt: json['levelPrompt'],
-        formatter: json['formatter'] == null
-            ? null
-            : LevelTextFormatter.fromJSON(json['formatter']));
-  }
-
-  ///
-  /// Return the JSON String representation.
-  ///
-  @override
-  String toJSON() {
-    List<String> strings = [
-      '"type": "Leveled"',
-      '"name": "$name"',
-      if (isAttackModifier) '"isAttackModifier": ${isAttackModifier}',
-      '"baseValue": $baseValue',
-      '"valuePerLevel": $valuePerLevel',
-      if (maxLevel != null) '"maxLevel": $maxLevel',
-      if (formatter != null) '"formatter":${formatter.toJSON()}'
-    ];
-    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  }
-
-  @override
-  int get hashCode => Hashes.finish(Hashes.combine(super.hashCode,
-      Hashes.combine(hash3(valuePerLevel, baseValue, levelPrompt), 0)));
-
-  @override
-  bool operator ==(dynamic other) {
-    return (identical(this, other)) ||
-        (other is LeveledModifierTemplate &&
-            super == other &&
-            this.levelPrompt == other.levelPrompt &&
-            this.valuePerLevel == other.valuePerLevel &&
-            this.baseValue == other.baseValue);
   }
 }
 
@@ -260,73 +120,8 @@ class AccessibilityTemplate {
   AccessibilityTemplate.fromJSON(Map<String, dynamic> json) {}
 }
 
-///
-/// [VariableLeveledModifiers] have 'levels' but do not have a consistent
-/// percentage increment per level.
-///
-class VariableLeveledModifierTemplate extends _BaseLeveledModifierTemplate {
-  ///
-  /// The cost of each level.
-  ///
-  final List<int> _levelValues;
-
-  @override
-  int levelPercentage(int level) => _levelValues[level - 1];
-
-  const VariableLeveledModifierTemplate(
-      {List<int> levelValues,
-      String name,
-      bool isAttackModifier = false,
-      LevelTextFormatter formatter})
-      : _levelValues = levelValues,
-        super(
-            formatter: formatter,
-            maxLevel: levelValues.length,
-            name: name,
-            isAttackModifier: isAttackModifier);
-
-  factory VariableLeveledModifierTemplate.fromJSON(Map<String, dynamic> json) {
-    var type = json['type'];
-    assert(type == 'Variable');
-    return VariableLeveledModifierTemplate(
-        levelValues: List<int>.from(json['levelValues'] as List),
-        isAttackModifier: (json['isAttackModifier'] ?? false) as bool,
-        name: json['name'],
-        formatter: json['formatter'] == null
-            ? null
-            : LevelTextFormatter.fromJSON(json['formatter']));
-  }
-
-  @override
-  String toJSON() {
-    List<String> strings = [
-      '"type": "Variable"',
-      '"name": "$name"',
-      if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
-      '"levelValues": $_levelValues',
-      if (this.formatter != null) '"formatter":${formatter.toJSON()}'
-    ];
-    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  }
-
-  @override
-  int get hashCode => Hashes.finish(Hashes.combine(
-      super.hashCode, Hashes.combine(hashObjects(_levelValues), 0)));
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is VariableLeveledModifierTemplate &&
-            super == other &&
-            listsEqual(this._levelValues, other._levelValues));
-  }
-}
-
 enum CyclicInterval { PerSecond, Per10Seconds, PerMinute, PerHour, PerDay }
 enum ContagionType { None, Mildly, Highly }
-
-String unqualifiedStringValue(ContagionType contagion) =>
-    contagion.toString().split(r'.')[1];
 
 class CyclicData {
   final CyclicInterval interval;
@@ -354,6 +149,11 @@ class CyclicModifierTemplate extends ModifierTemplate {
     '1 hour',
     '1 day'
   ];
+
+  ///
+  /// Percentage doesn't apply.
+  ///
+  int get percentage => null;
 
   ///
   /// Return the name + level text

@@ -7,28 +7,28 @@ import 'package:test/test.dart';
 main() {
   group('Simple enhancers', () {
     test('Affects Insubstantial', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('Affects Insubstantial');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Affects Insubstantial, Selective', () {
-      SimpleModifierTemplate mod = ModifierTemplates.instance()
+      ModifierTemplate mod = ModifierTemplates.instance()
           .fetch('Affects Insubstantial, Selective');
       expect(mod.percentage, 30);
       expect(mod.isAttackModifier, false);
     });
 
     test('Affects Substantial', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('Affects Substantial');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
 
     test('Affects Substantial, Selective', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('Affects Substantial, Selective');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
@@ -37,7 +37,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('AP Ammo, Huge piercing', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('AP Ammo, Huge piercing');
       expect(mod.percentage, 35);
       expect(mod.isAttackModifier, true);
@@ -46,7 +46,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('AP Ammo, Large piercing', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('AP Ammo, Large piercing');
       expect(mod.percentage, 45);
       expect(mod.isAttackModifier, true);
@@ -55,7 +55,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('AP Ammo, Piercing', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('AP Ammo, Piercing');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
@@ -314,7 +314,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Piercing', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('HP Ammo, Piercing');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
@@ -323,7 +323,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Large piercing', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('HP Ammo, Large piercing');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
@@ -332,7 +332,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Small piercing', () {
-      SimpleModifierTemplate mod =
+      ModifierTemplate mod =
           ModifierTemplates.instance().fetch('HP Ammo, Small piercing');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
@@ -690,15 +690,15 @@ main() {
 
   group('Leveled enhancers', () {
     test('Accurate', () {
-      var mod = ModifierTemplates.instance().fetch('Accurate')
-          as LeveledModifierTemplate;
+      var mod =
+          ModifierTemplates.instance().fetch('Accurate') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 5);
     });
 
     test('Affects Others', () {
       var mod = ModifierTemplates.instance().fetch('Affects Others')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 50);
       expect(mod.levelPrompt, 'Number affected');
@@ -706,7 +706,7 @@ main() {
 
     test('Area Effect', () {
       var mod = ModifierTemplates.instance().fetch('Area Effect')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 50);
     });
@@ -715,7 +715,7 @@ main() {
     // Rapid Fire, or Emanation.
     test('Cone', () {
       var mod =
-          ModifierTemplates.instance().fetch('Cone') as LeveledModifierTemplate;
+          ModifierTemplates.instance().fetch('Cone') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 60);
       expect(mod.levelName(1), 'Cone 1');
@@ -723,91 +723,91 @@ main() {
 
     test('Decreased Immunity', () {
       var mod = ModifierTemplates.instance().fetch('Decreased Immunity')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 50);
     });
 
     test('Explosion', () {
       var mod = ModifierTemplates.instance().fetch('Explosion')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 50);
     });
 
     test('Extended Duration', () {
       var mod = ModifierTemplates.instance().fetch('Extended Duration')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 20);
     });
 
     test('Extra Passes', () {
       var mod = ModifierTemplates.instance().fetch('Extra Passes')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 10);
     });
 
     test('Fragmentation, Cutting', () {
       var mod = ModifierTemplates.instance().fetch('Fragmentation, Cutting')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 15);
     });
 
     test('Fragmentation, Hot', () {
       var mod = ModifierTemplates.instance().fetch('Fragmentation, Hot')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 15);
     });
 
     test('Fragmentation, Impaling', () {
       var mod = ModifierTemplates.instance().fetch('Fragmentation, Impaling')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 20);
     });
 
     test('Fragmentation, Large Piercing', () {
       var mod = ModifierTemplates.instance()
-          .fetch('Fragmentation, Large Piercing') as LeveledModifierTemplate;
+          .fetch('Fragmentation, Large Piercing') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 15);
     });
 
     test('Incendiary, Burning', () {
       var mod = ModifierTemplates.instance().fetch('Incendiary, Burning')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 10);
     });
 
     test('Increased Range', () {
       var mod = ModifierTemplates.instance().fetch('Increased Range')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 10);
     });
 
     test('Long-Range', () {
       var mod = ModifierTemplates.instance().fetch('Long-Range')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 50);
     });
 
     test('Low Psychic Signature', () {
       var mod = ModifierTemplates.instance().fetch('Low Psychic Signature')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 5);
     });
 
     test('Low Signature, Variable', () {
       var mod = ModifierTemplates.instance().fetch('Low Signature, Variable')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 5);
     });
@@ -816,15 +816,15 @@ main() {
     // Effect and Persistent.
     //TODO: Mobile is mutually exclusive with Drifting.
     test('Mobile', () {
-      var mod = ModifierTemplates.instance().fetch('Mobile')
-          as LeveledModifierTemplate;
+      var mod =
+          ModifierTemplates.instance().fetch('Mobile') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 40);
     });
 
     test('Reduced Fatigue Cost', () {
       var mod = ModifierTemplates.instance().fetch('Reduced Fatigue Cost')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 20);
     });
@@ -833,14 +833,14 @@ main() {
     // any kind of special modifier that affects activation time, or to Magery.
     test('Reduced Time', () {
       var mod = ModifierTemplates.instance().fetch('Reduced Time')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 20);
     });
 
     test('Reliable', () {
-      var mod = ModifierTemplates.instance().fetch('Reliable')
-          as LeveledModifierTemplate;
+      var mod =
+          ModifierTemplates.instance().fetch('Reliable') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 5);
     });
@@ -849,7 +849,7 @@ main() {
   group('Variable enhancers', () {
     test('Armor Divisor', () {
       var mod = ModifierTemplates.instance().fetch('Armor Divisor')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), -70);
       expect(mod.levelName(1), 'Armor Divisor (0.1)');
@@ -869,7 +869,7 @@ main() {
 
     test('Can Carry Objects', () {
       var mod = ModifierTemplates.instance().fetch('Can Carry Objects')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 10);
       expect(mod.levelPercentage(2), 20);
@@ -1028,7 +1028,7 @@ main() {
 
     test('Increased Range, LOS', () {
       var mod = ModifierTemplates.instance().fetch('Increased Range, LOS')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), 90);
       expect(mod.levelPercentage(2), 80);
@@ -1044,7 +1044,7 @@ main() {
 
     test('Rapid Fire', () {
       var mod = ModifierTemplates.instance().fetch('Rapid Fire')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 40);
       expect(mod.levelPercentage(2), 50);
@@ -1058,7 +1058,7 @@ main() {
 
     test('Rapid Fire, Selective', () {
       var mod = ModifierTemplates.instance().fetch('Rapid Fire, Selective')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 80);
       expect(mod.levelPercentage(2), 110);

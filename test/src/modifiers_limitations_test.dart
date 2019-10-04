@@ -607,7 +607,7 @@ main() {
   group('Leveled limitations', () {
     test('Cardiac Stress', () {
       var mod = ModifierTemplates.instance().fetch('Cardiac Stress')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.levelPercentage(1), -50);
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(5), -10);
@@ -615,7 +615,7 @@ main() {
 
     test('Cerebral Stress', () {
       var mod = ModifierTemplates.instance().fetch('Cerebral Stress')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.levelPercentage(1), -50);
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(5), -10);
@@ -623,7 +623,7 @@ main() {
 
     test('Costs Fatigue', () {
       var mod = ModifierTemplates.instance().fetch('Costs Fatigue')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
@@ -631,7 +631,7 @@ main() {
 
     test('Costs Fatigue, Per second', () {
       var mod = ModifierTemplates.instance().fetch('Costs Fatigue, Per second')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(4), -40);
@@ -639,7 +639,7 @@ main() {
 
     test('Costs Hit Points', () {
       var mod = ModifierTemplates.instance().fetch('Costs Hit Points')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(4), -40);
@@ -647,7 +647,7 @@ main() {
 
     test('Costs Hit Points, Per second', () {
       var mod = ModifierTemplates.instance()
-          .fetch('Costs Hit Points, Per second') as LeveledModifierTemplate;
+          .fetch('Costs Hit Points, Per second') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -20);
       expect(mod.levelPercentage(4), -80);
@@ -655,8 +655,7 @@ main() {
 
     test('Costs Hit Points, Instead of Fatigue', () {
       var mod = ModifierTemplates.instance()
-              .fetch('Costs Hit Points, Instead of Fatigue')
-          as LeveledModifierTemplate;
+          .fetch('Costs Hit Points, Instead of Fatigue') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
@@ -665,7 +664,7 @@ main() {
     test('Costs Hit Points, Per second instead of Fatigue', () {
       var mod = ModifierTemplates.instance()
               .fetch('Costs Hit Points, Per second instead of Fatigue')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(4), -40);
@@ -673,7 +672,7 @@ main() {
 
     test('Easily Resisted', () {
       var mod = ModifierTemplates.instance().fetch('Easily Resisted')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(6), -30);
@@ -681,15 +680,15 @@ main() {
 
     test('Extra Recoil', () {
       var mod = ModifierTemplates.instance().fetch('Extra Recoil')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(4), -40);
     });
 
     test('Glamour', () {
-      var mod = ModifierTemplates.instance().fetch('Glamour')
-          as LeveledModifierTemplate;
+      var mod =
+          ModifierTemplates.instance().fetch('Glamour') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(10), -50);
@@ -697,16 +696,15 @@ main() {
 
     test('Hard to Use', () {
       var mod = ModifierTemplates.instance().fetch('Hard to Use')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
     });
 
     test('Immediate Preparation Required', () {
-      var mod =
-          ModifierTemplates.instance().fetch('Immediate Preparation Required')
-              as VariableLeveledModifierTemplate;
+      var mod = ModifierTemplates.instance()
+          .fetch('Immediate Preparation Required') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -30);
       expect(mod.levelPercentage(2), -45);
@@ -716,7 +714,7 @@ main() {
 
     test('Increased Immunity', () {
       var mod = ModifierTemplates.instance().fetch('Increased Immunity')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(4), -40);
@@ -724,7 +722,7 @@ main() {
 
     test('Inaccurate', () {
       var mod = ModifierTemplates.instance().fetch('Inaccurate')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
@@ -732,7 +730,7 @@ main() {
 
     test('Limited Use', () {
       var mod = ModifierTemplates.instance().fetch('Limited Use')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(4), -40);
@@ -740,7 +738,7 @@ main() {
 
     test('Limited Use, Fast Reload', () {
       var mod = ModifierTemplates.instance().fetch('Limited Use, Fast Reload')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
@@ -748,7 +746,7 @@ main() {
 
     test('Limited Use, Slow Reload', () {
       var mod = ModifierTemplates.instance().fetch('Limited Use, Slow Reload')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -35);
@@ -756,7 +754,7 @@ main() {
 
     test('Maximum Duration', () {
       var mod = ModifierTemplates.instance().fetch('Maximum Duration')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(2), -10);
@@ -771,7 +769,7 @@ main() {
     // Duration can’t go beyond -15%.
     test('Minimum Duration', () {
       var mod = ModifierTemplates.instance().fetch('Minimum Duration')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(2), -10);
@@ -789,16 +787,15 @@ main() {
     //   -5%.
     test('Nuisance Effect, Reaction penalty', () {
       var mod = ModifierTemplates.instance()
-              .fetch('Nuisance Effect, Reaction penalty')
-          as LeveledModifierTemplate;
+          .fetch('Nuisance Effect, Reaction penalty') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
     });
 
     test('Onset', () {
-      var mod = ModifierTemplates.instance().fetch('Onset')
-          as LeveledModifierTemplate;
+      var mod =
+          ModifierTemplates.instance().fetch('Onset') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(4), -40);
@@ -806,7 +803,7 @@ main() {
 
     test('Exposure Time', () {
       var mod = ModifierTemplates.instance().fetch('Exposure Time')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), -30);
       expect(mod.levelPercentage(4), -60);
@@ -814,7 +811,7 @@ main() {
 
     test('Periodic Recharge', () {
       var mod = ModifierTemplates.instance().fetch('Periodic Recharge')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(2), -10);
@@ -825,7 +822,7 @@ main() {
 
     test('Preparation Required', () {
       var mod = ModifierTemplates.instance().fetch('Preparation Required')
-          as VariableLeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -20);
       expect(mod.levelPercentage(2), -30);
@@ -834,9 +831,8 @@ main() {
     });
 
     test('Weakened Without Preparation', () {
-      var mod =
-          ModifierTemplates.instance().fetch('Weakened Without Preparation')
-              as VariableLeveledModifierTemplate;
+      var mod = ModifierTemplates.instance()
+          .fetch('Weakened Without Preparation') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(2), -15);
@@ -846,7 +842,7 @@ main() {
 
     test('Reduced Duration', () {
       var mod = ModifierTemplates.instance().fetch('Reduced Duration')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
@@ -855,7 +851,7 @@ main() {
 
     test('Requires Low Gravity', () {
       var mod = ModifierTemplates.instance().fetch('Requires Low Gravity')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
@@ -867,7 +863,7 @@ main() {
     // Contact Agent, Follow-Up, Respiratory Agent, or Sense-Based.
     test('Resistible', () {
       var mod = ModifierTemplates.instance().fetch('Resistible')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), -5);
       expect(mod.levelPercentage(4), -20);
@@ -876,7 +872,7 @@ main() {
 
     test('Short-Range', () {
       var mod = ModifierTemplates.instance().fetch('Short-Range')
-          as LeveledModifierTemplate;
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.levelPercentage(1), -10);
       expect(mod.levelPercentage(3), -30);
