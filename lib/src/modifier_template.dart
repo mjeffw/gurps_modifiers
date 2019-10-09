@@ -2,6 +2,7 @@ import 'package:dart_utils/dart_utils.dart';
 import 'package:quiver/core.dart';
 
 import 'level_text_formatter.dart';
+import 'modifier.dart';
 
 ///
 /// A modifier is a feature that you can add to a trait – usually an advantage
@@ -43,6 +44,8 @@ abstract class ModifierTemplate {
   /// Export as JSON.
   ///
   String toJSON();
+
+  Modifier createModifier();
 
   @override
   String toString() => toJSON();
@@ -134,6 +137,18 @@ class CyclicData {
       this.contagion = ContagionType.None,
       this.cycles = 2,
       this.resistible = false});
+
+  CyclicData copyWith(
+      {CyclicInterval interval,
+      int cycles,
+      bool resistible,
+      ContagionType contagion}) {
+    return CyclicData(
+        contagion: contagion ?? this.contagion,
+        cycles: cycles ?? this.cycles,
+        interval: interval ?? this.interval,
+        resistible: resistible ?? this.resistible);
+  }
 }
 
 ///
@@ -190,5 +205,10 @@ class CyclicModifierTemplate extends ModifierTemplate {
       "name": "Cyclic",
       "type": "Cyclic"
     }''';
+  }
+
+  @override
+  Modifier createModifier() {
+    return CyclicModifier(template: this, data: CyclicData());
   }
 }

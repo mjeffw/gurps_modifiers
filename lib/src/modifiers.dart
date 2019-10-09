@@ -1,15 +1,27 @@
 import 'dart:convert';
 
+import 'modifier.dart';
 import 'modifier_data.dart';
 import 'modifier_template.dart';
 import 'template_subtypes.dart';
 
 abstract class ModifierTemplates {
-  ModifierTemplate fetch(String name);
+  ModifierTemplate templateByName(String name);
   Iterable<String> fetchKeys();
   String printSourceData();
 
   factory ModifierTemplates.instance() {
+    if (_Modifiers._instance == null) {
+      _Modifiers._instance = _Modifiers();
+    }
+    return _Modifiers._instance;
+  }
+}
+
+abstract class Modifiers {
+  Modifier byName(String name);
+
+  factory Modifiers.instance() {
     if (_Modifiers._instance == null) {
       _Modifiers._instance = _Modifiers();
     }
@@ -24,7 +36,7 @@ class _ModifierFactory {
   _ModifierFactory({this.data, this.builder});
 }
 
-class _Modifiers implements ModifierTemplates {
+class _Modifiers implements ModifierTemplates, Modifiers {
   static _Modifiers _instance;
 
   static Map<String, Function> _constructors = {
@@ -36,10 +48,15 @@ class _Modifiers implements ModifierTemplates {
 
   static Map<String, _ModifierFactory> _map = {};
 
-  ModifierTemplate fetch(String name) {
-    print("fetch");
+  ModifierTemplate templateByName(String name) {
     var myFactory = _map[name];
     return myFactory.builder.call(myFactory.data);
+  }
+
+  @override
+  Modifier byName(String name) {
+    ModifierTemplate t = templateByName(name);
+    return t.createModifier();
   }
 
   Iterable<String> fetchKeys() => _Modifiers._map.keys;
@@ -61,7 +78,7 @@ class _Modifiers implements ModifierTemplates {
   String printSourceData() {
     var keys = _map.keys.toList();
     keys.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    var data = keys.map((f) => fetch(f).toJSON()).toList();
+    var data = keys.map((f) => templateByName(f).toJSON()).toList();
     var line = data.reduce((x, y) => '$x,\n$y');
 
     return '{ "modifiers": [\n'

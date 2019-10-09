@@ -4,8 +4,8 @@ import 'package:test/test.dart';
 main() {
   group('modifiers', () {
     test('fetch returns a new object', () {
-      var m1 = ModifierTemplates.instance().fetch('Accurate');
-      var m2 = ModifierTemplates.instance().fetch('Accurate');
+      var m1 = ModifierTemplates.instance().templateByName('Accurate');
+      var m2 = ModifierTemplates.instance().templateByName('Accurate');
       expect(m1, isNot(same(m2)));
     }, skip: false);
 

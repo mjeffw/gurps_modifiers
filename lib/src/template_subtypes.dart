@@ -1,4 +1,5 @@
 import 'package:dart_utils/dart_utils.dart';
+import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
@@ -60,6 +61,9 @@ class SimpleModifierTemplate extends ModifierTemplate {
         super == other &&
         this.percentage == other.percentage;
   }
+
+  @override
+  Modifier createModifier() => Modifier(template: this);
 }
 
 ///
@@ -154,6 +158,12 @@ class LeveledTemplate extends BaseLeveledTemplate {
             this.valuePerLevel == other.valuePerLevel &&
             this.baseValue == other.baseValue);
   }
+
+  @override
+  Modifier createModifier() {
+    // TODO: implement createModifier
+    return null;
+  }
 }
 
 ///
@@ -221,5 +231,11 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
         (other is VariableLeveledTemplate &&
             super == other &&
             listsEqual(this._levelValues, other._levelValues));
+  }
+
+  @override
+  Modifier createModifier() {
+    // TODO: implement createModifier
+    return null;
   }
 }

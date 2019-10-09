@@ -6,7 +6,7 @@ import 'package:gurps_modifiers/src/template_subtypes.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('modifier', () {
+  group('templates', () {
     group('simple', () {
       test('Constructor and percentage (default)', () {
         var mod = SimpleModifierTemplate(name: 'bar');
@@ -388,6 +388,15 @@ void main() {
         expect(m.levelName(1), '1 Bar');
       });
     }, skip: false);
+
+    group('cyclic', () {
+      test('fromJSON - empty', () {
+        var source = '''{}''';
+        var m = CyclicModifierTemplate.fromJSON(json.decode(source));
+        expect(m.name, 'Cyclic');
+        expect(m.isAttackModifier, true);
+      });
+    });
 
     group('accessibility modifier', () {});
   }, skip: false);
