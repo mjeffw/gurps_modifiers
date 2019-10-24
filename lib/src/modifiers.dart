@@ -43,7 +43,8 @@ class _Modifiers implements ModifierTemplates, Modifiers {
     'Simple': (x) => SimpleModifierTemplate.fromJSON(x),
     'Leveled': (x) => LeveledTemplate.fromJSON(x),
     'Variable': (x) => VariableLeveledTemplate.fromJSON(x),
-    'Cyclic': (x) => CyclicModifierTemplate.fromJSON(x)
+    'Cyclic': (x) => CyclicModifierTemplate.fromJSON(x),
+    'NamedVariant': (x) => NamedVariantTemplate.fromJSON(x),
   };
 
   static Map<String, _ModifierFactory> _map = {};

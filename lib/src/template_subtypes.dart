@@ -66,6 +66,49 @@ class SimpleModifierTemplate extends ModifierTemplate {
   Modifier createModifier() => Modifier(template: this);
 }
 
+class NamedVariantTemplate extends ModifierTemplate {
+  final Map<String, int> variations;
+
+  final int percentage;
+
+  List<String> get variationNames => variations.keys.toList();
+
+  int percentageVariation(String name) => variations[name] ?? percentage;
+
+  bool containsVariation(String detail) =>
+      detail == null || variations.containsKey(detail);
+
+  NamedVariantTemplate(
+      {String name,
+      bool isAttackModifier = false,
+      this.percentage,
+      this.variations})
+      : super(name: name, isAttackModifier: isAttackModifier);
+
+  @override
+  Modifier createModifier() => NamedVariantModifier(template: this);
+
+  @override
+  String toJSON() {
+    // TODO: implement toJSON
+    return null;
+  }
+
+  factory NamedVariantTemplate.fromJSON(Map<String, dynamic> json) {
+    List<dynamic> x = json['variations'];
+    Map<String, int> variations = {};
+    x.forEach((f) {
+      String name = f['key'];
+      int value = f['value'] as int;
+      variations[name] = value;
+    });
+    return NamedVariantTemplate(
+        name: json['name'],
+        percentage: json['percentage'],
+        variations: variations);
+  }
+}
+
 ///
 /// A Modifier that has levels with a fixed percentage per level and
 /// potentially a maximum level.

@@ -1,4 +1,5 @@
 import 'package:gurps_modifiers/gurps_modifiers.dart';
+import 'package:gurps_modifiers/src/template_subtypes.dart';
 
 import 'modifier_template.dart';
 
@@ -11,7 +12,9 @@ class Modifier {
 
   final ModifierTemplate template;
 
-  Modifier({this.template});
+  final String detail;
+
+  Modifier({this.template, this.detail});
 }
 
 class CyclicModifier extends Modifier {
@@ -41,5 +44,22 @@ class CyclicModifier extends Modifier {
             interval: interval,
             resistible: resistible,
             contagion: contagion));
+  }
+}
+
+class NamedVariantModifier extends Modifier {
+  NamedVariantTemplate get _template => template as NamedVariantTemplate;
+
+  int get percentage => _template.percentageVariation(detail);
+
+  String get description =>
+      '${super.description}${detail == null ? "" : ", " + detail}';
+
+  NamedVariantModifier({NamedVariantTemplate template, String detail})
+      : assert(template.containsVariation(detail)),
+        super(template: template, detail: detail);
+
+  NamedVariantModifier copyWith({String detail}) {
+    return NamedVariantModifier(template: this._template, detail: detail);
   }
 }

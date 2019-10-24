@@ -4,35 +4,48 @@ import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
 
 main() {
-  group('Simple enhancers', () {
+  group('named variants', () {
     test('Affects Insubstantial', () {
       var mod = Modifiers.instance().byName('Affects Insubstantial');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Affects Insubstantial');
     });
 
     test('Affects Insubstantial, Selective', () {
-      // var mod = Modifiers.instance().byName('Affects Insubstantial');
-      // mod = mod.copyWith(detail: 'Selective');
+      var mod = Modifiers.instance().byName('Affects Insubstantial')
+          as NamedVariantModifier;
+      mod = mod.copyWith(detail: 'Selective');
 
-      // expect(mod.percentage, 30);
-      // expect(mod.isAttackModifier, false);
+      expect(mod.percentage, 30);
+      expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Affects Insubstantial, Selective');
+    });
+
+    test('Affects Insubstantial, Bad Variation', () {
+      var mod = Modifiers.instance().byName('Affects Insubstantial')
+          as NamedVariantModifier;
+      expect(() => mod.copyWith(detail: 'Bad Variation'),
+          throwsA(isA<AssertionError>()));
     });
 
     test('Affects Substantial', () {
-      ModifierTemplate mod =
-          ModifierTemplates.instance().templateByName('Affects Substantial');
+      var mod = Modifiers.instance().byName('Affects Substantial')
+          as NamedVariantModifier;
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
 
     test('Affects Substantial, Selective', () {
-      ModifierTemplate mod = ModifierTemplates.instance()
-          .templateByName('Affects Substantial, Selective');
+      var mod = Modifiers.instance().byName('Affects Substantial')
+          as NamedVariantModifier;
+      mod = mod.copyWith(detail: 'Selective');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
+  });
 
+  group('Simple enhancers', () {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('AP Ammo, Huge piercing', () {

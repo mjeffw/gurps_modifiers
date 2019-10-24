@@ -23,11 +23,6 @@ abstract class ModifierTemplate {
   final bool isAttackModifier;
 
   ///
-  /// Any detailed description associated with this modifier.
-  ///
-  final String detail;
-
-  ///
   /// Modifiers adjust the base cost of a trait in proportion to their effects.
   /// This is expressed as a percentage.
   ///
@@ -36,7 +31,7 @@ abstract class ModifierTemplate {
   ///
   /// Constructor
   ///
-  const ModifierTemplate({this.name, this.isAttackModifier, this.detail})
+  const ModifierTemplate({this.name, this.isAttackModifier})
       : assert(name != null),
         assert(isAttackModifier != null);
 

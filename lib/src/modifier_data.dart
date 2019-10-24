@@ -145,13 +145,14 @@ String modifierDataString = '''
       },
       {
         "name": "Affects Insubstantial",
-        "type": "Simple",
+        "type": "NamedVariant",
+        "variations": [
+          {
+            "key": "Selective",
+            "value": 30
+          }
+        ],
         "percentage": 20
-      },
-      {
-        "name": "Affects Insubstantial, Selective",
-        "type": "Simple",
-        "percentage": 30
       },
       {
         "name": "Affects Others",
@@ -161,13 +162,14 @@ String modifierDataString = '''
       },
       {
         "name": "Affects Substantial",
-        "type": "Simple",
-        "percentage": 40
-      },
-      {
-        "name": "Affects Substantial, Selective",
-        "type": "Simple",
-        "percentage": 50
+        "type": "NamedVariant",
+        "percentage": 40,
+        "variations": [
+          {
+            "key": "Selective",
+            "value": 50
+          }
+        ]
       },
       {
         "name": "All-Out",
