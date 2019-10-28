@@ -3,15 +3,7 @@ import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
 
-class Data with ModifierData {
-  @override
-  final String detail;
-
-  @override
-  final int level;
-
-  Data({this.detail, this.level});
-}
+import 'data.dart';
 
 main() {
   group('named variants', () {

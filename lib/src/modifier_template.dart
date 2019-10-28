@@ -1,13 +1,9 @@
 import 'package:dart_utils/dart_utils.dart';
 import 'package:quiver/core.dart';
 
-import 'level_text_formatter.dart';
+import '../modifier_data.dart';
+import 'description_formatter.dart';
 import 'modifier.dart';
-
-mixin ModifierData {
-  String get detail;
-  int get level;
-}
 
 ///
 /// A modifier is a feature that you can add to a trait – usually an advantage

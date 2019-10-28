@@ -3,8 +3,9 @@ import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
+import '../modifier_data.dart';
+import 'description_formatter.dart';
 import 'modifier_template.dart';
-import 'level_text_formatter.dart';
 
 ///
 /// Simple modifiers have just a flat percentage.

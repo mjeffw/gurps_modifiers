@@ -1,44 +1,66 @@
 import 'dart:math';
 
-import 'package:gurps_modifiers/src/modifier_template.dart';
+import '../modifier_data.dart';
 
+///
+/// [DescriptionFormatter] is responsible for creating the printable description of a Modifier.
+///
+/// By default (i.e., given no data) the description is only the name of the
+/// Modifier, as passed into the describe method.
+///
 class DescriptionFormatter {
+  ///
+  /// The default [DescriptionFormatter].
+  ///
   static const DescriptionFormatter defaultFormatter =
       const DescriptionFormatter();
 
+  ///
+  /// The template to use when formatting a description.
+  ///
+  /// Templates may contain the following symbols: %name, %detail. Symbols are
+  /// replaced at runtime with values from the name parameter of the describe
+  /// method and the [ModifierData] object.
   final String template;
 
+  ///
+  /// Create a [DescriptionFormatter] with the given template.
+  ///
   const DescriptionFormatter({this.template = '%name'})
       : assert(template != null);
 
-  String describe({String name, ModifierData data}) => template
-      .replaceFirst('%name', name)
-      .replaceFirst('%detail', data.detail ?? '');
-
-  static DescriptionFormatter fromJSON(Map<String, dynamic> json) {
+  ///
+  /// Create a [DescriptionFormatter] from JSON.
+  ///
+  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) {
     return DescriptionFormatter(template: json['template'] ?? '%name');
   }
+
+  ///
+  /// Given a Modifier template name and instance data, return the description.
+  ///
+  String describe({String name, ModifierData data}) => template
+      .replaceFirst('%name', _name(name))
+      .replaceFirst('%detail', _detail(data));
+
+  String _name(String name) => name;
+  String _detail(ModifierData data) => data.detail ?? '';
 }
 
 ///
-/// Data driven object that creates printable description of a Leveled Modifier
-/// of a set level.
+/// A [DescriptionFormatter] that properly describes a Leveled Modifier of a
+/// set level.
 ///
-/// The formatter that takes a string template with replaceable tokens $name
-/// and $f. The values for these tokens are replaced with the values returned
-/// from the similarly named methods.
+/// This formatter adds the %f symbol to the list of possible replacement
+/// symbols. The %f value is typically the level of the modifier.
 ///
 class LevelTextFormatter extends DescriptionFormatter {
   ///
-  /// Template used by the formatter.
+  /// Create a constant [LevelTextFormatter]. By default, the description is <name> <level>.
   ///
-  final String template;
-
-  ///
-  /// Create a constant LevelTextFormatter.
-  ///
-  const LevelTextFormatter({this.template = '%name %f'})
-      : assert(template != null);
+  const LevelTextFormatter({String template = '%name %f'})
+      : assert(template != null),
+        super(template: template);
 
   ///
   /// Build a LevetTextFormatter from a JSON structure
@@ -53,8 +75,8 @@ class LevelTextFormatter extends DescriptionFormatter {
     return LevelTextFormatter(template: json['template']);
   }
 
-  String describe({String name, ModifierData data}) => template
-      .replaceFirst('%name', this._name(name))
+  String describe({String name, ModifierData data}) => super
+      .describe(name: name, data: data)
       .replaceFirst('%f', _f_value(data.level));
 
   ///
@@ -62,23 +84,6 @@ class LevelTextFormatter extends DescriptionFormatter {
   ///
   String _f_value(int level) {
     return level.toString();
-  }
-
-  ///
-  /// Given a modifier name and current level, return the canonical string used
-  /// to document the modifier.
-  ///
-  String _format(String name, int level) {
-    return template
-        .replaceFirst('%name', this._name(name))
-        .replaceFirst('%f', _f_value(level));
-  }
-
-  ///
-  /// Given a modifier name, return the value to replace the %name token.
-  ///
-  String _name(String name) {
-    return name;
   }
 
   ///
@@ -139,6 +144,9 @@ class _ArrayFormatter extends LevelTextFormatter {
     );
   }
 
+  ///
+  /// Use (level - 1) as the index into array; return the value at that index.
+  /// 
   @override
   String _f_value(int level) {
     return array[level - 1];
@@ -188,6 +196,9 @@ class _ExponentialFormatter extends LevelTextFormatter {
         a: json['a'], b: json['b'], template: json['template']);
   }
 
+  ///
+  /// Return the level value by calculating the exponential value.
+  /// 
   @override
   String _f_value(int level) {
     return (a * pow(b, level)).toString();

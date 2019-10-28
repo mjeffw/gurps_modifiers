@@ -1,19 +1,11 @@
 import 'dart:convert';
 
-import 'package:gurps_modifiers/src/level_text_formatter.dart';
+import 'package:gurps_modifiers/src/description_formatter.dart';
 import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:gurps_modifiers/src/template_subtypes.dart';
 import 'package:test/test.dart';
 
-class Data with ModifierData {
-  @override
-  final String detail;
-
-  @override
-  final int level;
-
-  Data({this.detail, this.level});
-}
+import 'data.dart';
 
 void main() {
   group('templates', () {

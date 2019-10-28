@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'modifier.dart';
-import 'modifier_data.dart';
+import 'modifier_json.dart';
 import 'modifier_template.dart';
 import 'template_subtypes.dart';
 
