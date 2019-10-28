@@ -20,6 +20,10 @@ class Modifier with ModifierData {
   final String detail;
 
   Modifier({this.template, this.detail});
+
+  factory Modifier.copyWith(Modifier source, {String detail}) {
+    return Modifier(template: source.template, detail: detail ?? source.detail);
+  }
 }
 
 class CyclicModifier extends Modifier {
@@ -37,14 +41,14 @@ class CyclicModifier extends Modifier {
       : assert(template is CyclicModifierTemplate),
         super(template: template);
 
-  CyclicModifier copyWith(
+  factory CyclicModifier.copyWith(CyclicModifier source,
       {CyclicInterval interval,
       int cycles,
       bool resistible,
       ContagionType contagion}) {
     return CyclicModifier(
-        template: this._template,
-        data: this.data.copyWith(
+        template: source._template,
+        data: source.data.copyWith(
             cycles: cycles,
             interval: interval,
             resistible: resistible,
@@ -64,7 +68,9 @@ class NamedVariantModifier extends Modifier {
       : assert(template.containsVariation(detail)),
         super(template: template, detail: detail);
 
-  NamedVariantModifier copyWith({String detail}) {
-    return NamedVariantModifier(template: this._template, detail: detail);
+  factory NamedVariantModifier.copyWith(NamedVariantModifier source,
+      {String detail}) {
+    return NamedVariantModifier(
+        template: source._template, detail: detail ?? source.detail);
   }
 }

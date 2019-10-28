@@ -46,8 +46,14 @@ abstract class ModifierTemplate {
   ///
   String toJSON();
 
+  ///
+  /// Create and return a [Modifier] based on this template.
+  ///
   Modifier createModifier();
 
+  ///
+  /// Return a description of a [Modifier] with the given [ModifierData].
+  ///
   String describe(ModifierData data) =>
       formatter.describe(name: name, data: data);
 
@@ -85,8 +91,14 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
   ///
   int levelPercentage(int level);
 
+  ///
+  /// String used to prompt for level values.
+  ///
   final String levelPrompt;
 
+  ///
+  /// Create a [BaseLeveledTemplate] with the required fields.
+  ///
   const BaseLeveledTemplate(
       {this.maxLevel,
       String name,
@@ -110,17 +122,17 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
   }
 }
 
-class DetailValue {
-  final String name;
-  final int percentage;
-  DetailValue({this.name, this.percentage});
-}
+// class DetailValue {
+//   final String name;
+//   final int percentage;
+//   DetailValue({this.name, this.percentage});
+// }
 
-class AccessibilityTemplate {
-  Map<String, int> detailValue = {};
+// class AccessibilityTemplate {
+//   Map<String, int> detailValue = {};
 
-  AccessibilityTemplate.fromJSON(Map<String, dynamic> json) {}
-}
+//   AccessibilityTemplate.fromJSON(Map<String, dynamic> json) {}
+// }
 
 enum CyclicInterval { PerSecond, Per10Seconds, PerMinute, PerHour, PerDay }
 enum ContagionType { None, Mildly, Highly }

@@ -18,7 +18,7 @@ main() {
       test('Insubstantial, Selective', () {
         var mod = Modifiers.instance().byName('Affects Insubstantial')
             as NamedVariantModifier;
-        mod = mod.copyWith(detail: 'Selective');
+        mod = NamedVariantModifier.copyWith(mod, detail: 'Selective');
 
         expect(mod.percentage, 30);
         expect(mod.isAttackModifier, false);
@@ -28,7 +28,8 @@ main() {
       test('Insubstantial, Bad Variation', () {
         var mod = Modifiers.instance().byName('Affects Insubstantial')
             as NamedVariantModifier;
-        expect(() => mod.copyWith(detail: 'Bad Variation'),
+        expect(
+            () => NamedVariantModifier.copyWith(mod, detail: 'Bad Variation'),
             throwsA(isA<AssertionError>()));
       });
 
@@ -43,7 +44,7 @@ main() {
       test('Substantial, Selective', () {
         var mod = Modifiers.instance().byName('Affects Substantial')
             as NamedVariantModifier;
-        mod = mod.copyWith(detail: 'Selective');
+        mod = NamedVariantModifier.copyWith(mod, detail: 'Selective');
         expect(mod.percentage, 50);
         expect(mod.isAttackModifier, false);
         expect(mod.description, 'Affects Substantial, Selective');
@@ -59,16 +60,16 @@ main() {
       });
       test('Huge Piercing', () {
         var mod =
-            (Modifiers.instance().byName('AP Ammo') as NamedVariantModifier)
-                .copyWith(detail: 'Huge Piercing');
+            Modifiers.instance().byName('AP Ammo') as NamedVariantModifier;
+        mod = NamedVariantModifier.copyWith(mod, detail: 'Huge Piercing');
         expect(mod.percentage, 45);
         expect(mod.isAttackModifier, true);
         expect(mod.description, 'AP Ammo, Huge Piercing');
       });
       test('Large Piercing', () {
         var mod =
-            (Modifiers.instance().byName('AP Ammo') as NamedVariantModifier)
-                .copyWith(detail: 'Large Piercing');
+            Modifiers.instance().byName('AP Ammo') as NamedVariantModifier;
+        mod = NamedVariantModifier.copyWith(mod, detail: 'Large Piercing');
         expect(mod.percentage, 35);
         expect(mod.isAttackModifier, true);
         expect(mod.description, 'AP Ammo, Large Piercing');
@@ -91,6 +92,10 @@ main() {
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
       expect(mod.description, 'Based On (Attribute)');
+
+      var m2 = Modifier.copyWith(mod, detail: 'ST');
+      expect(m2.percentage, 20);
+      expect(m2.description, 'Based On ST');
     });
 
     test('Based on (Attribute), Own Roll', () {
@@ -935,19 +940,20 @@ main() {
       test('per interval to max', () {
         var mod = Modifiers.instance().byName('Cyclic') as CyclicModifier;
 
-        mod = mod.copyWith(interval: CyclicInterval.PerHour);
+        mod = CyclicModifier.copyWith(mod, interval: CyclicInterval.PerHour);
         expect(mod.percentage, 20);
         expect(mod.description, 'Cyclic, 1 hour, 2 cycles');
 
-        mod = mod.copyWith(interval: CyclicInterval.PerMinute);
+        mod = CyclicModifier.copyWith(mod, interval: CyclicInterval.PerMinute);
         expect(mod.percentage, 40);
         expect(mod.description, 'Cyclic, 1 minute, 2 cycles');
 
-        mod = mod.copyWith(interval: CyclicInterval.Per10Seconds);
+        mod =
+            CyclicModifier.copyWith(mod, interval: CyclicInterval.Per10Seconds);
         expect(mod.percentage, 50);
         expect(mod.description, 'Cyclic, 10 seconds, 2 cycles');
 
-        mod = mod.copyWith(interval: CyclicInterval.PerSecond);
+        mod = CyclicModifier.copyWith(mod, interval: CyclicInterval.PerSecond);
         expect(mod.percentage, 100);
         expect(mod.description, 'Cyclic, 1 second, 2 cycles');
       });
@@ -955,11 +961,11 @@ main() {
       test('number of cycles multiplies percentage by (n - 1)', () {
         var mod = Modifiers.instance().byName('Cyclic') as CyclicModifier;
 
-        mod = mod.copyWith(cycles: 3);
+        mod = CyclicModifier.copyWith(mod, cycles: 3);
         expect(mod.percentage, 20);
         expect(mod.description, 'Cyclic, 1 day, 3 cycles');
 
-        mod = mod.copyWith(cycles: 4);
+        mod = CyclicModifier.copyWith(mod, cycles: 4);
         expect(mod.percentage, 30);
         expect(mod.description, 'Cyclic, 1 day, 4 cycles');
       });
@@ -967,11 +973,13 @@ main() {
       test('number of cycles + interval', () {
         var mod = Modifiers.instance().byName('Cyclic') as CyclicModifier;
 
-        mod = mod.copyWith(cycles: 3, interval: CyclicInterval.PerSecond);
+        mod = CyclicModifier.copyWith(mod,
+            cycles: 3, interval: CyclicInterval.PerSecond);
         expect(mod.percentage, 200);
         expect(mod.description, 'Cyclic, 1 second, 3 cycles');
 
-        mod = mod.copyWith(cycles: 4, interval: CyclicInterval.PerHour);
+        mod = CyclicModifier.copyWith(mod,
+            cycles: 4, interval: CyclicInterval.PerHour);
         expect(mod.percentage, 60);
         expect(mod.description, 'Cyclic, 1 hour, 4 cycles');
       });
@@ -979,16 +987,17 @@ main() {
       test('resistible cuts percentage in half', () {
         var mod = Modifiers.instance().byName('Cyclic') as CyclicModifier;
 
-        mod = mod.copyWith(cycles: 3, interval: CyclicInterval.PerMinute);
+        mod = CyclicModifier.copyWith(mod,
+            cycles: 3, interval: CyclicInterval.PerMinute);
         expect(mod.percentage, 80);
         expect(mod.description, 'Cyclic, 1 minute, 3 cycles');
 
-        mod = mod.copyWith(
+        mod = CyclicModifier.copyWith(mod,
             cycles: 3, interval: CyclicInterval.PerMinute, resistible: true);
         expect(mod.percentage, 40);
         expect(mod.description, 'Cyclic, 1 minute, 3 cycles, Resistible');
 
-        mod = mod.copyWith(
+        mod = CyclicModifier.copyWith(mod,
             cycles: 5, interval: CyclicInterval.Per10Seconds, resistible: true);
         expect(mod.percentage, 100);
         expect(mod.description, 'Cyclic, 10 seconds, 5 cycles, Resistible');
@@ -997,16 +1006,18 @@ main() {
       test('Mildly Contagious adds +20%', () {
         var mod = Modifiers.instance().byName('Cyclic') as CyclicModifier;
 
-        mod = mod.copyWith(cycles: 3, interval: CyclicInterval.PerMinute);
+        mod = CyclicModifier.copyWith(mod,
+            cycles: 3, interval: CyclicInterval.PerMinute);
         expect(mod.percentage, 80);
         expect(mod.description, 'Cyclic, 1 minute, 3 cycles');
 
-        mod = mod.copyWith(contagion: ContagionType.Mildly);
+        mod = CyclicModifier.copyWith(mod, contagion: ContagionType.Mildly);
         expect(mod.percentage, 100);
         expect(
             mod.description, 'Cyclic, 1 minute, 3 cycles, Mildly Contagious');
 
-        mod = mod.copyWith(cycles: 5, interval: CyclicInterval.Per10Seconds);
+        mod = CyclicModifier.copyWith(mod,
+            cycles: 5, interval: CyclicInterval.Per10Seconds);
         expect(mod.percentage, 220);
         expect(
             mod.description, 'Cyclic, 10 seconds, 5 cycles, Mildly Contagious');
@@ -1015,16 +1026,18 @@ main() {
       test('Highly Contagious adds +50%', () {
         var mod = Modifiers.instance().byName('Cyclic') as CyclicModifier;
 
-        mod = mod.copyWith(cycles: 3, interval: CyclicInterval.PerMinute);
+        mod = CyclicModifier.copyWith(mod,
+            cycles: 3, interval: CyclicInterval.PerMinute);
         expect(mod.percentage, 80);
         expect(mod.description, 'Cyclic, 1 minute, 3 cycles');
 
-        mod = mod.copyWith(contagion: ContagionType.Highly);
+        mod = CyclicModifier.copyWith(mod, contagion: ContagionType.Highly);
         expect(mod.percentage, 130);
         expect(
             mod.description, 'Cyclic, 1 minute, 3 cycles, Highly Contagious');
 
-        mod = mod.copyWith(interval: CyclicInterval.Per10Seconds, cycles: 5);
+        mod = CyclicModifier.copyWith(mod,
+            interval: CyclicInterval.Per10Seconds, cycles: 5);
         expect(mod.percentage, 250);
         expect(
             mod.description, 'Cyclic, 10 seconds, 5 cycles, Highly Contagious');
@@ -1033,16 +1046,18 @@ main() {
       test('take 50% for resistible before +X for contagion', () {
         var mod = Modifiers.instance().byName('Cyclic') as CyclicModifier;
 
-        mod = mod.copyWith(cycles: 4, interval: CyclicInterval.Per10Seconds);
+        mod = CyclicModifier.copyWith(mod,
+            cycles: 4, interval: CyclicInterval.Per10Seconds);
         expect(mod.percentage, 150);
         expect(mod.description, 'Cyclic, 10 seconds, 4 cycles');
 
-        mod = mod.copyWith(resistible: true, contagion: ContagionType.Mildly);
+        mod = CyclicModifier.copyWith(mod,
+            resistible: true, contagion: ContagionType.Mildly);
         expect(mod.percentage, 95);
         expect(mod.description,
             'Cyclic, 10 seconds, 4 cycles, Resistible, Mildly Contagious');
 
-        mod = mod.copyWith(contagion: ContagionType.Highly);
+        mod = CyclicModifier.copyWith(mod, contagion: ContagionType.Highly);
         expect(mod.percentage, 125);
         expect(mod.description,
             'Cyclic, 10 seconds, 4 cycles, Resistible, Highly Contagious');
