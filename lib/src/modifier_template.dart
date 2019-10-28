@@ -52,7 +52,7 @@ abstract class ModifierTemplate {
   Modifier createModifier();
 
   ///
-  /// Return a description of a [Modifier] with the given [ModifierData].
+  /// Return a description of a [SimpleModifier] with the given [ModifierData].
   ///
   String describe(ModifierData data) =>
       formatter.describe(name: name, data: data);
@@ -218,7 +218,6 @@ class CyclicModifierTemplate extends ModifierTemplate {
     }''';
   }
 
-  @override
   Modifier createModifier() {
     return CyclicModifier(template: this, data: CyclicData());
   }
