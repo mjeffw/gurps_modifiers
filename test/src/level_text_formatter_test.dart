@@ -1,14 +1,25 @@
 import 'dart:convert';
 
 import 'package:gurps_modifiers/src/level_text_formatter.dart';
+import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:test/test.dart';
+
+class Data with ModifierData {
+  @override
+  final String detail;
+
+  @override
+  final int level;
+
+  Data({this.detail, this.level});
+}
 
 void main() {
   group('formatters', () {
     group('LevelTextFormatter', () {
       test('constructor', () {
         var f = LevelTextFormatter();
-        expect(f.format('name', 1), 'name 1');
+        expect(f.describe(name: 'name', data: Data(level: 1)), 'name 1');
       });
 
       test('null template', () {
@@ -18,31 +29,30 @@ void main() {
 
       test('template', () {
         var f = LevelTextFormatter(template: 'One %name is %f');
-        expect(f.format('name', 7), 'One name is 7');
+        expect(f.describe(name: 'name', data: Data(level: 7)), 'One name is 7');
       });
 
       test('null args', () {
         var f = LevelTextFormatter();
-        expect(() => f.format(null, null), throwsA(isA<Error>()));
+        expect(() => f.describe(), throwsA(isA<Error>()));
       });
 
       test('fromJSON', () {
         String text = '{ "template": "%name %f" }';
         var f = LevelTextFormatter.fromJSON(json.decode(text));
-        expect(f.format('name', 9), 'name 9');
+        expect(f.describe(name: 'name', data: Data(level: 9)), 'name 9');
       });
 
       test('fromJSON 2', () {
         String text = '{ "type": "Simple", "template": "%name %f" }';
         var f = LevelTextFormatter.fromJSON(json.decode(text));
-        expect(f.format('name', 9), 'name 9');
+        expect(f.describe(name: 'name', data: Data(level: 9)), 'name 9');
       });
 
       test('const constructor', () {
         expect(const LevelTextFormatter(), same(const LevelTextFormatter()));
         expect(const LevelTextFormatter(template: '%name %f'),
             same(const LevelTextFormatter()));
-        expect(const LevelTextFormatter(), same(LevelTextFormatter.instance));
       });
 
       test('toJSON', () {
@@ -64,8 +74,8 @@ void main() {
   }''';
 
       test('fromJSON', () {
-        expect(f1.format('name', 1), 'name A');
-        expect(f1.format('bob', 2), 'bob B');
+        expect(f1.describe(name: 'name', data: Data(level: 1)), 'name A');
+        expect(f1.describe(name: 'bob', data: Data(level: 2)), 'bob B');
       });
 
       test('fromJSON varying template', () {
@@ -73,8 +83,9 @@ void main() {
       { "type": "Array", "template": "AA %f --** %name!", "array": ["A", "B", "C"] }
       ''';
         var f = LevelTextFormatter.fromJSON(json.decode(text));
-        expect(f.format('name', 1), 'AA A --** name!');
-        expect(f.format('bob', 2), 'AA B --** bob!');
+        expect(
+            f.describe(name: 'name', data: Data(level: 1)), 'AA A --** name!');
+        expect(f.describe(name: 'bob', data: Data(level: 2)), 'AA B --** bob!');
       });
 
       test('fromJSON missing template', () {
@@ -143,8 +154,8 @@ void main() {
             '''{ "type": "Exponential", "template": "%name: %f", "a": 5, "b": 2 }''';
 
         var f = LevelTextFormatter.fromJSON(json.decode(text));
-        expect(f.format('name', 2), 'name: 20');
-        expect(f.format('foo', 3), 'foo: 40');
+        expect(f.describe(name: 'name', data: Data(level: 2)), 'name: 20');
+        expect(f.describe(name: 'foo', data: Data(level: 3)), 'foo: 40');
       });
 
       test('toJSON', () {

@@ -197,22 +197,24 @@ String modifierDataString = '''
         "percentage": -10
       },
       {
-        "name": "AP Ammo, Huge piercing",
-        "type": "Simple",
-        "percentage": 35,
-        "isAttackModifier": true
-      },
-      {
-        "name": "AP Ammo, Large piercing",
-        "type": "Simple",
-        "percentage": 45,
-        "isAttackModifier": true
-      },
-      {
-        "name": "AP Ammo, Piercing",
-        "type": "Simple",
-        "percentage": 20,
-        "isAttackModifier": true
+        "name": "AP Ammo",
+        "type": "NamedVariant",
+        "default": "Piercing",
+        "isAttackModifier": true,
+        "variations": [
+          {
+            "key": "Piercing",
+            "value": 20
+          },
+          {
+            "key": "Large Piercing",
+            "value": 35
+          },
+          {
+            "key": "Huge Piercing",
+            "value": 45
+          }
+        ]
       },
       {
         "name": "Area Effect",
@@ -263,7 +265,9 @@ String modifierDataString = '''
       {
         "name": "Based On",
         "type": "Simple",
-        "percentage": 20
+        "percentage": 20,
+        "defaultDetail": "(Attribute)",
+        "template": "%name %detail"
       },
       {
         "name": "Based On, Own Roll",

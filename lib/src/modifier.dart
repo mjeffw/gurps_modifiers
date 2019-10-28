@@ -3,12 +3,17 @@ import 'package:gurps_modifiers/src/template_subtypes.dart';
 
 import 'modifier_template.dart';
 
-class Modifier {
-  get isAttackModifier => template.isAttackModifier;
+
+class Modifier with ModifierData {
+  bool get isAttackModifier => template.isAttackModifier;
 
   int get percentage => template.percentage;
 
-  get description => template.name;
+  String get description => template.describe(this);
+
+  String get name => template.name;
+
+  int get level => null;
 
   final ModifierTemplate template;
 

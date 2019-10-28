@@ -1,5 +1,25 @@
 import 'dart:math';
 
+import 'package:gurps_modifiers/src/modifier_template.dart';
+
+class DescriptionFormatter {
+  static const DescriptionFormatter defaultFormatter =
+      const DescriptionFormatter();
+
+  final String template;
+
+  const DescriptionFormatter({this.template = '%name'})
+      : assert(template != null);
+
+  String describe({String name, ModifierData data}) => template
+      .replaceFirst('%name', name)
+      .replaceFirst('%detail', data.detail ?? '');
+
+  static DescriptionFormatter fromJSON(Map<String, dynamic> json) {
+    return DescriptionFormatter(template: json['template'] ?? '%name');
+  }
+}
+
 ///
 /// Data driven object that creates printable description of a Leveled Modifier
 /// of a set level.
@@ -8,9 +28,7 @@ import 'dart:math';
 /// and $f. The values for these tokens are replaced with the values returned
 /// from the similarly named methods.
 ///
-class LevelTextFormatter {
-  static const LevelTextFormatter instance = LevelTextFormatter();
-
+class LevelTextFormatter extends DescriptionFormatter {
   ///
   /// Template used by the formatter.
   ///
@@ -35,6 +53,10 @@ class LevelTextFormatter {
     return LevelTextFormatter(template: json['template']);
   }
 
+  String describe({String name, ModifierData data}) => template
+      .replaceFirst('%name', this._name(name))
+      .replaceFirst('%f', _f_value(data.level));
+
   ///
   /// Given a level, return the value to use to replace the %f token.
   ///
@@ -46,16 +68,16 @@ class LevelTextFormatter {
   /// Given a modifier name and current level, return the canonical string used
   /// to document the modifier.
   ///
-  String format(String name, int level) {
+  String _format(String name, int level) {
     return template
-        .replaceFirst('%name', this.name(name))
+        .replaceFirst('%name', this._name(name))
         .replaceFirst('%f', _f_value(level));
   }
 
   ///
   /// Given a modifier name, return the value to replace the %name token.
   ///
-  String name(String name) {
+  String _name(String name) {
     return name;
   }
 

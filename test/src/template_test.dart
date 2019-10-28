@@ -5,6 +5,16 @@ import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:gurps_modifiers/src/template_subtypes.dart';
 import 'package:test/test.dart';
 
+class Data with ModifierData {
+  @override
+  final String detail;
+
+  @override
+  final int level;
+
+  Data({this.detail, this.level});
+}
+
 void main() {
   group('templates', () {
     group('simple', () {
@@ -385,7 +395,7 @@ void main() {
             "formatter": { "template": "%f %name" } }''';
         BaseLeveledTemplate m =
             VariableLeveledTemplate.fromJSON(json.decode(source));
-        expect(m.levelName(1), '1 Bar');
+        expect(m.describe(Data(level: 1)), '1 Bar');
       });
     }, skip: false);
 

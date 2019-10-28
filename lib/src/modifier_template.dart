@@ -4,6 +4,11 @@ import 'package:quiver/core.dart';
 import 'level_text_formatter.dart';
 import 'modifier.dart';
 
+mixin ModifierData {
+  String get detail;
+  int get level;
+}
+
 ///
 /// A modifier is a feature that you can add to a trait – usually an advantage
 /// – to change the way it works. You can apply any number of modifiers to a
@@ -28,10 +33,15 @@ abstract class ModifierTemplate {
   ///
   int get percentage;
 
+  final DescriptionFormatter formatter;
+
   ///
   /// Constructor
   ///
-  const ModifierTemplate({this.name, this.isAttackModifier})
+  const ModifierTemplate(
+      {this.name,
+      this.isAttackModifier,
+      this.formatter = DescriptionFormatter.defaultFormatter})
       : assert(name != null),
         assert(isAttackModifier != null);
 
@@ -41,6 +51,9 @@ abstract class ModifierTemplate {
   String toJSON();
 
   Modifier createModifier();
+
+  String describe(ModifierData data) =>
+      formatter.describe(name: name, data: data);
 
   @override
   String toString() => toJSON();
@@ -72,11 +85,6 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
   final LevelTextFormatter formatter;
 
   ///
-  /// Return the name + level text
-  ///
-  String levelName(int level) => formatter.format(name, level);
-
-  ///
   /// Calculate the percentage for a given level of the modifier.
   ///
   int levelPercentage(int level);
@@ -90,7 +98,7 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
       bool isAttackModifier = false,
       this.levelPrompt})
       : assert(1 <= (maxLevel ?? 1000000)),
-        this.formatter = formatter ?? LevelTextFormatter.instance,
+        this.formatter = formatter ?? const LevelTextFormatter(),
         super(name: name, isAttackModifier: isAttackModifier);
 
   @override

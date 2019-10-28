@@ -3,86 +3,102 @@ import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
 
+class Data with ModifierData {
+  @override
+  final String detail;
+
+  @override
+  final int level;
+
+  Data({this.detail, this.level});
+}
+
 main() {
   group('named variants', () {
-    test('Affects Insubstantial', () {
-      var mod = Modifiers.instance().byName('Affects Insubstantial');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, false);
-      expect(mod.description, 'Affects Insubstantial');
+    group('Afects (In)substantial', () {
+      test('Insubstantial', () {
+        var mod = Modifiers.instance().byName('Affects Insubstantial');
+        expect(mod.percentage, 20);
+        expect(mod.isAttackModifier, false);
+        expect(mod.description, 'Affects Insubstantial');
+      });
+
+      test('Insubstantial, Selective', () {
+        var mod = Modifiers.instance().byName('Affects Insubstantial')
+            as NamedVariantModifier;
+        mod = mod.copyWith(detail: 'Selective');
+
+        expect(mod.percentage, 30);
+        expect(mod.isAttackModifier, false);
+        expect(mod.description, 'Affects Insubstantial, Selective');
+      });
+
+      test('Insubstantial, Bad Variation', () {
+        var mod = Modifiers.instance().byName('Affects Insubstantial')
+            as NamedVariantModifier;
+        expect(() => mod.copyWith(detail: 'Bad Variation'),
+            throwsA(isA<AssertionError>()));
+      });
+
+      test('Substantial', () {
+        var mod = Modifiers.instance().byName('Affects Substantial')
+            as NamedVariantModifier;
+        expect(mod.percentage, 40);
+        expect(mod.isAttackModifier, false);
+        expect(mod.description, 'Affects Substantial');
+      });
+
+      test('Substantial, Selective', () {
+        var mod = Modifiers.instance().byName('Affects Substantial')
+            as NamedVariantModifier;
+        mod = mod.copyWith(detail: 'Selective');
+        expect(mod.percentage, 50);
+        expect(mod.isAttackModifier, false);
+        expect(mod.description, 'Affects Substantial, Selective');
+      });
     });
 
-    test('Affects Insubstantial, Selective', () {
-      var mod = Modifiers.instance().byName('Affects Insubstantial')
-          as NamedVariantModifier;
-      mod = mod.copyWith(detail: 'Selective');
-
-      expect(mod.percentage, 30);
-      expect(mod.isAttackModifier, false);
-      expect(mod.description, 'Affects Insubstantial, Selective');
-    });
-
-    test('Affects Insubstantial, Bad Variation', () {
-      var mod = Modifiers.instance().byName('Affects Insubstantial')
-          as NamedVariantModifier;
-      expect(() => mod.copyWith(detail: 'Bad Variation'),
-          throwsA(isA<AssertionError>()));
-    });
-
-    test('Affects Substantial', () {
-      var mod = Modifiers.instance().byName('Affects Substantial')
-          as NamedVariantModifier;
-      expect(mod.percentage, 40);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Affects Substantial, Selective', () {
-      var mod = Modifiers.instance().byName('Affects Substantial')
-          as NamedVariantModifier;
-      mod = mod.copyWith(detail: 'Selective');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
+    group('AP Ammo', () {
+      test('default (Piercing)', () {
+        var mod = Modifiers.instance().byName('AP Ammo');
+        expect(mod.percentage, 20);
+        expect(mod.isAttackModifier, true);
+        expect(mod.description, 'AP Ammo, Piercing');
+      });
+      test('Huge Piercing', () {
+        var mod =
+            (Modifiers.instance().byName('AP Ammo') as NamedVariantModifier)
+                .copyWith(detail: 'Huge Piercing');
+        expect(mod.percentage, 45);
+        expect(mod.isAttackModifier, true);
+        expect(mod.description, 'AP Ammo, Huge Piercing');
+      });
+      test('Large Piercing', () {
+        var mod =
+            (Modifiers.instance().byName('AP Ammo') as NamedVariantModifier)
+                .copyWith(detail: 'Large Piercing');
+        expect(mod.percentage, 35);
+        expect(mod.isAttackModifier, true);
+        expect(mod.description, 'AP Ammo, Large Piercing');
+      });
     });
   });
 
   group('Simple enhancers', () {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
-    test('AP Ammo, Huge piercing', () {
-      ModifierTemplate mod =
-          ModifierTemplates.instance().templateByName('AP Ammo, Huge piercing');
-      expect(mod.percentage, 35);
-      expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Ammo options value is reduced by 5% if it takes a second to switch
-    // between ammo types.
-    test('AP Ammo, Large piercing', () {
-      ModifierTemplate mod = ModifierTemplates.instance()
-          .templateByName('AP Ammo, Large piercing');
-      expect(mod.percentage, 45);
-      expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Ammo options value is reduced by 5% if it takes a second to switch
-    // between ammo types.
-    test('AP Ammo, Piercing', () {
-      ModifierTemplate mod =
-          ModifierTemplates.instance().templateByName('AP Ammo, Piercing');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
     test('Aura', () {
-      var mod = ModifierTemplates.instance().templateByName('Aura');
+      var mod = Modifiers.instance().byName('Aura');
       expect(mod.percentage, 80);
       expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Aura');
     });
 
     test('Based on (Attribute)', () {
-      var mod = ModifierTemplates.instance().templateByName('Based On');
+      var mod = Modifiers.instance().byName('Based On');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Based On (Attribute)');
     });
 
     test('Based on (Attribute), Own Roll', () {
@@ -755,7 +771,6 @@ main() {
           as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), 60);
-      expect(mod.levelName(1), 'Cone 1');
     });
 
     test('Decreased Immunity', () {
@@ -890,19 +905,19 @@ main() {
           as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.levelPercentage(1), -70);
-      expect(mod.levelName(1), 'Armor Divisor (0.1)');
+      expect(mod.describe(Data(level: 1)), 'Armor Divisor (0.1)');
       expect(mod.levelPercentage(2), -50);
-      expect(mod.levelName(2), 'Armor Divisor (0.2)');
+      expect(mod.describe(Data(level: 2)), 'Armor Divisor (0.2)');
       expect(mod.levelPercentage(3), -30);
-      expect(mod.levelName(3), 'Armor Divisor (0.5)');
+      expect(mod.describe(Data(level: 3)), 'Armor Divisor (0.5)');
       expect(mod.levelPercentage(4), 50);
-      expect(mod.levelName(4), 'Armor Divisor (2)');
+      expect(mod.describe(Data(level: 4)), 'Armor Divisor (2)');
       expect(mod.levelPercentage(5), 100);
-      expect(mod.levelName(5), 'Armor Divisor (3)');
+      expect(mod.describe(Data(level: 5)), 'Armor Divisor (3)');
       expect(mod.levelPercentage(6), 150);
-      expect(mod.levelName(6), 'Armor Divisor (5)');
+      expect(mod.describe(Data(level: 6)), 'Armor Divisor (5)');
       expect(mod.levelPercentage(7), 200);
-      expect(mod.levelName(7), 'Armor Divisor (10)');
+      expect(mod.describe(Data(level: 7)), 'Armor Divisor (10)');
     });
 
     test('Can Carry Objects', () {

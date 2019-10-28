@@ -16,23 +16,39 @@ class SimpleModifierTemplate extends ModifierTemplate {
   ///
   final int percentage;
 
+  final String detail;
+
+  @override
+  String describe(ModifierData data) =>
+      formatter.describe(name: name, data: data);
+
   ///
   /// Create a Simple Modifier Template
   ///
   const SimpleModifierTemplate(
-      {this.percentage = 0, String name, bool isAttackModifier = false})
+      {this.percentage = 0,
+      String name,
+      bool isAttackModifier = false,
+      DescriptionFormatter formatter,
+      this.detail})
       : assert(percentage != null),
-        super(name: name, isAttackModifier: isAttackModifier);
+        super(
+            name: name,
+            isAttackModifier: isAttackModifier,
+            formatter: formatter);
 
   ///
   /// Create a SimpleModifier from a JSON map.
   ///
   factory SimpleModifierTemplate.fromJSON(Map<String, dynamic> json) {
+    DescriptionFormatter formatter = DescriptionFormatter.fromJSON(json);
     var type = json['type'];
     assert(type == 'Simple');
     return SimpleModifierTemplate(
         percentage: (json['percentage'] ?? 0) as int,
         name: json['name'],
+        formatter: formatter ?? DescriptionFormatter.defaultFormatter,
+        detail: json['defaultDetail'],
         isAttackModifier: (json['isAttackModifier'] ?? false) as bool);
   }
 
@@ -63,7 +79,7 @@ class SimpleModifierTemplate extends ModifierTemplate {
   }
 
   @override
-  Modifier createModifier() => Modifier(template: this);
+  Modifier createModifier() => Modifier(template: this, detail: detail);
 }
 
 class NamedVariantTemplate extends ModifierTemplate {
@@ -71,9 +87,12 @@ class NamedVariantTemplate extends ModifierTemplate {
 
   final int percentage;
 
+  final String defaultVariation;
+
   List<String> get variationNames => variations.keys.toList();
 
-  int percentageVariation(String name) => variations[name] ?? percentage;
+  int percentageVariation(String name) =>
+      variations[name ?? defaultVariation] ?? percentage;
 
   bool containsVariation(String detail) =>
       detail == null || variations.containsKey(detail);
@@ -82,11 +101,13 @@ class NamedVariantTemplate extends ModifierTemplate {
       {String name,
       bool isAttackModifier = false,
       this.percentage,
-      this.variations})
-      : super(name: name, isAttackModifier: isAttackModifier);
+      this.variations,
+      this.defaultVariation})
+      : super(name: name, isAttackModifier: isAttackModifier ?? false);
 
   @override
-  Modifier createModifier() => NamedVariantModifier(template: this);
+  Modifier createModifier() =>
+      NamedVariantModifier(template: this, detail: defaultVariation);
 
   @override
   String toJSON() {
@@ -105,7 +126,9 @@ class NamedVariantTemplate extends ModifierTemplate {
     return NamedVariantTemplate(
         name: json['name'],
         percentage: json['percentage'],
-        variations: variations);
+        variations: variations,
+        defaultVariation: json['default'],
+        isAttackModifier: json['isAttackModifier']);
   }
 }
 
