@@ -15,24 +15,27 @@ class SimpleModifierTemplate extends ModifierTemplate {
   /// Modifiers adjust the base cost of a trait in proportion to their effects.
   /// This is expressed as a percentage.
   ///
-  final int percentage;
+  final int _percentage;
 
-  final String detail;
+  final String defaultDetail;
 
   @override
   String describe(ModifierData data) =>
       formatter.describe(name: name, data: data);
 
+  int percentage(ModifierData data) => _percentage;
+
   ///
   /// Create a Simple Modifier Template
   ///
   const SimpleModifierTemplate(
-      {this.percentage = 0,
+      {int percentage = 0,
       String name,
       bool isAttackModifier = false,
       DescriptionFormatter formatter,
-      this.detail})
+      this.defaultDetail})
       : assert(percentage != null),
+        this._percentage = percentage,
         super(
             name: name,
             isAttackModifier: isAttackModifier,
@@ -48,8 +51,8 @@ class SimpleModifierTemplate extends ModifierTemplate {
     return SimpleModifierTemplate(
         percentage: (json['percentage'] ?? 0) as int,
         name: json['name'],
-        formatter: formatter ?? DescriptionFormatter.defaultFormatter,
-        detail: json['defaultDetail'],
+        formatter: formatter ?? const DefaultFormatter(),
+        defaultDetail: json['defaultDetail'],
         isAttackModifier: (json['isAttackModifier'] ?? false) as bool);
   }
 
@@ -61,7 +64,7 @@ class SimpleModifierTemplate extends ModifierTemplate {
     List<String> strings = [
       '"type": "Simple"',
       '"name": "$name"',
-      '"percentage": $percentage',
+      '"percentage": $_percentage',
       '"isAttackModifier": $isAttackModifier',
     ];
     return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
@@ -69,31 +72,32 @@ class SimpleModifierTemplate extends ModifierTemplate {
 
   @override
   int get hashCode => Hashes.finish(
-      Hashes.combine(super.hashCode, Hashes.combine(percentage.hashCode, 0)));
+      Hashes.combine(super.hashCode, Hashes.combine(_percentage.hashCode, 0)));
 
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     return other is SimpleModifierTemplate &&
         super == other &&
-        this.percentage == other.percentage;
+        this._percentage == other._percentage;
   }
 
   @override
-  Modifier createModifier() => Modifier(template: this, detail: detail);
+  Modifier createModifier({ModifierData data}) =>
+      Modifier(template: this, detail: data?.detail ?? defaultDetail);
 }
 
 class NamedVariantTemplate extends ModifierTemplate {
   final Map<String, int> variations;
 
-  final int percentage;
+  final int _percentage;
 
   final String defaultVariation;
 
   List<String> get variationNames => variations.keys.toList();
 
-  int percentageVariation(String name) =>
-      variations[name ?? defaultVariation] ?? percentage;
+  int percentage(ModifierData data) =>
+      variations[data.detail ?? defaultVariation] ?? _percentage;
 
   bool containsVariation(String detail) =>
       detail == null || variations.containsKey(detail);
@@ -101,14 +105,24 @@ class NamedVariantTemplate extends ModifierTemplate {
   NamedVariantTemplate(
       {String name,
       bool isAttackModifier = false,
-      this.percentage,
+      int percentage,
       this.variations,
       this.defaultVariation})
-      : super(name: name, isAttackModifier: isAttackModifier ?? false);
+      : this._percentage = percentage,
+        super(name: name, isAttackModifier: isAttackModifier ?? false);
 
   @override
-  Modifier createModifier() =>
-      NamedVariantModifier(template: this, detail: defaultVariation);
+  Modifier createModifier({ModifierData data}) {
+    if (data?.detail != null) {
+      if (!containsVariation(data.detail))
+        throw AssertionError('invalid variation');
+    }
+    return Modifier(
+        template: this,
+        level: null,
+        detail:
+            data == null ? defaultVariation : data.detail ?? defaultVariation);
+  }
 
   @override
   String toJSON() {
@@ -151,14 +165,8 @@ class LeveledTemplate extends BaseLeveledTemplate {
   ///
   final int valuePerLevel;
 
-  ///
-  /// For leveled modifiers, the percentage is the baseValue.
-  ///
   @override
-  int get percentage => baseValue;
-
-  @override
-  int levelPercentage(int level) => level * valuePerLevel + baseValue;
+  int percentage(ModifierData data) => data.level * valuePerLevel + baseValue;
 
   const LeveledTemplate(
       {String name,
@@ -225,12 +233,6 @@ class LeveledTemplate extends BaseLeveledTemplate {
             this.valuePerLevel == other.valuePerLevel &&
             this.baseValue == other.baseValue);
   }
-
-  @override
-  Modifier createModifier() {
-    // TODO: implement createModifier
-    return null;
-  }
 }
 
 ///
@@ -243,14 +245,8 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
   ///
   final List<int> _levelValues;
 
-  ///
-  /// The percentage is null as it doesn't make sense for this type of modifier.
-  ///
   @override
-  int get percentage => null;
-
-  @override
-  int levelPercentage(int level) => _levelValues[level - 1];
+  int percentage(ModifierData data) => _levelValues[data.level - 1];
 
   const VariableLeveledTemplate(
       {List<int> levelValues,
@@ -299,10 +295,116 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
             super == other &&
             listsEqual(this._levelValues, other._levelValues));
   }
+}
+
+///
+/// [Category] represents a named group of options or specialties. Each also
+/// determines the cost of the Modifier.
+///
+class Category {
+  ///
+  /// Name of the [Category].
+  ///
+  final String name;
+
+  ///
+  /// Cost of the [Modifier] if its specialties match one of the items in this
+  /// category.
+  ///
+  final int cost;
+
+  ///
+  /// The list of items that match this category.
+  ///
+  final List<String> items;
+
+  const Category({this.name, this.cost, this.items});
+
+  ///
+  /// Create a [Category] from JSON data
+  ///
+  factory Category.fromJSON(Map<String, dynamic> json) {
+    var cat = Category(
+        name: json['name'],
+        cost: json['cost'],
+        items: JsonEx.toListOfStrings(json['items']));
+    cat.items.add(cat.name);
+    return cat;
+  }
+
+  ///
+  /// Create a list of [Category] from a JSON list.
+  ///
+  static List<Category> listFromJSON(List<dynamic> list) =>
+      list.map((it) => Category.fromJSON(it)).toList();
 
   @override
-  Modifier createModifier() {
-    // TODO: implement createModifier
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) return true;
+    return other is Category &&
+        this.name == other.name &&
+        this.cost == other.cost &&
+        listsEqual(this.items, other.items);
+  }
+
+  @override
+  int get hashCode => hash3(name, cost, items);
+}
+
+const Category NullCategory =
+    const Category(name: 'NULL', cost: null, items: []);
+
+class CategorizedTemplate extends ModifierTemplate {
+  ///
+  /// The list of [Category].
+  ///
+  final List<Category> categories;
+
+  final String defaultDetail;
+
+  CategorizedTemplate(
+      {String name,
+      bool isAttackModifier = false,
+      this.defaultDetail,
+      DescriptionFormatter formatter = const DefaultFormatter(),
+      this.categories})
+      : super(
+            name: name,
+            isAttackModifier: isAttackModifier,
+            formatter: formatter);
+
+  factory CategorizedTemplate.fromJSON(Map<String, dynamic> json) {
+    var fmtjson =
+        json['formatter'] ?? <String, dynamic>{'template': '%name, %detail'};
+
+    return CategorizedTemplate(
+        isAttackModifier: json['isAttackModifier'] ?? false,
+        name: json['name'],
+        defaultDetail: json['defaultDetail'],
+        categories: Category.listFromJSON(json['categories']),
+        formatter: DescriptionFormatter.fromJSON(fmtjson));
+  }
+
+  @override
+  Modifier createModifier({ModifierData data}) {
+    return Modifier(
+        template: this,
+        level: null,
+        detail: data == null ? defaultDetail : data.detail);
+  }
+
+  int percentage(ModifierData data) => _findCategory(data.detail).cost;
+
+  String describe(ModifierData data) =>
+      formatter.describe(name: name, data: data);
+
+  Category _findCategory(String detail) =>
+      categories.firstWhere((it) => it.items.contains(detail),
+          orElse: () => NullCategory);
+
+  @override
+  String toJSON() {
+    // TODO: implement toJSON
     return null;
   }
 }

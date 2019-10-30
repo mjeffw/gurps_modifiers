@@ -272,7 +272,9 @@ String modifierDataString = '''
       {
         "name": "Based On, Own Roll",
         "type": "Simple",
-        "percentage": 20
+        "percentage": 20,
+        "defaultDetail": "(Attribute)",
+        "template": "Based On %detail, Own Roll"
       },
       {
         "name": "Blockable",
@@ -361,54 +363,39 @@ String modifierDataString = '''
         "valuePerLevel": 10
       },
       {
-        "name": "Cosmic, Avoiding drawbacks",
-        "type": "Simple",
-        "percentage": 50
-      },
-      {
-        "name": "Cosmic, Defensive",
-        "type": "Simple",
-        "percentage": 50
-      },
-      {
-        "name": "Cosmic, Irresistible attack",
-        "type": "Simple",
-        "percentage": 300
-      },
-      {
-        "name": "Cosmic, Lingering effect",
-        "type": "Simple",
-        "percentage": 100
-      },
-      {
-        "name": "Cosmic, No active defense allowed",
-        "type": "Simple",
-        "percentage": 300
-      },
-      {
-        "name": "Cosmic, No die roll required",
-        "type": "Simple",
-        "percentage": 100
-      },
-      {
-        "name": "Cosmic, No Rule of 16",
-        "type": "Simple",
-        "percentage": 50
-      },
-      {
-        "name": "Cosmic, Privileged attack",
-        "type": "Simple",
-        "percentage": 50
-      },
-      {
-        "name": "Cosmic, Unhealing damage",
-        "type": "Simple",
-        "percentage": 100
-      },
-      {
-        "name": "Cosmic, Unrestricted powers",
-        "type": "Simple",
-        "percentage": 300
+        "name": "Cosmic",
+        "type": "Categorized",
+        "defaultDetail": "Adding Utility",
+        "categories": [
+          {
+            "name": "Adding Utility",
+            "cost": 50,
+            "items":[
+              "Avoiding drawbacks",
+              "Defensive",
+              "No Rule of 16",
+              "Privileged attack"
+            ]
+          },
+          {
+            "name": "Cheating",
+            "cost": 100,
+            "items": [
+              "Lingering effect",
+              "No die roll required",
+              "Unhealing damage"
+            ]
+          },
+          {
+            "name": "Godlike Tricks",
+            "cost": 300,
+            "items": [
+              "Irresistible attack",
+              "No active defense allowed",
+              "Unrestricted powers"
+            ]
+          }
+        ]
       },
       {
         "name": "Costs Fatigue",
@@ -462,40 +449,36 @@ String modifierDataString = '''
         "isAttackModifier": true
       },
       {
-        "name": "Delay, Fixed",
-        "type": "Simple",
-        "percentage": 0,
-        "isAttackModifier": true
-      },
-      {
-        "name": "Delay, Supernatural, fixed",
-        "type": "Simple",
-        "percentage": 50,
-        "isAttackModifier": true
-      },
-      {
-        "name": "Delay, Supernatural, variable",
-        "type": "Simple",
-        "percentage": 100,
-        "isAttackModifier": true
-      },
-      {
-        "name": "Delay, Triggered",
-        "type": "Simple",
-        "percentage": 50,
-        "isAttackModifier": true
-      },
-      {
-        "name": "Delay, Variable, long",
-        "type": "Simple",
-        "percentage": 20,
-        "isAttackModifier": true
-      },
-      {
-        "name": "Delay, Variable, short",
-        "type": "Simple",
-        "percentage": 10,
-        "isAttackModifier": true
+        "name": "Delay",
+        "type": "NamedVariant",
+        "default": "Fixed",
+        "isAttackModifier": true,
+        "variations": [
+          {
+            "key": "Fixed",
+            "value": 0
+          },
+          {
+            "key": "Variable, short",
+            "value": 10
+          },
+          {
+            "key": "Variable, long",
+            "value": 20
+          },
+          {
+            "key": "Supernatural, fixed",
+            "value": 50
+          },
+          {
+            "key": "Triggered",
+            "value": 50
+          },
+          {
+            "key": "Supernatural, variable",
+            "value": 100
+          }
+        ]
       },
       {
         "name": "Destructive Parry",

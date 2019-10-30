@@ -12,20 +12,20 @@ void main() {
     group('simple', () {
       test('Constructor and percentage (default)', () {
         var mod = SimpleModifierTemplate(name: 'bar');
-        expect(mod.percentage, 0);
+        expect(mod.percentage(Data()), 0);
         expect(mod.name, 'bar');
       });
 
       test('Positive percentage', () {
         var mod = SimpleModifierTemplate(percentage: 20, name: 'foo');
-        expect(mod.percentage, 20);
+        expect(mod.percentage(Data()), 20);
         expect(mod.name, 'foo');
         expect(mod.toString(), equals(mod.toJSON()));
       });
 
       test('Negative percentage', () {
         var mod = SimpleModifierTemplate(percentage: -50, name: 'baz');
-        expect(mod.percentage, -50);
+        expect(mod.percentage(Data()), -50);
       });
 
       test('null percentage', () {
@@ -76,7 +76,7 @@ void main() {
             SimpleModifierTemplate.fromJSON(json.decode(source));
         expect(m.name, 'Foo');
         expect(m.isAttackModifier, false);
-        expect(m.percentage, 0);
+        expect(m.percentage(Data()), 0);
       });
 
       test('fromJSON + isAttackModifier', () {
@@ -87,7 +87,7 @@ void main() {
             SimpleModifierTemplate.fromJSON(json.decode(source));
         expect(m.name, 'Foo');
         expect(m.isAttackModifier, true);
-        expect(m.percentage, 0);
+        expect(m.percentage(Data()), 0);
       });
 
       test('fromJSON + Percentage', () {
@@ -98,7 +98,7 @@ void main() {
             SimpleModifierTemplate.fromJSON(json.decode(source));
         expect(m.name, 'Bar');
         expect(m.isAttackModifier, false);
-        expect(m.percentage, -5);
+        expect(m.percentage(Data()), -5);
       });
 
       test('toJSON', () {
@@ -138,14 +138,14 @@ void main() {
         expect(mod, isA<ModifierTemplate>());
         expect(mod.baseValue, 0);
         expect(mod.valuePerLevel, 5);
-        expect(mod.levelPercentage(1), 5);
+        expect(mod.percentage(Data(level: 1)), 5);
         expect(mod.toString(), equals(mod.toJSON()));
       });
 
       test('negative valuePerLevel in constructor', () {
         var mod = LeveledTemplate(valuePerLevel: -1, name: 'Baz');
         expect(mod.valuePerLevel, -1);
-        expect(mod.levelPercentage(1), -1);
+        expect(mod.percentage(Data(level: 1)), -1);
       });
 
       test('level greater than 1', () {
@@ -153,7 +153,7 @@ void main() {
         expect(mod, isA<ModifierTemplate>());
         expect(mod.baseValue, 0);
         expect(mod.valuePerLevel, 5);
-        expect(mod.levelPercentage(3), 15);
+        expect(mod.percentage(Data(level: 3)), 15);
       });
 
       test('valuePerLevel null', () {
@@ -293,7 +293,7 @@ void main() {
         var mod = VariableLeveledTemplate(
             name: 'Bar', levelValues: <int>[10, 20, 40, 50, 100]);
         expect(mod, isA<ModifierTemplate>());
-        expect(mod.levelPercentage(1), 10);
+        expect(mod.percentage(Data(level: 1)), 10);
         expect(mod.isAttackModifier, false);
         expect(mod.toString(), equals(mod.toJSON()));
       });
@@ -370,7 +370,7 @@ void main() {
         expect(m.name, 'Foo');
         expect(m.isAttackModifier, false);
         expect(m.maxLevel, 3);
-        expect(m.levelPercentage(1), 1);
+        expect(m.percentage(Data(level: 1)), 1);
         expect(m.formatter, LevelTextFormatter(template: '%name %f'));
       });
 

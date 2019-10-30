@@ -1,17 +1,26 @@
 import 'package:gurps_modifiers/gurps_modifiers.dart';
-import 'package:gurps_modifiers/src/template_subtypes.dart';
 
 import '../modifier_data.dart';
 import 'modifier_template.dart';
+
+class ModifierDTO with ModifierData {
+  @override
+  String detail;
+
+  @override
+  int level;
+
+  ModifierDTO({this.detail, this.level});
+}
 
 class Modifier with ModifierData {
   String get name => template.name;
 
   final String detail;
 
-  int get percentage => template.percentage;
+  final int level;
 
-  int get level => null;
+  int get percentage => template.percentage(this);
 
   bool get isAttackModifier => template.isAttackModifier;
 
@@ -19,32 +28,38 @@ class Modifier with ModifierData {
 
   final ModifierTemplate template;
 
-  Modifier({this.template, this.detail});
+  Modifier({this.template, this.detail, int level = 1})
+      : this.level = (template.hasLevels) ? level : null;
 
-  factory Modifier.copyWith(Modifier source, {String detail}) {
-    return Modifier(template: source.template, detail: detail ?? source.detail);
+  factory Modifier.copyWith(Modifier source, {String detail, int level}) {
+    if (level != null && !source.template.hasLevels) {
+      throw Exception("modifier doesn't have levels");
+    }
+
+    return source.template.createModifier(
+        data: ModifierDTO(
+            detail: detail ?? source.detail, level: level ?? source.level));
   }
 }
 
-class CyclicModifier extends Modifier {
-  final CyclicData data;
+class CyclicModifier extends Modifier with CyclicData {
+  final CyclicInterval interval;
+  final int cycles;
+  final bool resistible;
+  final ContagionType contagion;
 
   CyclicModifierTemplate get _template => template;
 
-  @override
-  String get name => template.name;
+  int get percentage => _template.percentage(this);
 
-  @override
-  String get detail => null;
+  String get description => _template.levelName(this);
 
-  int get percentage => _template.levelPercentage(data);
-
-  @override
-  int get level => null;
-
-  String get description => _template.levelName(data);
-
-  CyclicModifier({CyclicModifierTemplate template, this.data})
+  CyclicModifier(
+      {CyclicModifierTemplate template,
+      this.interval,
+      this.cycles,
+      this.resistible,
+      this.contagion})
       : super(template: template);
 
   factory CyclicModifier.copyWith(CyclicModifier source,
@@ -54,40 +69,21 @@ class CyclicModifier extends Modifier {
       ContagionType contagion}) {
     return CyclicModifier(
         template: source.template,
-        data: source.data.copyWith(
-            cycles: cycles,
-            interval: interval,
-            resistible: resistible,
-            contagion: contagion));
+        cycles: cycles ?? source.cycles,
+        interval: interval ?? source.interval,
+        resistible: resistible ?? source.resistible,
+        contagion: contagion ?? source.contagion);
   }
 }
 
-class NamedVariantModifier extends Modifier {
-  NamedVariantTemplate get _template => template;
+// class NamedVariantModifier extends Modifier {
+//   NamedVariantModifier({NamedVariantTemplate template, String detail})
+//       : assert(template.containsVariation(detail)),
+//         super(template: template, detail: detail);
 
-  @override
-  String get name => template.name;
-
-  @override
-  final String detail;
-
-  @override
-  int get percentage => _template.percentageVariation(detail);
-
-  @override
-  int get level => null;
-
-  @override
-  String get description =>
-      '${template.describe(this)}${detail == null ? "" : ", " + detail}';
-
-  NamedVariantModifier({NamedVariantTemplate template, this.detail})
-      : assert(template.containsVariation(detail)),
-        super(template: template);
-
-  factory NamedVariantModifier.copyWith(NamedVariantModifier source,
-      {String detail}) {
-    return NamedVariantModifier(
-        template: source.template, detail: detail ?? source.detail);
-  }
-}
+//   factory NamedVariantModifier.copyWith(NamedVariantModifier source,
+//       {String detail}) {
+//     return NamedVariantModifier(
+//         template: source.template, detail: detail ?? source.detail);
+//   }
+// }

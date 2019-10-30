@@ -10,12 +10,6 @@ import '../modifier_data.dart';
 ///
 class DescriptionFormatter {
   ///
-  /// The default [DescriptionFormatter].
-  ///
-  static const DescriptionFormatter defaultFormatter =
-      const DescriptionFormatter();
-
-  ///
   /// The template to use when formatting a description.
   ///
   /// Templates may contain the following symbols: %name, %detail. Symbols are
@@ -30,13 +24,6 @@ class DescriptionFormatter {
       : assert(template != null);
 
   ///
-  /// Create a [DescriptionFormatter] from JSON.
-  ///
-  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) {
-    return DescriptionFormatter(template: json['template'] ?? '%name');
-  }
-
-  ///
   /// Given a Modifier template name and instance data, return the description.
   ///
   String describe({String name, ModifierData data}) => template
@@ -44,7 +31,28 @@ class DescriptionFormatter {
       .replaceFirst('%detail', _detail(data));
 
   String _name(String name) => name;
+
   String _detail(ModifierData data) => data.detail ?? '';
+
+  ///
+  /// Create a [DescriptionFormatter] from JSON.
+  ///
+  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) {
+    return (json == null)
+        ? DefaultFormatter
+        : DescriptionFormatter(template: json['template'] ?? '%name');
+  }
+
+  String toJSON() {
+    return '{ "template": "$template" }';
+  }
+}
+
+class DefaultFormatter extends DescriptionFormatter {
+  const DefaultFormatter();
+
+  String describe({String name, ModifierData data}) =>
+      '$name${data.detail == null ? "" : ", " + data.detail}';
 }
 
 ///
@@ -146,7 +154,7 @@ class _ArrayFormatter extends LevelTextFormatter {
 
   ///
   /// Use (level - 1) as the index into array; return the value at that index.
-  /// 
+  ///
   @override
   String _f_value(int level) {
     return array[level - 1];
@@ -198,7 +206,7 @@ class _ExponentialFormatter extends LevelTextFormatter {
 
   ///
   /// Return the level value by calculating the exponential value.
-  /// 
+  ///
   @override
   String _f_value(int level) {
     return (a * pow(b, level)).toString();

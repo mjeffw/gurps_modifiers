@@ -1,9 +1,7 @@
+import 'package:gurps_modifiers/modifier_data.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
-import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
-
-import 'data.dart';
 
 main() {
   group('named variants', () {
@@ -16,9 +14,8 @@ main() {
       });
 
       test('Insubstantial, Selective', () {
-        var mod = Modifiers.instance().byName('Affects Insubstantial')
-            as NamedVariantModifier;
-        mod = NamedVariantModifier.copyWith(mod, detail: 'Selective');
+        var mod = Modifiers.instance().byName('Affects Insubstantial');
+        mod = Modifier.copyWith(mod, detail: 'Selective');
 
         expect(mod.percentage, 30);
         expect(mod.isAttackModifier, false);
@@ -26,25 +23,21 @@ main() {
       });
 
       test('Insubstantial, Bad Variation', () {
-        var mod = Modifiers.instance().byName('Affects Insubstantial')
-            as NamedVariantModifier;
-        expect(
-            () => NamedVariantModifier.copyWith(mod, detail: 'Bad Variation'),
+        var mod = Modifiers.instance().byName('Affects Insubstantial');
+        expect(() => Modifier.copyWith(mod, detail: 'Bad Variation'),
             throwsA(isA<AssertionError>()));
       });
 
       test('Substantial', () {
-        var mod = Modifiers.instance().byName('Affects Substantial')
-            as NamedVariantModifier;
+        var mod = Modifiers.instance().byName('Affects Substantial');
         expect(mod.percentage, 40);
         expect(mod.isAttackModifier, false);
         expect(mod.description, 'Affects Substantial');
       });
 
       test('Substantial, Selective', () {
-        var mod = Modifiers.instance().byName('Affects Substantial')
-            as NamedVariantModifier;
-        mod = NamedVariantModifier.copyWith(mod, detail: 'Selective');
+        var mod = Modifiers.instance().byName('Affects Substantial');
+        mod = Modifier.copyWith(mod, detail: 'Selective');
         expect(mod.percentage, 50);
         expect(mod.isAttackModifier, false);
         expect(mod.description, 'Affects Substantial, Selective');
@@ -59,21 +52,143 @@ main() {
         expect(mod.description, 'AP Ammo, Piercing');
       });
       test('Huge Piercing', () {
-        var mod =
-            Modifiers.instance().byName('AP Ammo') as NamedVariantModifier;
-        mod = NamedVariantModifier.copyWith(mod, detail: 'Huge Piercing');
+        var mod = Modifiers.instance().byName('AP Ammo');
+        mod = Modifier.copyWith(mod, detail: 'Huge Piercing');
         expect(mod.percentage, 45);
         expect(mod.isAttackModifier, true);
         expect(mod.description, 'AP Ammo, Huge Piercing');
       });
       test('Large Piercing', () {
-        var mod =
-            Modifiers.instance().byName('AP Ammo') as NamedVariantModifier;
-        mod = NamedVariantModifier.copyWith(mod, detail: 'Large Piercing');
+        var mod = Modifiers.instance().byName('AP Ammo');
+        mod = Modifier.copyWith(mod, detail: 'Large Piercing');
         expect(mod.percentage, 35);
         expect(mod.isAttackModifier, true);
         expect(mod.description, 'AP Ammo, Large Piercing');
       });
+    });
+  });
+
+  group('Cosmic', () {
+    Modifier mod;
+
+    setUp(() async {
+      mod = Modifiers.instance().byName('Cosmic');
+    });
+
+    test('default', () {
+      expect(mod.percentage, 50);
+      expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Cosmic, Adding Utility');
+    });
+
+    test('Avoiding drawbacks', () {
+      var m2 = Modifier.copyWith(mod, detail: 'Avoiding drawbacks');
+      expect(m2.percentage, 50);
+      expect(m2.description, 'Cosmic, Avoiding drawbacks');
+    });
+
+    test('Defensive', () {
+      var m2 = Modifier.copyWith(mod, detail: 'Defensive');
+      expect(m2.percentage, 50);
+      expect(m2.description, 'Cosmic, Defensive');
+    });
+
+    test('Irresistible attack', () {
+      var m2 = Modifier.copyWith(mod, detail: 'Irresistible attack');
+      expect(m2.percentage, 300);
+      expect(m2.description, 'Cosmic, Irresistible attack');
+    });
+
+    test('Lingering effect', () {
+      var m2 = Modifier.copyWith(mod, detail: 'Lingering effect');
+      expect(m2.percentage, 100);
+      expect(m2.description, 'Cosmic, Lingering effect');
+    });
+
+    test('No active defense allowed', () {
+      var m2 = Modifier.copyWith(mod, detail: 'No active defense allowed');
+      expect(m2.percentage, 300);
+      expect(m2.description, 'Cosmic, No active defense allowed');
+    });
+
+    test('No die roll required', () {
+      var m2 = Modifier.copyWith(mod, detail: 'No die roll required');
+      expect(m2.percentage, 100);
+      expect(m2.description, 'Cosmic, No die roll required');
+    });
+
+    test('No Rule of 16', () {
+      var m2 = Modifier.copyWith(mod, detail: 'No Rule of 16');
+      expect(m2.percentage, 50);
+      expect(m2.description, 'Cosmic, No Rule of 16');
+    });
+
+    test('Privileged attack', () {
+      var m2 = Modifier.copyWith(mod, detail: 'Privileged attack');
+      expect(m2.percentage, 50);
+      expect(m2.description, 'Cosmic, Privileged attack');
+    });
+
+    test('Unhealing damage', () {
+      var m2 = Modifier.copyWith(mod, detail: 'Unhealing damage');
+      expect(m2.percentage, 100);
+      expect(m2.description, 'Cosmic, Unhealing damage');
+    });
+
+    test('Unrestricted powers', () {
+      var m2 = Modifier.copyWith(mod, detail: 'Unrestricted powers');
+      expect(m2.percentage, 300);
+      expect(m2.description, 'Cosmic, Unrestricted powers');
+    });
+  });
+
+  group('Delay', () {
+    Modifier m1;
+
+    setUp(() {
+      m1 = Modifiers.instance().byName('Delay');
+    });
+
+    test('Fixed', () {
+      var mod = Modifier.copyWith(m1, detail: 'Fixed');
+      expect(mod.percentage, 0);
+      expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Delay, Fixed');
+    });
+
+    test('Supernatural (fixed)', () {
+      var mod = Modifier.copyWith(m1, detail: 'Supernatural, fixed');
+      expect(mod.percentage, 50);
+      expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Delay, Supernatural, fixed');
+    });
+
+    test('Supernatural (variable)', () {
+      var mod = Modifier.copyWith(m1, detail: 'Supernatural, variable');
+      expect(mod.percentage, 100);
+      expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Delay, Supernatural, variable');
+    });
+
+    test('Variable (short)', () {
+      var mod = Modifier.copyWith(m1, detail: 'Variable, short');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Delay, Variable, short');
+    });
+
+    test('Variable (long)', () {
+      var mod = Modifier.copyWith(m1, detail: 'Variable, long');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Delay, Variable, long');
+    });
+
+    test('Triggered', () {
+      var mod = Modifier.copyWith(m1, detail: 'Triggered');
+      expect(mod.percentage, 50);
+      expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Delay, Triggered');
     });
   });
 
@@ -99,196 +214,85 @@ main() {
     });
 
     test('Based on (Attribute), Own Roll', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Based On, Own Roll');
+      var mod = Modifiers.instance().byName('Based On, Own Roll');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
-    });
+      expect(mod.description, 'Based On (Attribute), Own Roll');
 
-    test('Cosmic, Avoiding drawbacks', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Cosmic, Avoiding drawbacks');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, Defensive', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Cosmic, Defensive');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, Irresistible attack', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Cosmic, Irresistible attack');
-      expect(mod.percentage, 300);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, Lingering effect', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Cosmic, Lingering effect');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, No active defense allowed', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Cosmic, No active defense allowed');
-      expect(mod.percentage, 300);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, No die roll required', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Cosmic, No die roll required');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, No Rule of 16', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Cosmic, No Rule of 16');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, Privileged attack', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Cosmic, Privileged attack');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, Unhealing damage', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Cosmic, Unhealing damage');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Cosmic, Unrestricted powers', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Cosmic, Unrestricted powers');
-      expect(mod.percentage, 300);
-      expect(mod.isAttackModifier, false);
+      var m2 = Modifier.copyWith(mod, detail: 'Will');
+      expect(m2.description, 'Based On Will, Own Roll');
     });
 
     test('Decreased Immunity 0', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Decreased Immunity 0');
+      var mod = Modifiers.instance().byName('Decreased Immunity 0');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Dehydration', () {
-      var mod = ModifierTemplates.instance().templateByName('Dehydration');
+      var mod = Modifiers.instance().byName('Dehydration');
       expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Delay, Fixed', () {
-      var mod = ModifierTemplates.instance().templateByName('Delay, Fixed');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Delay, Supernatural (fixed)', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Delay, Supernatural, fixed');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Delay, Supernatural (variable)', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Delay, Supernatural, variable');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Delay, Variable (short)', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Delay, Variable, short');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Delay, Variable (long)', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Delay, Variable, long');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Delay, Triggered', () {
-      var mod = ModifierTemplates.instance().templateByName('Delay, Triggered');
-      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
 
     test('Destructive Parry', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Destructive Parry');
+      var mod = Modifiers.instance().byName('Destructive Parry');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
     test('Double Blunt Trauma', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Double Blunt Trauma');
+      var mod = Modifiers.instance().byName('Double Blunt Trauma');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Double Knockback', () {
-      var mod = ModifierTemplates.instance().templateByName('Double Knockback');
+      var mod = Modifiers.instance().byName('Double Knockback');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     //TODO: Mobile is mutually exclusive with Drifting.
     test('Drifting', () {
-      var mod = ModifierTemplates.instance().templateByName('Drifting');
+      var mod = Modifiers.instance().byName('Drifting');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Drowning', () {
-      var mod = ModifierTemplates.instance().templateByName('Drowning');
+      var mod = Modifiers.instance().byName('Drowning');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
     });
 
     test('Dual', () {
-      var mod = ModifierTemplates.instance().templateByName('Dual');
+      var mod = Modifiers.instance().byName('Dual');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
     test('Erosive', () {
-      var mod = ModifierTemplates.instance().templateByName('Erosive');
+      var mod = Modifiers.instance().byName('Erosive');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
 
     test('Extended Duration, Permanent', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Extended Duration, Permanent');
+      var mod = Modifiers.instance().byName('Extended Duration, Permanent');
       expect(mod.percentage, 300);
       expect(mod.isAttackModifier, false);
     });
 
     test('Extended Duration, Permanent, dispellable', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Extended Duration, Permanent, dispellable');
+      var mod = Modifiers.instance()
+          .byName('Extended Duration, Permanent, dispellable');
       expect(mod.percentage, 150);
       expect(mod.isAttackModifier, false);
     });
 
     test('Fixed Duration', () {
-      var mod = ModifierTemplates.instance().templateByName('Fixed Duration');
+      var mod = Modifiers.instance().byName('Fixed Duration');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
     });
@@ -298,8 +302,7 @@ main() {
     //TODO: Follow-Up is a “penetration modifier”; you cannot combine it with
     // other penetration modifiers (although the carrier attack can have them).
     test('Follow-Up, Natural weapon', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Follow-Up, Natural weapon');
+      var mod = Modifiers.instance().byName('Follow-Up, Natural weapon');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
     });
@@ -307,45 +310,43 @@ main() {
     //TODO: Follow-Up, Universal is a "penetration modifier"; you cannot
     // combine it with other penetration modifiers.
     test('Follow-Up, Universal', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Follow-Up, Universal');
+      var mod = Modifiers.instance().byName('Follow-Up, Universal');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Force Field', () {
-      var mod = ModifierTemplates.instance().templateByName('Force Field');
+      var mod = Modifiers.instance().byName('Force Field');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Freezing', () {
-      var mod = ModifierTemplates.instance().templateByName('Freezing');
+      var mod = Modifiers.instance().byName('Freezing');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Game Time', () {
-      var mod = ModifierTemplates.instance().templateByName('Game Time');
+      var mod = Modifiers.instance().byName('Game Time');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
     });
 
     test('Guided', () {
-      var mod = ModifierTemplates.instance().templateByName('Guided');
+      var mod = Modifiers.instance().byName('Guided');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
 
     test('Heat', () {
-      var mod = ModifierTemplates.instance().templateByName('Heat');
+      var mod = Modifiers.instance().byName('Heat');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Incendiary, Non-burning', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Incendiary, Non-burning');
+      var mod = Modifiers.instance().byName('Incendiary, Non-burning');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
@@ -353,8 +354,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Piercing', () {
-      ModifierTemplate mod =
-          ModifierTemplates.instance().templateByName('HP Ammo, Piercing');
+      var mod = Modifiers.instance().byName('HP Ammo, Piercing');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
@@ -362,8 +362,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Large piercing', () {
-      ModifierTemplate mod = ModifierTemplates.instance()
-          .templateByName('HP Ammo, Large piercing');
+      Modifier mod = Modifiers.instance().byName('HP Ammo, Large piercing');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
@@ -371,46 +370,43 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('HP Ammo, Small piercing', () {
-      ModifierTemplate mod = ModifierTemplates.instance()
-          .templateByName('HP Ammo, Small piercing');
+      var mod = Modifiers.instance().byName('HP Ammo, Small piercing');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
     test('Independent', () {
-      var mod = ModifierTemplates.instance().templateByName('Independent');
+      var mod = Modifiers.instance().byName('Independent');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
 
     test('Independent, Simultaneous uses', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Independent, Simultaneous uses');
+      var mod = Modifiers.instance().byName('Independent, Simultaneous uses');
       expect(mod.percentage, 70);
       expect(mod.isAttackModifier, false);
     });
 
     test('Jet', () {
-      var mod = ModifierTemplates.instance().templateByName('Jet');
+      var mod = Modifiers.instance().byName('Jet');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
     });
 
     test('Link, Independent', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Link, Independent');
+      var mod = Modifiers.instance().byName('Link, Independent');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Link, Permanent', () {
-      var mod = ModifierTemplates.instance().templateByName('Link, Permanent');
+      var mod = Modifiers.instance().byName('Link, Permanent');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
     });
 
     test('Low Signature', () {
-      var mod = ModifierTemplates.instance().templateByName('Low Signature');
+      var mod = Modifiers.instance().byName('Low Signature');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
     });
@@ -419,8 +415,7 @@ main() {
     // other penetration modifiers, nor with modifiers that apply only to
     // conventional ranged attacks.
     test('Malediction, -1 per yard', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Malediction, -1 per yard');
+      var mod = Modifiers.instance().byName('Malediction, -1 per yard');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 100);
     });
@@ -429,8 +424,8 @@ main() {
     // other penetration modifiers, nor with modifiers that apply only to
     // conventional ranged attacks.
     test('Malediction, Long-Distance Modifiers', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Malediction, Long-Distance Modifiers');
+      var mod =
+          Modifiers.instance().byName('Malediction, Long-Distance Modifiers');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 200);
     });
@@ -439,21 +434,20 @@ main() {
     // other penetration modifiers, nor with modifiers that apply only to
     // conventional ranged attacks.
     test('Malediction, Size and Speed/Range Table', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Malediction, Size and Speed/Range Table');
+      var mod = Modifiers.instance()
+          .byName('Malediction, Size and Speed/Range Table');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 150);
     });
 
     test('Mental Defense Only', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Mental Defense Only');
+      var mod = Modifiers.instance().byName('Mental Defense Only');
       expect(mod.percentage, 250);
       expect(mod.isAttackModifier, true);
     });
 
     test('Missed Sleep', () {
-      var mod = ModifierTemplates.instance().templateByName('Missed Sleep');
+      var mod = Modifiers.instance().byName('Missed Sleep');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
@@ -461,8 +455,7 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('Multi-Ammo, Large piercing', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Multi-Ammo, Large piercing');
+      var mod = Modifiers.instance().byName('Multi-Ammo, Large piercing');
       expect(mod.percentage, 65);
       expect(mod.isAttackModifier, true);
     });
@@ -470,52 +463,49 @@ main() {
     //TODO: Ammo options value is reduced by 5% if it takes a second to switch
     // between ammo types.
     test('Multi-Ammo, Piercing', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Multi-Ammo, Piercing');
+      var mod = Modifiers.instance().byName('Multi-Ammo, Piercing');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
     test('No Signature', () {
-      var mod = ModifierTemplates.instance().templateByName('No Signature');
+      var mod = Modifiers.instance().byName('No Signature');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Once On, Stays On', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Once On, Stays On');
+      var mod = Modifiers.instance().byName('Once On, Stays On');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Overhead', () {
-      var mod = ModifierTemplates.instance().templateByName('Overhead');
+      var mod = Modifiers.instance().byName('Overhead');
       expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
     });
 
     test('Persistent', () {
-      var mod = ModifierTemplates.instance().templateByName('Persistent');
+      var mod = Modifiers.instance().byName('Persistent');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
     test('Radiation, Toxic', () {
-      var mod = ModifierTemplates.instance().templateByName('Radiation, Toxic');
+      var mod = Modifiers.instance().byName('Radiation, Toxic');
       expect(mod.percentage, 25);
       expect(mod.isAttackModifier, true);
     });
 
     test('Radiation, Burning', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Radiation, Burning');
+      var mod = Modifiers.instance().byName('Radiation, Burning');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
     });
 
     test('Ranged', () {
-      var mod = ModifierTemplates.instance().templateByName('Ranged');
+      var mod = Modifiers.instance().byName('Ranged');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
@@ -523,7 +513,7 @@ main() {
     //TODO: Incompatible with Always On, as well as Active Defense and Usually
     // On (both from Powers).
     test('Reflexive', () {
-      var mod = ModifierTemplates.instance().templateByName('Reflexive');
+      var mod = Modifiers.instance().byName('Reflexive');
       expect(mod.name, 'Reflexive');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
@@ -535,15 +525,14 @@ main() {
     //TODO: Respiratory Agent is a “penetration modifier”; you cannot combine
     // it with other penetration modifiers, such as Follow-Up.
     test('Respiratory Agent', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Respiratory Agent');
+      var mod = Modifiers.instance().byName('Respiratory Agent');
       expect(mod.name, 'Respiratory Agent');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, true);
     });
 
     test('Ricochet', () {
-      var mod = ModifierTemplates.instance().templateByName('Ricochet');
+      var mod = Modifiers.instance().byName('Ricochet');
       expect(mod.name, 'Ricochet');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
@@ -551,21 +540,21 @@ main() {
 
     // TODO You may add this enhancement to any Area Effect or Cone attack.
     test('Selective Area', () {
-      var mod = ModifierTemplates.instance().templateByName('Selective Area');
+      var mod = Modifiers.instance().byName('Selective Area');
       expect(mod.name, 'Selective Area');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Selective Effect', () {
-      var mod = ModifierTemplates.instance().templateByName('Selective Effect');
+      var mod = Modifiers.instance().byName('Selective Effect');
       expect(mod.name, 'Selective Effect');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, false);
     });
 
     test('Selectivity', () {
-      var mod = ModifierTemplates.instance().templateByName('Selectivity');
+      var mod = Modifiers.instance().byName('Selectivity');
       expect(mod.name, 'Selectivity');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
@@ -577,7 +566,7 @@ main() {
     // Respiratory Agent, Sense-Based, and any modifier that has one of these
     // modifiers as a prerequisite.
     test('ST-Based', () {
-      var mod = ModifierTemplates.instance().templateByName('ST-Based');
+      var mod = Modifiers.instance().byName('ST-Based');
       expect(mod.name, 'ST-Based');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
@@ -590,148 +579,143 @@ main() {
     // the Innate Attack. All-Out Attack (Strong), Mighty Blows, etc., can
     // still be applied to this capped damage.
     test('ST-Based, Limited', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('ST-Based, Limited');
+      var mod = Modifiers.instance().byName('ST-Based, Limited');
       expect(mod.name, 'ST-Based, Limited');
       expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
     });
 
     test('Starvation', () {
-      var mod = ModifierTemplates.instance().templateByName('Starvation');
+      var mod = Modifiers.instance().byName('Starvation');
       expect(mod.name, 'Starvation');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
     test('Suffocation', () {
-      var mod = ModifierTemplates.instance().templateByName('Suffocation');
+      var mod = Modifiers.instance().byName('Suffocation');
       expect(mod.name, 'Suffocation');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
     });
 
     test('Super Attribute', () {
-      var mod = ModifierTemplates.instance().templateByName('Super Attribute');
+      var mod = Modifiers.instance().byName('Super Attribute');
       expect(mod.name, 'Super Attribute');
       expect(mod.percentage, 25);
       expect(mod.isAttackModifier, false);
     });
 
     test('Surge', () {
-      var mod = ModifierTemplates.instance().templateByName('Surge');
+      var mod = Modifiers.instance().byName('Surge');
       expect(mod.name, 'Surge');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Surge, Arcing', () {
-      var mod = ModifierTemplates.instance().templateByName('Surge, Arcing');
+      var mod = Modifiers.instance().byName('Surge, Arcing');
       expect(mod.name, 'Surge, Arcing');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, true);
     });
 
     test('Surprise Attack', () {
-      var mod = ModifierTemplates.instance().templateByName('Surprise Attack');
+      var mod = Modifiers.instance().byName('Surprise Attack');
       expect(mod.name, 'Surprise Attack');
       expect(mod.percentage, 150);
       expect(mod.isAttackModifier, true);
     });
 
     test('Switchable', () {
-      var mod = ModifierTemplates.instance().templateByName('Switchable');
+      var mod = Modifiers.instance().byName('Switchable');
       expect(mod.name, 'Switchable');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, false);
     });
 
     test('Thrusting Blade', () {
-      var mod = ModifierTemplates.instance().templateByName('Thrusting Blade');
+      var mod = Modifiers.instance().byName('Thrusting Blade');
       expect(mod.name, 'Thrusting Blade');
       expect(mod.percentage, 15);
       expect(mod.isAttackModifier, true);
     });
 
     test('Time-Spanning, Past or future plus present', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Time-Spanning, Past or future plus present');
+      var mod = Modifiers.instance()
+          .byName('Time-Spanning, Past or future plus present');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Time-Spanning, Universal', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Time-Spanning, Universal');
+      var mod = Modifiers.instance().byName('Time-Spanning, Universal');
       expect(mod.name, 'Time-Spanning, Universal');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
     });
 
     test('Time-Spanning, Past and future only', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Time-Spanning, Past and future only');
+      var mod =
+          Modifiers.instance().byName('Time-Spanning, Past and future only');
       expect(mod.name, 'Time-Spanning, Past and future only');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('Time-Spanning, Past or future only', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Time-Spanning, Past or future only');
+      var mod =
+          Modifiers.instance().byName('Time-Spanning, Past or future only');
       expect(mod.name, 'Time-Spanning, Past or future only');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, false);
     });
 
     test('Underwater', () {
-      var mod = ModifierTemplates.instance().templateByName('Underwater');
+      var mod = Modifiers.instance().byName('Underwater');
       expect(mod.name, 'Underwater');
       expect(mod.percentage, 20);
       expect(mod.isAttackModifier, true);
     });
 
     test('Usually On', () {
-      var mod = ModifierTemplates.instance().templateByName('Usually On');
+      var mod = Modifiers.instance().byName('Usually On');
       expect(mod.name, 'Usually On');
       expect(mod.percentage, 5);
       expect(mod.isAttackModifier, false);
     });
 
     test('Variable', () {
-      var mod = ModifierTemplates.instance().templateByName('Variable');
+      var mod = Modifiers.instance().byName('Variable');
       expect(mod.name, 'Variable');
       expect(mod.percentage, 5);
       expect(mod.isAttackModifier, true);
     });
 
     test('Wall, Fixed shape', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Wall, Fixed shape');
+      var mod = Modifiers.instance().byName('Wall, Fixed shape');
       expect(mod.name, 'Wall, Fixed shape');
       expect(mod.percentage, 30);
       expect(mod.isAttackModifier, true);
     });
 
     test('Wall, Variable shape', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Wall, Variable shape');
+      var mod = Modifiers.instance().byName('Wall, Variable shape');
       expect(mod.name, 'Wall, Variable shape');
       expect(mod.percentage, 60);
       expect(mod.isAttackModifier, true);
     });
 
     test('World-Spanning, Others only', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('World-Spanning, Others only');
+      var mod = Modifiers.instance().byName('World-Spanning, Others only');
       expect(mod.name, 'World-Spanning, Others only');
       expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
     test('World-Spanning, Others plus current', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('World-Spanning, Others plus current');
+      var mod =
+          Modifiers.instance().byName('World-Spanning, Others plus current');
       expect(mod.name, 'World-Spanning, Others plus current');
       expect(mod.percentage, 100);
       expect(mod.isAttackModifier, false);
@@ -740,192 +724,184 @@ main() {
 
   group('Leveled enhancers', () {
     test('Accurate', () {
-      var mod = ModifierTemplates.instance().templateByName('Accurate')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Accurate');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 5);
+      expect(mod.percentage, 5);
     });
 
     test('Affects Others', () {
-      var mod = ModifierTemplates.instance().templateByName('Affects Others')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Affects Others');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 50);
-      expect(mod.levelPrompt, 'Number affected');
+      expect(mod.percentage, 50);
     });
 
     test('Area Effect', () {
-      var mod = ModifierTemplates.instance().templateByName('Area Effect')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Area Effect');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 50);
+      expect(mod.percentage, 50);
     });
 
     //TODO: You cannot combine Cone with Area Effect, Aura, Jet, Melee Attack,
     // Rapid Fire, or Emanation.
     test('Cone', () {
-      var mod = ModifierTemplates.instance().templateByName('Cone')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Cone');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 60);
+      expect(mod.percentage, 60);
     });
 
     test('Decreased Immunity', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Decreased Immunity') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Decreased Immunity');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 50);
+      expect(mod.percentage, 50);
     });
 
     test('Explosion', () {
-      var mod = ModifierTemplates.instance().templateByName('Explosion')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Explosion');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 50);
+      expect(mod.percentage, 50);
     });
 
     test('Extended Duration', () {
-      var mod = ModifierTemplates.instance().templateByName('Extended Duration')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Extended Duration');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 20);
+      expect(mod.percentage, 20);
     });
 
     test('Extra Passes', () {
-      var mod = ModifierTemplates.instance().templateByName('Extra Passes')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Extra Passes');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 10);
+      expect(mod.percentage, 10);
     });
 
     test('Fragmentation, Cutting', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Fragmentation, Cutting') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Fragmentation, Cutting');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 15);
+      expect(mod.percentage, 15);
     });
 
     test('Fragmentation, Hot', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Fragmentation, Hot') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Fragmentation, Hot');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 15);
+      expect(mod.percentage, 15);
     });
 
     test('Fragmentation, Impaling', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Fragmentation, Impaling') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Fragmentation, Impaling');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 20);
+      expect(mod.percentage, 20);
     });
 
     test('Fragmentation, Large Piercing', () {
-      var mod = ModifierTemplates.instance()
-              .templateByName('Fragmentation, Large Piercing')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Fragmentation, Large Piercing');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 15);
+      expect(mod.percentage, 15);
     });
 
     test('Incendiary, Burning', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Incendiary, Burning') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Incendiary, Burning');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 10);
+      expect(mod.percentage, 10);
     });
 
     test('Increased Range', () {
-      var mod = ModifierTemplates.instance().templateByName('Increased Range')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Increased Range');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 10);
+      expect(mod.percentage, 10);
     });
 
     test('Long-Range', () {
-      var mod = ModifierTemplates.instance().templateByName('Long-Range')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Long-Range');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 50);
+      expect(mod.percentage, 50);
     });
 
     test('Low Psychic Signature', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Low Psychic Signature') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Low Psychic Signature');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 5);
+      expect(mod.percentage, 5);
     });
 
     test('Low Signature, Variable', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Low Signature, Variable') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Low Signature, Variable');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 5);
+      expect(mod.percentage, 5);
     });
 
     //TODO: You may only add this enhancement to an attack that has both Area
     // Effect and Persistent.
     //TODO: Mobile is mutually exclusive with Drifting.
     test('Mobile', () {
-      var mod = ModifierTemplates.instance().templateByName('Mobile')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Mobile');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 40);
+      expect(mod.percentage, 40);
     });
 
     test('Reduced Fatigue Cost', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Reduced Fatigue Cost') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Reduced Fatigue Cost');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 20);
+      expect(mod.percentage, 20);
     });
 
     //TODO: You cannot add Reduced Time to attack powers, to traits that list
     // any kind of special modifier that affects activation time, or to Magery.
     test('Reduced Time', () {
-      var mod = ModifierTemplates.instance().templateByName('Reduced Time')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Reduced Time');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 20);
+      expect(mod.percentage, 20);
     });
 
     test('Reliable', () {
-      var mod = ModifierTemplates.instance().templateByName('Reliable')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Reliable');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 5);
+      expect(mod.percentage, 5);
     });
   }, skip: false);
 
   group('Variable enhancers', () {
     test('Armor Divisor', () {
-      var mod = ModifierTemplates.instance().templateByName('Armor Divisor')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Armor Divisor');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), -70);
-      expect(mod.describe(Data(level: 1)), 'Armor Divisor (0.1)');
-      expect(mod.levelPercentage(2), -50);
-      expect(mod.describe(Data(level: 2)), 'Armor Divisor (0.2)');
-      expect(mod.levelPercentage(3), -30);
-      expect(mod.describe(Data(level: 3)), 'Armor Divisor (0.5)');
-      expect(mod.levelPercentage(4), 50);
-      expect(mod.describe(Data(level: 4)), 'Armor Divisor (2)');
-      expect(mod.levelPercentage(5), 100);
-      expect(mod.describe(Data(level: 5)), 'Armor Divisor (3)');
-      expect(mod.levelPercentage(6), 150);
-      expect(mod.describe(Data(level: 6)), 'Armor Divisor (5)');
-      expect(mod.levelPercentage(7), 200);
-      expect(mod.describe(Data(level: 7)), 'Armor Divisor (10)');
+      expect(mod.percentage, -70);
+      expect(mod.description, 'Armor Divisor (0.1)');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, -50);
+      expect(mod.description, 'Armor Divisor (0.2)');
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, -30);
+      expect(mod.description, 'Armor Divisor (0.5)');
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, 50);
+      expect(mod.description, 'Armor Divisor (2)');
+      mod = Modifier.copyWith(mod, level: 5);
+      expect(mod.percentage, 100);
+      expect(mod.description, 'Armor Divisor (3)');
+      mod = Modifier.copyWith(mod, level: 6);
+      expect(mod.percentage, 150);
+      expect(mod.description, 'Armor Divisor (5)');
+      mod = Modifier.copyWith(mod, level: 7);
+      expect(mod.percentage, 200);
+      expect(mod.description, 'Armor Divisor (10)');
     });
 
     test('Can Carry Objects', () {
-      var mod = ModifierTemplates.instance().templateByName('Can Carry Objects')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Can Carry Objects');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 10);
-      expect(mod.levelPercentage(2), 20);
-      expect(mod.levelPercentage(3), 50);
-      expect(mod.levelPercentage(4), 100);
-      expect(mod.levelPercentage(5), 150);
+      expect(mod.percentage, 10);
+
+      // TODO description?
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 20);
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 50);
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, 100);
+
+      mod = Modifier.copyWith(mod, level: 5);
+      expect(mod.percentage, 150);
     });
 
     group('Cyclic', () {
@@ -1065,45 +1041,76 @@ main() {
     });
 
     test('Increased Range, LOS', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Increased Range, LOS') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Increased Range, LOS');
       expect(mod.isAttackModifier, false);
-      expect(mod.levelPercentage(1), 90);
-      expect(mod.levelPercentage(2), 80);
-      expect(mod.levelPercentage(3), 70);
-      expect(mod.levelPercentage(4), 60);
-      expect(mod.levelPercentage(5), 50);
-      expect(mod.levelPercentage(6), 40);
-      expect(mod.levelPercentage(7), 30);
-      expect(mod.levelPercentage(8), 20);
-      expect(mod.levelPercentage(9), 10);
-      expect(mod.levelPercentage(10), 0);
+      expect(mod.percentage, 90);
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 80);
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 70);
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, 60);
+      mod = Modifier.copyWith(mod, level: 5);
+      expect(mod.percentage, 50);
+      mod = Modifier.copyWith(mod, level: 6);
+      expect(mod.percentage, 40);
+      mod = Modifier.copyWith(mod, level: 7);
+      expect(mod.percentage, 30);
+      mod = Modifier.copyWith(mod, level: 8);
+      expect(mod.percentage, 20);
+      mod = Modifier.copyWith(mod, level: 9);
+      expect(mod.percentage, 10);
+      mod = Modifier.copyWith(mod, level: 10);
+      expect(mod.percentage, 0);
     });
 
     test('Rapid Fire', () {
-      var mod = ModifierTemplates.instance().templateByName('Rapid Fire')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Rapid Fire');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 40);
-      expect(mod.levelPercentage(2), 50);
-      expect(mod.levelPercentage(3), 70);
-      expect(mod.levelPercentage(4), 100);
-      expect(mod.levelPercentage(5), 150);
-      expect(mod.levelPercentage(6), 200);
-      expect(mod.levelPercentage(7), 250);
-      expect(mod.levelPercentage(8), 300);
+      expect(mod.percentage, 40);
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 50);
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 70);
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, 100);
+
+      mod = Modifier.copyWith(mod, level: 5);
+      expect(mod.percentage, 150);
+
+      mod = Modifier.copyWith(mod, level: 6);
+      expect(mod.percentage, 200);
+
+      mod = Modifier.copyWith(mod, level: 7);
+      expect(mod.percentage, 250);
+
+      mod = Modifier.copyWith(mod, level: 8);
+      expect(mod.percentage, 300);
     });
 
     test('Rapid Fire, Selective', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Rapid Fire, Selective') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Rapid Fire, Selective');
       expect(mod.isAttackModifier, true);
-      expect(mod.levelPercentage(1), 80);
-      expect(mod.levelPercentage(2), 110);
-      expect(mod.levelPercentage(3), 160);
-      expect(mod.levelPercentage(4), 210);
-      expect(mod.levelPercentage(5), 260);
-      expect(mod.levelPercentage(6), 310);
+      expect(mod.percentage, 80);
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 110);
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 160);
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, 210);
+
+      mod = Modifier.copyWith(mod, level: 5);
+      expect(mod.percentage, 260);
+
+      mod = Modifier.copyWith(mod, level: 6);
+      expect(mod.percentage, 310);
     });
   }, skip: false);
 
