@@ -2,20 +2,27 @@ import 'package:gurps_modifiers/modifier_data.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
+import 'package:test/test.dart' as prefix0;
 
 main() {
-  group('named variants', () {
-    group('Afects', () {
+  group('Named Variants', () {
+    group('Affects', () {
+      Modifier insub;
+      Modifier sub;
+
+      setUp(() {
+        insub = Modifiers.instance().byName('Affects Insubstantial');
+        sub = Modifiers.instance().byName('Affects Substantial');
+      });
+
       test('Insubstantial', () {
-        var mod = Modifiers.instance().byName('Affects Insubstantial');
-        expect(mod.percentage, 20);
-        expect(mod.isAttackModifier, false);
-        expect(mod.description, 'Affects Insubstantial');
+        expect(insub.percentage, 20);
+        expect(insub.isAttackModifier, false);
+        expect(insub.description, 'Affects Insubstantial');
       });
 
       test('Insubstantial, Selective', () {
-        var mod = Modifiers.instance().byName('Affects Insubstantial');
-        mod = Modifier.copyWith(mod, detail: 'Selective');
+        var mod = Modifier.copyWith(insub, detail: 'Selective');
 
         expect(mod.percentage, 30);
         expect(mod.isAttackModifier, false);
@@ -23,178 +30,413 @@ main() {
       });
 
       test('Insubstantial, Bad Variation', () {
-        var mod = Modifiers.instance().byName('Affects Insubstantial');
-        expect(() => Modifier.copyWith(mod, detail: 'Bad Variation'),
+        expect(() => Modifier.copyWith(insub, detail: 'Bad Variation'),
             throwsA(isA<AssertionError>()));
       });
 
       test('Substantial', () {
-        var mod = Modifiers.instance().byName('Affects Substantial');
-        expect(mod.percentage, 40);
-        expect(mod.isAttackModifier, false);
-        expect(mod.description, 'Affects Substantial');
+        expect(sub.percentage, 40);
+        expect(sub.isAttackModifier, false);
+        expect(sub.description, 'Affects Substantial');
       });
 
       test('Substantial, Selective', () {
-        var mod = Modifiers.instance().byName('Affects Substantial');
-        mod = Modifier.copyWith(mod, detail: 'Selective');
+        var mod = Modifier.copyWith(sub, detail: 'Selective');
         expect(mod.percentage, 50);
         expect(mod.isAttackModifier, false);
         expect(mod.description, 'Affects Substantial, Selective');
       });
     });
 
-    group('AP Ammo', () {
-      test('default (Piercing)', () {
-        var mod = Modifiers.instance().byName('AP Ammo');
+    group('Ammo Options', () {
+      //TODO: Ammo options value is reduced by 5% if it takes a full turn (1 second) to switch between ammo types.
+      group('AP', () {
+        Modifier ammo;
+
+        setUp(() {
+          ammo = Modifiers.instance().byName('AP Ammo');
+        });
+
+        test('default', () {
+          expect(ammo.percentage, 20);
+          expect(ammo.isAttackModifier, true);
+          expect(ammo.description, 'AP Ammo, Piercing');
+        });
+
+        test('Piercing', () {
+          var mod = Modifier.copyWith(ammo, detail: 'Piercing');
+          expect(mod.percentage, 20);
+          expect(mod.description, 'AP Ammo, Piercing');
+        });
+        test('Huge Piercing', () {
+          var mod = Modifier.copyWith(ammo, detail: 'Huge Piercing');
+          expect(mod.percentage, 45);
+          expect(mod.description, 'AP Ammo, Huge Piercing');
+        });
+        test('Large Piercing', () {
+          var mod = Modifier.copyWith(ammo, detail: 'Large Piercing');
+          expect(mod.percentage, 35);
+          expect(mod.description, 'AP Ammo, Large Piercing');
+        });
+      });
+
+      group('HP', () {
+        Modifier ammo;
+
+        setUp(() {
+          ammo = Modifiers.instance().byName('HP Ammo');
+        });
+
+        test('default', () {
+          expect(ammo.percentage, 20);
+          expect(ammo.isAttackModifier, true);
+          expect(ammo.description, 'HP Ammo, Piercing');
+        });
+
+        test('Piercing', () {
+          var mod = Modifier.copyWith(ammo, detail: 'Piercing');
+          expect(mod.percentage, 20);
+          expect(mod.description, 'HP Ammo, Piercing');
+        });
+
+        test('Large piercing', () {
+          var mod = Modifier.copyWith(ammo, detail: 'Large Piercing');
+          expect(mod.percentage, 20);
+          expect(mod.description, 'HP Ammo, Large Piercing');
+        });
+
+        test('Small piercing', () {
+          var mod = Modifier.copyWith(ammo, detail: 'Small Piercing');
+          expect(mod.percentage, 40);
+          expect(mod.description, 'HP Ammo, Small Piercing');
+        });
+      });
+
+      group('Multi-Ammo', () {
+        var ammo;
+
+        setUp(() {
+          ammo = Modifiers.instance().byName('Multi-Ammo');
+        });
+
+        test('default', () {
+          expect(ammo.percentage, 40);
+          expect(ammo.isAttackModifier, true);
+          expect(ammo.description, 'Multi-Ammo, Piercing');
+        });
+
+        test('Piercing', () {
+          var mod = Modifier.copyWith(ammo, detail: 'Piercing');
+          expect(mod.description, 'Multi-Ammo, Piercing');
+          expect(mod.percentage, 40);
+        });
+
+        test('Large piercing', () {
+          var mod = Modifier.copyWith(ammo, detail: 'Large Piercing');
+          expect(mod.description, 'Multi-Ammo, Large Piercing');
+          expect(mod.isAttackModifier, true);
+        });
+      });
+    });
+
+    group('Delay', () {
+      Modifier m1;
+
+      setUp(() {
+        m1 = Modifiers.instance().byName('Delay');
+      });
+
+      test('Fixed', () {
+        var mod = Modifier.copyWith(m1, detail: 'Fixed');
+        expect(mod.percentage, 0);
+        expect(mod.isAttackModifier, true);
+        expect(mod.description, 'Delay, Fixed');
+      });
+
+      test('Supernatural (fixed)', () {
+        var mod = Modifier.copyWith(m1, detail: 'Supernatural, fixed');
+        expect(mod.percentage, 50);
+        expect(mod.isAttackModifier, true);
+        expect(mod.description, 'Delay, Supernatural, fixed');
+      });
+
+      test('Supernatural (variable)', () {
+        var mod = Modifier.copyWith(m1, detail: 'Supernatural, variable');
+        expect(mod.percentage, 100);
+        expect(mod.isAttackModifier, true);
+        expect(mod.description, 'Delay, Supernatural, variable');
+      });
+
+      test('Variable (short)', () {
+        var mod = Modifier.copyWith(m1, detail: 'Variable, short');
+        expect(mod.percentage, 10);
+        expect(mod.isAttackModifier, true);
+        expect(mod.description, 'Delay, Variable, short');
+      });
+
+      test('Variable (long)', () {
+        var mod = Modifier.copyWith(m1, detail: 'Variable, long');
         expect(mod.percentage, 20);
         expect(mod.isAttackModifier, true);
-        expect(mod.description, 'AP Ammo, Piercing');
+        expect(mod.description, 'Delay, Variable, long');
       });
-      test('Huge Piercing', () {
-        var mod = Modifiers.instance().byName('AP Ammo');
-        mod = Modifier.copyWith(mod, detail: 'Huge Piercing');
-        expect(mod.percentage, 45);
+
+      test('Triggered', () {
+        var mod = Modifier.copyWith(m1, detail: 'Triggered');
+        expect(mod.percentage, 50);
         expect(mod.isAttackModifier, true);
-        expect(mod.description, 'AP Ammo, Huge Piercing');
+        expect(mod.description, 'Delay, Triggered');
       });
-      test('Large Piercing', () {
-        var mod = Modifiers.instance().byName('AP Ammo');
-        mod = Modifier.copyWith(mod, detail: 'Large Piercing');
-        expect(mod.percentage, 35);
-        expect(mod.isAttackModifier, true);
-        expect(mod.description, 'AP Ammo, Large Piercing');
+    });
+
+    group('Extended Duration', () {
+      Modifier dur;
+      setUp(() {
+        dur = Modifiers.instance().byName('Extended Duration');
+      });
+
+      test('default', () {
+        expect(dur.percentage, 20);
+        expect(dur.isAttackModifier, false);
+        expect(dur.description, 'Extended Duration, 3x');
+      });
+
+      test('Permanent', () {
+        var mod = Modifier.copyWith(dur, detail: 'Permanent');
+        expect(mod.percentage, 300);
+        expect(mod.description, 'Extended Duration, Permanent');
+      });
+
+      test('Permanent, dispellable', () {
+        var mod = Modifier.copyWith(dur, detail: 'Permanent but dispellable');
+        expect(mod.percentage, 150);
+        expect(mod.description, 'Extended Duration, Permanent but dispellable');
+      });
+
+      test('values', () {
+        var mod = Modifier.copyWith(dur, detail: '3x');
+        expect(mod.percentage, 20);
+        expect(mod.description, 'Extended Duration, 3x');
+
+        mod = Modifier.copyWith(dur, detail: '10x');
+        expect(mod.percentage, 40);
+        expect(mod.description, 'Extended Duration, 10x');
+
+        mod = Modifier.copyWith(dur, detail: '30x');
+        expect(mod.percentage, 60);
+        expect(mod.description, 'Extended Duration, 30x');
+
+        mod = Modifier.copyWith(dur, detail: '100x');
+        expect(mod.percentage, 80);
+        expect(mod.description, 'Extended Duration, 100x');
+
+        mod = Modifier.copyWith(dur, detail: '300x');
+        expect(mod.percentage, 100);
+        expect(mod.description, 'Extended Duration, 300x');
+
+        mod = Modifier.copyWith(dur, detail: '1,000x');
+        expect(mod.percentage, 120);
+        expect(mod.description, 'Extended Duration, 1,000x');
+      });
+    });
+
+    group('Follow-Up', () {
+      Modifier follow;
+
+      setUp(() {
+        follow = Modifiers.instance().byName('Follow-Up');
+      });
+      //TODO: Exception: On a passive carrier attack such as Spines, Follow-Up is a -50% limitation.
+      //TODO: Follow-Up is a “penetration modifier”; you cannot combine it with other penetration modifiers (although the carrier attack can have them).
+      //TODO: If the carrier attack is an Innate Attack, the cost of Follow-Up depends on the modifiers on the carrier attack.
+      test('default', () {
+        expect(follow.percentage, 0);
+        expect(follow.isAttackModifier, true);
+        expect(follow.description, 'Follow-Up, Natural weapon');
+      });
+
+      test('Natural weapon', () {
+        var mod = Modifier.copyWith(follow, detail: 'Natural weapon');
+        expect(mod.percentage, 0);
+        expect(mod.description, 'Follow-Up, Natural weapon');
+      });
+
+      //TODO: Follow-Up, Universal is a "penetration modifier"; you cannot combine it with other penetration modifiers.
+      test('Follow-Up, Universal', () {
+        var mod = Modifier.copyWith(follow, detail: 'Universal');
+        expect(mod.percentage, 50);
+        expect(mod.description, 'Follow-Up, Universal');
+      });
+
+      test('Follow-Up, Passive carrier', () {
+        var mod = Modifier.copyWith(follow, detail: 'Passive carrier');
+        expect(mod.percentage, -50);
+        expect(mod.description, 'Follow-Up, Passive carrier');
+      });
+    });
+
+    group('Independent', () {
+      Modifier ind;
+      setUp(() {
+        ind = Modifiers.instance().byName('Independent');
+      });
+
+      test('default', () {
+        expect(ind.percentage, 40);
+        expect(ind.isAttackModifier, false);
+        expect(ind.description, 'Independent');
+      });
+
+      test('Simultaneous uses', () {
+        var mod = Modifier.copyWith(ind, detail: 'Simultaneous uses');
+        expect(mod.percentage, 70);
+        expect(mod.description, 'Independent, Simultaneous uses');
+      });
+    });
+
+    group('Link', () {
+      Modifier link;
+      setUp(() {
+        link = Modifiers.instance().byName('Link');
+      });
+      test('default', () {
+        expect(link.percentage, 10);
+        expect(link.isAttackModifier, false);
+        expect(link.description, 'Link');
+      });
+      test('Link, Independent', () {
+        var mod = Modifier.copyWith(link, detail: 'Independent');
+        expect(mod.percentage, 20);
+        expect(mod.description, 'Link, Independent');
+      });
+    });
+
+    group('Radiation', () {
+      Modifier rad;
+
+      setUp(() {
+        rad = Modifiers.instance().byName('Radiation');
+      });
+
+      test('default', () {
+        expect(rad.percentage, 25);
+        expect(rad.isAttackModifier, true);
+        expect(rad.description, 'Radiation, Toxic');
+      });
+
+      test('Toxic', () {
+        var mod = Modifier.copyWith(rad, detail: 'Toxic');
+        expect(mod.percentage, 25);
+        expect(mod.description, 'Radiation, Toxic');
+      });
+
+      test('Radiation, Burning', () {
+        var mod = Modifier.copyWith(rad, detail: 'Burning');
+        expect(mod.percentage, 100);
+        expect(mod.description, 'Radiation, Burning');
+      });
+    });
+
+    group('Surge', () {
+      Modifier surge;
+
+      setUp(() {
+        surge = Modifiers.instance().byName('Surge');
+      });
+
+      test('default', () {
+        expect(surge.name, 'Surge');
+        expect(surge.percentage, 20);
+        expect(surge.isAttackModifier, true);
+        expect(surge.description, 'Surge');
+      });
+
+      test('Arcing', () {
+        var mod = Modifier.copyWith(surge, detail: 'Arcing');
+        expect(mod.name, 'Surge');
+        expect(mod.percentage, 100);
+        expect(mod.description, 'Surge, Arcing');
       });
     });
   });
 
-  group('Cosmic', () {
-    Modifier mod;
+  group('Categorized', () {
+    group('Cosmic', () {
+      Modifier mod;
 
-    setUp(() async {
-      mod = Modifiers.instance().byName('Cosmic');
-    });
+      setUp(() async {
+        mod = Modifiers.instance().byName('Cosmic');
+      });
 
-    test('default', () {
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-      expect(mod.description, 'Cosmic, Adding Utility');
-    });
+      test('default', () {
+        expect(mod.percentage, 50);
+        expect(mod.isAttackModifier, false);
+        expect(mod.description, 'Cosmic, Adding Utility');
+      });
 
-    test('Avoiding drawbacks', () {
-      var m2 = Modifier.copyWith(mod, detail: 'Avoiding drawbacks');
-      expect(m2.percentage, 50);
-      expect(m2.description, 'Cosmic, Avoiding drawbacks');
-    });
+      test('Avoiding drawbacks', () {
+        var m2 = Modifier.copyWith(mod, detail: 'Avoiding drawbacks');
+        expect(m2.percentage, 50);
+        expect(m2.description, 'Cosmic, Avoiding drawbacks');
+      });
 
-    test('Defensive', () {
-      var m2 = Modifier.copyWith(mod, detail: 'Defensive');
-      expect(m2.percentage, 50);
-      expect(m2.description, 'Cosmic, Defensive');
-    });
+      test('Defensive', () {
+        var m2 = Modifier.copyWith(mod, detail: 'Defensive');
+        expect(m2.percentage, 50);
+        expect(m2.description, 'Cosmic, Defensive');
+      });
 
-    test('Irresistible attack', () {
-      var m2 = Modifier.copyWith(mod, detail: 'Irresistible attack');
-      expect(m2.percentage, 300);
-      expect(m2.description, 'Cosmic, Irresistible attack');
-    });
+      test('Irresistible attack', () {
+        var m2 = Modifier.copyWith(mod, detail: 'Irresistible attack');
+        expect(m2.percentage, 300);
+        expect(m2.description, 'Cosmic, Irresistible attack');
+      });
 
-    test('Lingering effect', () {
-      var m2 = Modifier.copyWith(mod, detail: 'Lingering effect');
-      expect(m2.percentage, 100);
-      expect(m2.description, 'Cosmic, Lingering effect');
-    });
+      test('Lingering effect', () {
+        var m2 = Modifier.copyWith(mod, detail: 'Lingering effect');
+        expect(m2.percentage, 100);
+        expect(m2.description, 'Cosmic, Lingering effect');
+      });
 
-    test('No active defense allowed', () {
-      var m2 = Modifier.copyWith(mod, detail: 'No active defense allowed');
-      expect(m2.percentage, 300);
-      expect(m2.description, 'Cosmic, No active defense allowed');
-    });
+      test('No active defense allowed', () {
+        var m2 = Modifier.copyWith(mod, detail: 'No active defense allowed');
+        expect(m2.percentage, 300);
+        expect(m2.description, 'Cosmic, No active defense allowed');
+      });
 
-    test('No die roll required', () {
-      var m2 = Modifier.copyWith(mod, detail: 'No die roll required');
-      expect(m2.percentage, 100);
-      expect(m2.description, 'Cosmic, No die roll required');
-    });
+      test('No die roll required', () {
+        var m2 = Modifier.copyWith(mod, detail: 'No die roll required');
+        expect(m2.percentage, 100);
+        expect(m2.description, 'Cosmic, No die roll required');
+      });
 
-    test('No Rule of 16', () {
-      var m2 = Modifier.copyWith(mod, detail: 'No Rule of 16');
-      expect(m2.percentage, 50);
-      expect(m2.description, 'Cosmic, No Rule of 16');
-    });
+      test('No Rule of 16', () {
+        var m2 = Modifier.copyWith(mod, detail: 'No Rule of 16');
+        expect(m2.percentage, 50);
+        expect(m2.description, 'Cosmic, No Rule of 16');
+      });
 
-    test('Privileged attack', () {
-      var m2 = Modifier.copyWith(mod, detail: 'Privileged attack');
-      expect(m2.percentage, 50);
-      expect(m2.description, 'Cosmic, Privileged attack');
-    });
+      test('Privileged attack', () {
+        var m2 = Modifier.copyWith(mod, detail: 'Privileged attack');
+        expect(m2.percentage, 50);
+        expect(m2.description, 'Cosmic, Privileged attack');
+      });
 
-    test('Unhealing damage', () {
-      var m2 = Modifier.copyWith(mod, detail: 'Unhealing damage');
-      expect(m2.percentage, 100);
-      expect(m2.description, 'Cosmic, Unhealing damage');
-    });
+      test('Unhealing damage', () {
+        var m2 = Modifier.copyWith(mod, detail: 'Unhealing damage');
+        expect(m2.percentage, 100);
+        expect(m2.description, 'Cosmic, Unhealing damage');
+      });
 
-    test('Unrestricted powers', () {
-      var m2 = Modifier.copyWith(mod, detail: 'Unrestricted powers');
-      expect(m2.percentage, 300);
-      expect(m2.description, 'Cosmic, Unrestricted powers');
-    });
-  });
-
-  group('Delay', () {
-    Modifier m1;
-
-    setUp(() {
-      m1 = Modifiers.instance().byName('Delay');
-    });
-
-    test('Fixed', () {
-      var mod = Modifier.copyWith(m1, detail: 'Fixed');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, true);
-      expect(mod.description, 'Delay, Fixed');
-    });
-
-    test('Supernatural (fixed)', () {
-      var mod = Modifier.copyWith(m1, detail: 'Supernatural, fixed');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, true);
-      expect(mod.description, 'Delay, Supernatural, fixed');
-    });
-
-    test('Supernatural (variable)', () {
-      var mod = Modifier.copyWith(m1, detail: 'Supernatural, variable');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, true);
-      expect(mod.description, 'Delay, Supernatural, variable');
-    });
-
-    test('Variable (short)', () {
-      var mod = Modifier.copyWith(m1, detail: 'Variable, short');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-      expect(mod.description, 'Delay, Variable, short');
-    });
-
-    test('Variable (long)', () {
-      var mod = Modifier.copyWith(m1, detail: 'Variable, long');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-      expect(mod.description, 'Delay, Variable, long');
-    });
-
-    test('Triggered', () {
-      var mod = Modifier.copyWith(m1, detail: 'Triggered');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, true);
-      expect(mod.description, 'Delay, Triggered');
+      test('Unrestricted powers', () {
+        var m2 = Modifier.copyWith(mod, detail: 'Unrestricted powers');
+        expect(m2.percentage, 300);
+        expect(m2.description, 'Cosmic, Unrestricted powers');
+      });
     });
   });
 
   group('Simple enhancers', () {
-    //TODO: Ammo options value is reduced by 5% if it takes a second to switch
-    // between ammo types.
     test('Aura', () {
       var mod = Modifiers.instance().byName('Aura');
       expect(mod.percentage, 80);
@@ -278,40 +520,9 @@ main() {
       expect(mod.isAttackModifier, true);
     });
 
-    test('Extended Duration, Permanent', () {
-      var mod = Modifiers.instance().byName('Extended Duration, Permanent');
-      expect(mod.percentage, 300);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Extended Duration, Permanent, dispellable', () {
-      var mod = Modifiers.instance()
-          .byName('Extended Duration, Permanent, dispellable');
-      expect(mod.percentage, 150);
-      expect(mod.isAttackModifier, false);
-    });
-
     test('Fixed Duration', () {
       var mod = Modifiers.instance().byName('Fixed Duration');
       expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Exception: On a passive carrier attack such as Spines, Follow-Up is
-    // a -50% limitation.
-    //TODO: Follow-Up is a “penetration modifier”; you cannot combine it with
-    // other penetration modifiers (although the carrier attack can have them).
-    test('Follow-Up, Natural weapon', () {
-      var mod = Modifiers.instance().byName('Follow-Up, Natural weapon');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Follow-Up, Universal is a "penetration modifier"; you cannot
-    // combine it with other penetration modifiers.
-    test('Follow-Up, Universal', () {
-      var mod = Modifiers.instance().byName('Follow-Up, Universal');
-      expect(mod.percentage, 50);
       expect(mod.isAttackModifier, false);
     });
 
@@ -351,93 +562,16 @@ main() {
       expect(mod.isAttackModifier, true);
     });
 
-    //TODO: Ammo options value is reduced by 5% if it takes a second to switch
-    // between ammo types.
-    test('HP Ammo, Piercing', () {
-      var mod = Modifiers.instance().byName('HP Ammo, Piercing');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Ammo options value is reduced by 5% if it takes a second to switch
-    // between ammo types.
-    test('HP Ammo, Large piercing', () {
-      Modifier mod = Modifiers.instance().byName('HP Ammo, Large piercing');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Ammo options value is reduced by 5% if it takes a second to switch
-    // between ammo types.
-    test('HP Ammo, Small piercing', () {
-      var mod = Modifiers.instance().byName('HP Ammo, Small piercing');
-      expect(mod.percentage, 40);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Independent', () {
-      var mod = Modifiers.instance().byName('Independent');
-      expect(mod.percentage, 40);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Independent, Simultaneous uses', () {
-      var mod = Modifiers.instance().byName('Independent, Simultaneous uses');
-      expect(mod.percentage, 70);
-      expect(mod.isAttackModifier, false);
-    });
-
     test('Jet', () {
       var mod = Modifiers.instance().byName('Jet');
       expect(mod.percentage, 0);
       expect(mod.isAttackModifier, true);
     });
 
-    test('Link, Independent', () {
-      var mod = Modifiers.instance().byName('Link, Independent');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Link, Permanent', () {
-      var mod = Modifiers.instance().byName('Link, Permanent');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, false);
-    });
-
     test('Low Signature', () {
       var mod = Modifiers.instance().byName('Low Signature');
       expect(mod.percentage, 10);
       expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Malediction is a "penetration modifier"; you cannot combine it with
-    // other penetration modifiers, nor with modifiers that apply only to
-    // conventional ranged attacks.
-    test('Malediction, -1 per yard', () {
-      var mod = Modifiers.instance().byName('Malediction, -1 per yard');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, 100);
-    });
-
-    //TODO: Malediction is a "penetration modifier"; you cannot combine it with
-    // other penetration modifiers, nor with modifiers that apply only to
-    // conventional ranged attacks.
-    test('Malediction, Long-Distance Modifiers', () {
-      var mod =
-          Modifiers.instance().byName('Malediction, Long-Distance Modifiers');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, 200);
-    });
-
-    //TODO: Malediction is a "penetration modifier"; you cannot combine it with
-    // other penetration modifiers, nor with modifiers that apply only to
-    // conventional ranged attacks.
-    test('Malediction, Size and Speed/Range Table', () {
-      var mod = Modifiers.instance()
-          .byName('Malediction, Size and Speed/Range Table');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, 150);
     });
 
     test('Mental Defense Only', () {
@@ -449,22 +583,6 @@ main() {
     test('Missed Sleep', () {
       var mod = Modifiers.instance().byName('Missed Sleep');
       expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Ammo options value is reduced by 5% if it takes a second to switch
-    // between ammo types.
-    test('Multi-Ammo, Large piercing', () {
-      var mod = Modifiers.instance().byName('Multi-Ammo, Large piercing');
-      expect(mod.percentage, 65);
-      expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Ammo options value is reduced by 5% if it takes a second to switch
-    // between ammo types.
-    test('Multi-Ammo, Piercing', () {
-      var mod = Modifiers.instance().byName('Multi-Ammo, Piercing');
-      expect(mod.percentage, 40);
       expect(mod.isAttackModifier, true);
     });
 
@@ -492,26 +610,13 @@ main() {
       expect(mod.isAttackModifier, true);
     });
 
-    test('Radiation, Toxic', () {
-      var mod = Modifiers.instance().byName('Radiation, Toxic');
-      expect(mod.percentage, 25);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Radiation, Burning', () {
-      var mod = Modifiers.instance().byName('Radiation, Burning');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, true);
-    });
-
     test('Ranged', () {
       var mod = Modifiers.instance().byName('Ranged');
       expect(mod.percentage, 40);
       expect(mod.isAttackModifier, false);
     });
 
-    //TODO: Incompatible with Always On, as well as Active Defense and Usually
-    // On (both from Powers).
+    //TODO: Incompatible with Always On, as well as Active Defense and Usually On (both from Powers).
     test('Reflexive', () {
       var mod = Modifiers.instance().byName('Reflexive');
       expect(mod.name, 'Reflexive');
@@ -519,9 +624,7 @@ main() {
       expect(mod.isAttackModifier, false);
     });
 
-    //TODO: You may only add this enhancement to an Affliction or to an Innate
-    // Attack that inflicts toxic or fatigue damage, and you must combine it
-    // with one of Area Effect, Cone, or Jet.
+    //TODO: You may only add this enhancement to an Affliction or to an Innate Attack that inflicts toxic or fatigue damage, and you must combine it with one of Area Effect, Cone, or Jet.
     //TODO: Respiratory Agent is a “penetration modifier”; you cannot combine
     // it with other penetration modifiers, such as Follow-Up.
     test('Respiratory Agent', () {
@@ -560,8 +663,8 @@ main() {
       expect(mod.isAttackModifier, false);
     });
 
-    //TODO: Incompatible with any modifiers that don’t suit a muscle-powered
-    // attack. These include Area Effect, Blood Agent, Cone, Contact Agent,
+    //TODO: Incompatible with any modifiers that don’t suit a muscle-powered attack.
+    // These include Area Effect, Blood Agent, Cone, Contact Agent,
     // Cyclic, Explosion, Follow-Up, Jet, Malediction, Onset, Resistible,
     // Respiratory Agent, Sense-Based, and any modifier that has one of these
     // modifiers as a prerequisite.
@@ -572,12 +675,12 @@ main() {
       expect(mod.isAttackModifier, true);
     });
 
-    // TODO It must be combined with the Melee Attack limitation. When making
-    // a cutting attack, you may only use your swing damage. When making an
-    // impaling attack, you may only use your thrust damage. Crushing attacks
-    // may use either. The total damage added by your ST cannot exceed that of
-    // the Innate Attack. All-Out Attack (Strong), Mighty Blows, etc., can
-    // still be applied to this capped damage.
+    // TODO It must be combined with the Melee Attack limitation.
+    // When making a cutting attack, you may only use your swing damage. When
+    // making an impaling attack, you may only use your thrust damage. Crushing
+    // attacks may use either. The total damage added by your ST cannot exceed
+    // that of the Innate Attack. All-Out Attack (Strong), Mighty Blows, etc.,
+    // can still be applied to this capped damage.
     test('ST-Based, Limited', () {
       var mod = Modifiers.instance().byName('ST-Based, Limited');
       expect(mod.name, 'ST-Based, Limited');
@@ -604,20 +707,6 @@ main() {
       expect(mod.name, 'Super Attribute');
       expect(mod.percentage, 25);
       expect(mod.isAttackModifier, false);
-    });
-
-    test('Surge', () {
-      var mod = Modifiers.instance().byName('Surge');
-      expect(mod.name, 'Surge');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Surge, Arcing', () {
-      var mod = Modifiers.instance().byName('Surge, Arcing');
-      expect(mod.name, 'Surge, Arcing');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, true);
     });
 
     test('Surprise Attack', () {
@@ -761,12 +850,6 @@ main() {
       expect(mod.percentage, 50);
     });
 
-    test('Extended Duration', () {
-      var mod = Modifiers.instance().byName('Extended Duration');
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage, 20);
-    });
-
     test('Extra Passes', () {
       var mod = Modifiers.instance().byName('Extra Passes');
       expect(mod.isAttackModifier, true);
@@ -825,6 +908,36 @@ main() {
       var mod = Modifiers.instance().byName('Low Signature, Variable');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 5);
+    });
+
+    group('Malediction', () {
+      Modifier mal;
+
+      setUp(() {
+        mal = Modifiers.instance().byName('Malediction');
+      });
+
+      //TODO: Malediction is a "penetration modifier"; you cannot combine it with other penetration modifiers, nor with modifiers that apply only to conventional ranged attacks.
+      test('1, -1 Per Yard', () {
+        expect(mal.isAttackModifier, true);
+        expect(mal.level, 1);
+        expect(mal.description, 'Malediction 1');
+        expect(mal.percentage, 100);
+      });
+
+      test('2, Size and Speed/Range Table', () {
+        var mod = Modifier.copyWith(mal, level: 2);
+        expect(mod.level, 2);
+        expect(mod.description, 'Malediction 2');
+        expect(mod.percentage, 150);
+      });
+
+      test('3, Long-Distance Modifiers', () {
+        var mod = Modifier.copyWith(mal, level: 3);
+        expect(mod.percentage, 200);
+        expect(mod.level, 3);
+        expect(mod.description, 'Malediction 3');
+      });
     });
 
     //TODO: You may only add this enhancement to an attack that has both Area

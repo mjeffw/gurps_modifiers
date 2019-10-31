@@ -621,19 +621,42 @@ String modifierDataString = '''
     },
     {
       "name": "Extended Duration",
-      "type": "Leveled",
-      "maxLevel": 14,
-      "valuePerLevel": 20
-    },
-    {
-      "name": "Extended Duration, Permanent",
-      "type": "Simple",
-      "percentage": 300
-    },
-    {
-      "name": "Extended Duration, Permanent, dispellable",
-      "type": "Simple",
-      "percentage": 150
+      "type": "NamedVariant",
+      "default": "3x",
+      "variations": [
+        {
+          "key": "3x",
+          "value": 20
+        },
+        {
+          "key": "10x",
+          "value": 40
+        },
+        {
+          "key": "30x",
+          "value": 60
+        },
+        {
+          "key": "100x",
+          "value": 80
+        },
+        {
+          "key": "300x",
+          "value": 100
+        },
+        {
+          "key": "1,000x",
+          "value": 120
+        },
+        {
+          "key": "Permanent but dispellable",
+          "value": 150
+        },
+        {
+          "key": "Permanent",
+          "value": 300
+        }
+      ]
     },
     {
       "name": "Extra Passes",
@@ -659,14 +682,24 @@ String modifierDataString = '''
       "percentage": 0
     },
     {
-      "name": "Follow-Up, Natural weapon",
-      "type": "Simple",
-      "percentage": 0
-    },
-    {
-      "name": "Follow-Up, Universal",
-      "type": "Simple",
-      "percentage": 50
+      "name": "Follow-Up",
+      "type": "NamedVariant",
+      "isAttackModifier": true,
+      "default": "Natural weapon",
+      "variations": [
+        {
+          "key": "Natural weapon",
+          "value": 0
+        },
+        {
+          "key": "Universal",
+          "value": 50
+        },
+        {
+          "key": "Passive carrier",
+          "value": -50
+        }
+      ]
     },
     {
       "name": "Force Field",
@@ -742,22 +775,24 @@ String modifierDataString = '''
       "isAttackModifier": true
     },
     {
-      "name": "HP Ammo, Large piercing",
-      "type": "Simple",
-      "percentage": 20,
-      "isAttackModifier": true
-    },
-    {
-      "name": "HP Ammo, Piercing",
-      "type": "Simple",
-      "percentage": 20,
-      "isAttackModifier": true
-    },
-    {
-      "name": "HP Ammo, Small piercing",
-      "type": "Simple",
-      "percentage": 40,
-      "isAttackModifier": true
+      "name": "HP Ammo",
+      "type": "NamedVariant",
+      "default": "Piercing",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Piercing",
+          "value": 20
+        },
+        {
+          "key": "Large Piercing",
+          "value": 20
+        },
+        {
+          "key": "Small Piercing",
+          "value": 40
+        }
+      ]
     },
     {
       "name": "Immediate Preparation Required",
@@ -816,13 +851,14 @@ String modifierDataString = '''
     },
     {
       "name": "Independent",
-      "type": "Simple",
-      "percentage": 40
-    },
-    {
-      "name": "Independent, Simultaneous uses",
-      "type": "Simple",
-      "percentage": 70
+      "type": "NamedVariant",
+      "percentage": 40,
+      "variations": [
+        {
+          "key": "Simultaneous uses",
+          "value": 70
+        }
+      ]
     },
     {
       "name": "Informal",
@@ -860,14 +896,15 @@ String modifierDataString = '''
       "valuePerLevel": -10
     },
     {
-      "name": "Link, Independent",
-      "type": "Simple",
-      "percentage": 20
-    },
-    {
-      "name": "Link, Permanent",
-      "type": "Simple",
-      "percentage": 10
+      "name": "Link",
+      "type": "NamedVariant",
+      "percentage": 10,
+      "variations": [
+        {
+          "key": "Independent",
+          "value": 20
+        }
+      ]
     },
     {
       "name": "Long-Range",
@@ -899,21 +936,11 @@ String modifierDataString = '''
       "percentage": -50
     },
     {
-      "name": "Malediction, -1 per yard",
-      "type": "Simple",
-      "percentage": 100,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Malediction, Long-Distance Modifiers",
-      "type": "Simple",
-      "percentage": 200,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Malediction, Size and Speed/Range Table",
-      "type": "Simple",
-      "percentage": 150,
+      "name": "Malediction",
+      "type": "Leveled",
+      "baseValue": 50,
+      "valuePerLevel": 50,
+      "maxLevel": 3,
       "isAttackModifier": true
     },
     {
@@ -993,16 +1020,20 @@ String modifierDataString = '''
       "valuePerLevel": 40
     },
     {
-      "name": "Multi-Ammo, Large piercing",
-      "type": "Simple",
-      "percentage": 65,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Multi-Ammo, Piercing",
-      "type": "Simple",
-      "percentage": 40,
-      "isAttackModifier": true
+      "name": "Multi-Ammo",
+      "type": "NamedVariant",
+      "default": "Piercing",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Piercing",
+          "value": 40
+        },
+        {
+          "key": "Large Piercing",
+          "value": 65
+        }
+      ]
     },
     {
       "name": "No Blunt Trauma",
@@ -1094,6 +1125,22 @@ String modifierDataString = '''
         -30,
         -50,
         -60
+      ]
+    },
+    {
+      "name": "Radiation",
+      "type": "NamedVariant",
+      "default": "Toxic",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Toxic",
+          "value": 25
+        },
+        {
+          "key": "Burning",
+          "value": 100
+        }
       ]
     },
     {
@@ -1308,18 +1355,20 @@ String modifierDataString = '''
       "type": "Simple",
       "percentage": 25
     },
+
     {
       "name": "Surge",
-      "type": "Simple",
+      "type": "NamedVariant",
+      "isAttackModifier": true,
       "percentage": 20,
-      "isAttackModifier": true
+      "variations": [
+        {
+          "key": "Arcing",
+          "value": 100
+        }
+      ]
     },
-    {
-      "name": "Surge, Arcing",
-      "type": "Simple",
-      "percentage": 100,
-      "isAttackModifier": true
-    },
+
     {
       "name": "Surprise Attack",
       "type": "Simple",
