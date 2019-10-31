@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:quiver/collection.dart';
+import 'package:quiver/core.dart';
+
 import '../modifier_data.dart';
 
 ///
@@ -20,39 +23,61 @@ class DescriptionFormatter {
   ///
   /// Create a [DescriptionFormatter] with the given template.
   ///
-  const DescriptionFormatter({this.template = '%name'})
-      : assert(template != null);
+  const DescriptionFormatter({this.template}) : assert(template != null);
 
   ///
   /// Given a Modifier template name and instance data, return the description.
   ///
-  String describe({String name, ModifierData data}) => template
-      .replaceFirst('%name', _name(name))
-      .replaceFirst('%detail', _detail(data));
+  String describe({String name, ModifierData data}) {
+    var text = template
+        .replaceFirst('%name', _name(name))
+        .replaceFirst('%detail', _detail(data))
+        .trim();
+    if (text.endsWith(',')) {
+      text = text.substring(0, text.length - 1);
+    }
+    return text;
+  }
 
   String _name(String name) => name;
 
   String _detail(ModifierData data) => data.detail ?? '';
 
   ///
-  /// Create a [DescriptionFormatter] from JSON.
+  /// Build a LevetTextFormatter from a JSON structure
   ///
   factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) {
-    return (json == null)
-        ? DefaultFormatter
-        : DescriptionFormatter(template: json['template'] ?? '%name');
+    if (json == null) return const DefaultFormatter();
+
+    String type = json['type'];
+    if (type == 'Exponential') {
+      return _ExponentialFormatter.fromJSON(json);
+    } else if (type == 'Array') {
+      return _ArrayFormatter.fromJSON(json);
+    } else if (type == 'Level') {
+      return LevelTextFormatter(template: json['template']);
+    } else {
+      return DescriptionFormatter(template: json['template']);
+    }
   }
 
-  String toJSON() {
-    return '{ "template": "$template" }';
+  String toJSON() => '"formatter": { "template": "$template" }';
+
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) return true;
+    return other is DescriptionFormatter && this.template == other.template;
   }
+
+  @override
+  int get hashCode => template.hashCode;
 }
 
 class DefaultFormatter extends DescriptionFormatter {
-  const DefaultFormatter();
+  const DefaultFormatter() : super(template: '%name, %detail');
 
-  String describe({String name, ModifierData data}) =>
-      '$name${data.detail == null ? "" : ", " + data.detail}';
+  @override
+  String toJSON() => null;
 }
 
 ///
@@ -70,19 +95,6 @@ class LevelTextFormatter extends DescriptionFormatter {
       : assert(template != null),
         super(template: template);
 
-  ///
-  /// Build a LevetTextFormatter from a JSON structure
-  ///
-  factory LevelTextFormatter.fromJSON(Map<String, dynamic> json) {
-    String type = json['type'];
-    if (type == 'Exponential') {
-      return _ExponentialFormatter.fromJSON(json);
-    } else if (type == 'Array') {
-      return _ArrayFormatter.fromJSON(json);
-    }
-    return LevelTextFormatter(template: json['template']);
-  }
-
   String describe({String name, ModifierData data}) => super
       .describe(name: name, data: data)
       .replaceFirst('%f', _f_value(data.level));
@@ -98,7 +110,7 @@ class LevelTextFormatter extends DescriptionFormatter {
   /// Return the formatter as a JSON object
   ///
   String toJSON() {
-    return '{ "template": "$template" }';
+    return '{ "type": "Level", "template": "$template" }';
   }
 
   @override
@@ -107,7 +119,11 @@ class LevelTextFormatter extends DescriptionFormatter {
   }
 
   @override
-  int get hashCode => super.hashCode ^ template.hashCode;
+  int get hashCode => template.hashCode;
+}
+
+class DefaultLevelTextFormatter extends LevelTextFormatter {
+  const DefaultLevelTextFormatter() : super(template: "%name %f");
 }
 
 ///
@@ -170,7 +186,15 @@ class _ArrayFormatter extends LevelTextFormatter {
   }''';
   }
 
-  // TODO add equals and hashcode
+  @override
+  bool operator ==(dynamic other) {
+    return other is _ArrayFormatter &&
+        this.template == other.template &&
+        listsEqual(this.array, other.array);
+  }
+
+  @override
+  int get hashCode => hashObjects(array) ^ template.hashCode;
 }
 
 ///
@@ -222,5 +246,14 @@ class _ExponentialFormatter extends LevelTextFormatter {
   }''';
   }
 
-  // TODO add equals and hashcode
+  @override
+  bool operator ==(dynamic other) {
+    return other is _ExponentialFormatter &&
+        this.template == other.template &&
+        this.a == other.a &&
+        this.b == other.b;
+  }
+
+  @override
+  int get hashCode => hash3(a, b, template);
 }

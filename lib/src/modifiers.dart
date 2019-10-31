@@ -56,10 +56,7 @@ class _Modifiers implements ModifierTemplates, Modifiers {
   }
 
   @override
-  Modifier byName(String name) {
-    ModifierTemplate t = templateByName(name);
-    return t.createModifier();
-  }
+  Modifier byName(String name) => templateByName(name).createModifier();
 
   Iterable<String> fetchKeys() => _Modifiers._map.keys;
 
@@ -70,9 +67,8 @@ class _Modifiers implements ModifierTemplates, Modifiers {
       var list = temp['modifiers'] as List;
 
       list.forEach((a) {
-        var name = a['name'];
-        var m = _constructors[a['type']];
-        _map[name] = _ModifierFactory(builder: m, data: a);
+        _map[a['name']] = _ModifierFactory(
+            builder: _constructors[a['type'] ?? 'Simple'], data: a);
       });
     }
   }

@@ -12,7 +12,7 @@ String modifierDataString = \'\'\'
 
   // Write file
   var fileCopy =
-      await File('lib/src/modifier_data.dart').writeAsString(contents);
+      await File('lib/src/modifier_json.dart').writeAsString(contents);
   print(await fileCopy.exists());
   print(await fileCopy.length());
 }

@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 main() {
   group('named variants', () {
-    group('Afects (In)substantial', () {
+    group('Afects', () {
       test('Insubstantial', () {
         var mod = Modifiers.instance().byName('Affects Insubstantial');
         expect(mod.percentage, 20);

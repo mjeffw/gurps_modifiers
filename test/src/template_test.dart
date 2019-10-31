@@ -103,8 +103,8 @@ void main() {
 
       test('toJSON', () {
         var expected = '''{
-  "type": "Simple",
   "name": "test",
+  "type": "Simple",
   "percentage": 10,
   "isAttackModifier": true
 }''';
@@ -118,10 +118,9 @@ void main() {
 
       test('toJSON - template is true', () {
         var expected = '''{
-  "type": "Simple",
   "name": "Foo",
-  "percentage": -20,
-  "isAttackModifier": false
+  "type": "Simple",
+  "percentage": -20
 }''';
 
         expect(
@@ -282,7 +281,7 @@ void main() {
 
       test('fromJSON -- formatter', () {
         var source = '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7,
-            "formatter": {"template": "Boo-Ya"} }''';
+            "formatter": {"type": "Level","template": "Boo-Ya"} }''';
         var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.formatter, LevelTextFormatter(template: "Boo-Ya"));
       });
@@ -384,7 +383,7 @@ void main() {
       test('fromJSON - formatter', () {
         var source =
             '''{ "type": "Variable", "name": "Bar", "levelValues": [1,2,3], 
-            "formatter": { "template": "%f %name" } }''';
+            "formatter": { "type": "Level","template": "%f %name" } }''';
         BaseLeveledTemplate m =
             VariableLeveledTemplate.fromJSON(json.decode(source));
         expect(m.describe(Data(level: 1)), '1 Bar');

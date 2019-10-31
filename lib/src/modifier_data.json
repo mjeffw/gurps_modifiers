@@ -143,28 +143,31 @@
     },
     {
       "name": "Affects Insubstantial",
-      "type": "Simple",
-      "percentage": 20
-    },
-    {
-      "name": "Affects Insubstantial, Selective",
-      "type": "Simple",
-      "percentage": 30
+      "type": "NamedVariant",
+      "percentage": 20,
+      "variations": [
+        {
+          "key": "Selective",
+          "value": 30
+        }
+      ]
     },
     {
       "name": "Affects Others",
       "type": "Leveled",
-      "valuePerLevel": 50
+      "valuePerLevel": 50,
+      "levelPrompt": "Number affected"
     },
     {
       "name": "Affects Substantial",
-      "type": "Simple",
-      "percentage": 40
-    },
-    {
-      "name": "Affects Substantial, Selective",
-      "type": "Simple",
-      "percentage": 50
+      "type": "NamedVariant",
+      "percentage": 40,
+      "variations": [
+        {
+          "key": "Selective",
+          "value": 50
+        }
+      ]
     },
     {
       "name": "All-Out",
@@ -192,34 +195,36 @@
       "percentage": -10
     },
     {
-      "name": "AP Ammo, Huge piercing",
-      "type": "Simple",
-      "percentage": 35,
-      "isAttackModifier": true
-    },
-    {
-      "name": "AP Ammo, Large piercing",
-      "type": "Simple",
-      "percentage": 45,
-      "isAttackModifier": true
-    },
-    {
-      "name": "AP Ammo, Piercing",
-      "type": "Simple",
-      "percentage": 20,
-      "isAttackModifier": true
+      "name": "AP Ammo",
+      "type": "NamedVariant",
+      "default": "Piercing",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Piercing",
+          "value": 20
+        },
+        {
+          "key": "Large Piercing",
+          "value": 35
+        },
+        {
+          "key": "Huge Piercing",
+          "value": 45
+        }
+      ]
     },
     {
       "name": "Area Effect",
       "type": "Leveled",
       "isAttackModifier": true,
       "valuePerLevel": 50,
+      "levelPrompt": "Radius (yards)",
       "formatter": {
         "type": "Exponential",
-        "a": "1",
-        "b": "2",
-        "template": "%name, %f yards",
-        "prompt": "Radius (yards)"
+        "a": 1,
+        "b": 2,
+        "template": "%name, %f yards"
       }
     },
     {
@@ -246,8 +251,7 @@
           "(5)",
           "(10)"
         ],
-        "template": "%name %f",
-        "prompt": "Divisor"
+        "template": "%name %f"
       }
     },
     {
@@ -274,12 +278,20 @@
     {
       "name": "Based On",
       "type": "Simple",
-      "percentage": 20
+      "percentage": 20,
+      "defaultDetail": "(Attribute)",
+      "formatter": {
+        "template": "Based On %detail"
+      }
     },
     {
       "name": "Based On, Own Roll",
       "type": "Simple",
-      "percentage": 20
+      "percentage": 20,
+      "defaultDetail": "(Attribute)",
+      "formatter": {
+        "template": "Based On %detail, Own Roll"
+      }
     },
     {
       "name": "Blockable",
@@ -386,54 +398,39 @@
       "valuePerLevel": 10
     },
     {
-      "name": "Cosmic, Avoiding drawbacks",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "Cosmic, Defensive",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "Cosmic, Irresistible attack",
-      "type": "Simple",
-      "percentage": 300
-    },
-    {
-      "name": "Cosmic, Lingering effect",
-      "type": "Simple",
-      "percentage": 100
-    },
-    {
-      "name": "Cosmic, No active defense allowed",
-      "type": "Simple",
-      "percentage": 300
-    },
-    {
-      "name": "Cosmic, No die roll required",
-      "type": "Simple",
-      "percentage": 100
-    },
-    {
-      "name": "Cosmic, No Rule of 16",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "Cosmic, Privileged attack",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "Cosmic, Unhealing damage",
-      "type": "Simple",
-      "percentage": 100
-    },
-    {
-      "name": "Cosmic, Unrestricted powers",
-      "type": "Simple",
-      "percentage": 300
+      "name": "Cosmic",
+      "type": "Categorized",
+      "defaultDetail": "Adding Utility",
+      "categories": [
+        {
+          "name": "Adding Utility",
+          "cost": 50,
+          "items": [
+            "Avoiding drawbacks",
+            "Defensive",
+            "No Rule of 16",
+            "Privileged attack"
+          ]
+        },
+        {
+          "name": "Cheating",
+          "cost": 100,
+          "items": [
+            "Lingering effect",
+            "No die roll required",
+            "Unhealing damage"
+          ]
+        },
+        {
+          "name": "Godlike Tricks",
+          "cost": 300,
+          "items": [
+            "Irresistible attack",
+            "No active defense allowed",
+            "Unrestricted powers"
+          ]
+        }
+      ]
     },
     {
       "name": "Costs Fatigue",
@@ -487,40 +484,36 @@
       "isAttackModifier": true
     },
     {
-      "name": "Delay, Fixed",
-      "type": "Simple",
-      "percentage": 0,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Delay, Supernatural, fixed",
-      "type": "Simple",
-      "percentage": 50,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Delay, Supernatural, variable",
-      "type": "Simple",
-      "percentage": 100,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Delay, Triggered",
-      "type": "Simple",
-      "percentage": 50,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Delay, Variable, long",
-      "type": "Simple",
-      "percentage": 20,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Delay, Variable, short",
-      "type": "Simple",
-      "percentage": 10,
-      "isAttackModifier": true
+      "name": "Delay",
+      "type": "NamedVariant",
+      "default": "Fixed",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Fixed",
+          "value": 0
+        },
+        {
+          "key": "Variable, short",
+          "value": 10
+        },
+        {
+          "key": "Variable, long",
+          "value": 20
+        },
+        {
+          "key": "Supernatural, fixed",
+          "value": 50
+        },
+        {
+          "key": "Triggered",
+          "value": 50
+        },
+        {
+          "key": "Supernatural, variable",
+          "value": 100
+        }
+      ]
     },
     {
       "name": "Destructive Parry",

@@ -29,15 +29,15 @@ void main() {
       });
 
       test('fromJSON', () {
-        String text = '{ "template": "%name %f" }';
-        var f = LevelTextFormatter.fromJSON(json.decode(text));
+        String text = '{ "type": "Level", "template": "%name %f" }';
+        var f = DescriptionFormatter.fromJSON(json.decode(text));
         expect(f.describe(name: 'name', data: Data(level: 9)), 'name 9');
       });
 
       test('fromJSON 2', () {
-        String text = '{ "type": "Simple", "template": "%name %f" }';
-        var f = LevelTextFormatter.fromJSON(json.decode(text));
-        expect(f.describe(name: 'name', data: Data(level: 9)), 'name 9');
+        String text = '{ "type": "Simple", "template": "%name %detail" }';
+        var f = DescriptionFormatter.fromJSON(json.decode(text));
+        expect(f.describe(name: 'name', data: Data(detail: '9')), 'name 9');
       });
 
       test('const constructor', () {
@@ -47,9 +47,10 @@ void main() {
       });
 
       test('toJSON', () {
-        expect(LevelTextFormatter().toJSON(), '{ "template": "%name %f" }');
+        expect(LevelTextFormatter().toJSON(),
+            '{ "type": "Level", "template": "%name %f" }');
         expect(LevelTextFormatter(template: 'One %name to %f').toJSON(),
-            '{ "template": "One %name to %f" }');
+            '{ "type": "Level", "template": "One %name to %f" }');
       });
     });
 
@@ -57,7 +58,7 @@ void main() {
       var text = '''
       { "type": "Array", "template": "%name %f", "array": ["A", "B", "C"] }
       ''';
-      var f1 = LevelTextFormatter.fromJSON(json.decode(text));
+      var f1 = DescriptionFormatter.fromJSON(json.decode(text));
       var expected = ''' {
     "type": "Array",
     "array": %array,
@@ -73,7 +74,7 @@ void main() {
         var text = '''
       { "type": "Array", "template": "AA %f --** %name!", "array": ["A", "B", "C"] }
       ''';
-        var f = LevelTextFormatter.fromJSON(json.decode(text));
+        var f = DescriptionFormatter.fromJSON(json.decode(text));
         expect(
             f.describe(name: 'name', data: Data(level: 1)), 'AA A --** name!');
         expect(f.describe(name: 'bob', data: Data(level: 2)), 'AA B --** bob!');
@@ -83,7 +84,7 @@ void main() {
         var text = '''
       { "type": "Array", "array": ["A", "B", "C"] }
       ''';
-        expect(() => LevelTextFormatter.fromJSON(json.decode(text)),
+        expect(() => DescriptionFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
@@ -91,7 +92,7 @@ void main() {
         var text = '''
       { "type": "Array", "template": "%name %f" }
       ''';
-        expect(() => LevelTextFormatter.fromJSON(json.decode(text)),
+        expect(() => DescriptionFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
@@ -107,7 +108,7 @@ void main() {
         var text = '''
       { "type": "Array", "template": "AA %name some %f template", "array": ["any", "old", "hole"] }
       ''';
-        var f1 = LevelTextFormatter.fromJSON(json.decode(text));
+        var f1 = DescriptionFormatter.fromJSON(json.decode(text));
         expect(
             f1.toJSON(),
             expected
@@ -121,7 +122,7 @@ void main() {
         var text =
             '''{ "type": "Exponential", "template": "%name %f", "b": 2 }''';
 
-        expect(() => LevelTextFormatter.fromJSON(json.decode(text)),
+        expect(() => DescriptionFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
@@ -129,14 +130,14 @@ void main() {
         var text =
             '''{ "type": "Exponential", "template": "%name %f", "a": 5 }''';
 
-        expect(() => LevelTextFormatter.fromJSON(json.decode(text)),
+        expect(() => DescriptionFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- missing template', () {
         var text = '''{ "type": "Exponential", "a": 5, "b": 2 }''';
 
-        expect(() => LevelTextFormatter.fromJSON(json.decode(text)),
+        expect(() => DescriptionFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
@@ -144,7 +145,7 @@ void main() {
         var text =
             '''{ "type": "Exponential", "template": "%name: %f", "a": 5, "b": 2 }''';
 
-        var f = LevelTextFormatter.fromJSON(json.decode(text));
+        var f = DescriptionFormatter.fromJSON(json.decode(text));
         expect(f.describe(name: 'name', data: Data(level: 2)), 'name: 20');
         expect(f.describe(name: 'foo', data: Data(level: 3)), 'foo: 40');
       });
@@ -157,7 +158,7 @@ void main() {
     "template": "%name: %f"
   }''';
 
-        var f = LevelTextFormatter.fromJSON(json.decode(text));
+        var f = DescriptionFormatter.fromJSON(json.decode(text));
         expect(f.toJSON(), text);
       });
     });
