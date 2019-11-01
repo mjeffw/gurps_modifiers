@@ -117,14 +117,15 @@ String _mapToJson(Map<String, int> map) {
 class NamedVariantTemplate extends ModifierTemplate {
   final Map<String, int> variations;
 
-  final int _percentage;
+  // final int _percentage;
+  final Optional<int> _percentage;
 
   final String defaultVariation;
 
   List<String> get variationNames => variations.keys.toList();
 
   int percentage(ModifierData data) =>
-      variations[data.detail ?? defaultVariation] ?? _percentage;
+      variations[data.detail ?? defaultVariation] ?? _percentage.value;
 
   bool containsVariation(String detail) =>
       detail == null || variations.containsKey(detail);
@@ -135,14 +136,15 @@ class NamedVariantTemplate extends ModifierTemplate {
       int percentage,
       this.variations,
       this.defaultVariation})
-      : this._percentage = percentage,
+      : _percentage = Optional.fromNullable(percentage),
         super(name: name, isAttackModifier: isAttackModifier ?? false);
 
   @override
   Modifier createModifier({ModifierData data}) {
     if (data?.detail != null) {
-      if (!containsVariation(data.detail))
+      if (!containsVariation(data.detail)) {
         throw AssertionError('invalid variation');
+      }
     }
     return Modifier(
         template: this,
@@ -156,7 +158,7 @@ class NamedVariantTemplate extends ModifierTemplate {
     List<String> attributes = [
       '"name": "$name"',
       '"type": "NamedVariant"',
-      if (_percentage != null) '"percentage": $_percentage',
+      if (_percentage.isPresent) '"percentage": $_percentage',
       if (defaultVariation != null) '"default": "$defaultVariation"',
       if (isAttackModifier) '"isAttackModifier": true',
       '"variations": [\n${_mapToJson(variations)}\n\t]'
