@@ -1355,7 +1355,6 @@ String modifierDataString = '''
       "type": "Simple",
       "percentage": 25
     },
-
     {
       "name": "Surge",
       "type": "NamedVariant",
@@ -1368,7 +1367,6 @@ String modifierDataString = '''
         }
       ]
     },
-
     {
       "name": "Surprise Attack",
       "type": "Simple",
@@ -1387,24 +1385,27 @@ String modifierDataString = '''
       "isAttackModifier": true
     },
     {
-      "name": "Time-Spanning, Past and future only",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "Time-Spanning, Past or future only",
-      "type": "Simple",
-      "percentage": 0
-    },
-    {
-      "name": "Time-Spanning, Past or future plus present",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "Time-Spanning, Universal",
-      "type": "Simple",
-      "percentage": 100
+      "name": "Time-Spanning",
+      "type": "NamedVariant",
+      "default": "Past or future",
+      "variations": [
+        {
+          "key": "Past or future",
+          "value": 50
+        },
+        {
+          "key": "Past or future only",
+          "value": 0
+        },
+        {
+          "key": "Universal",
+          "value": 100
+        },
+        {
+          "key": "Past and future only",
+          "value": 50
+        }
+      ]
     },
     {
       "name": "Unconscious Only",
@@ -1464,16 +1465,16 @@ String modifierDataString = '''
       "percentage": -10
     },
     {
-      "name": "Wall, Fixed shape",
-      "type": "Simple",
+      "name": "Wall",
+      "type": "NamedVariant",
       "percentage": 30,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Wall, Variable shape",
-      "type": "Simple",
-      "percentage": 60,
-      "isAttackModifier": true
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Variable",
+          "value": 60
+        }
+      ]
     },
     {
       "name": "Weakened Without Preparation",
@@ -1486,14 +1487,19 @@ String modifierDataString = '''
       ]
     },
     {
-      "name": "World-Spanning, Others only",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "World-Spanning, Others plus current",
-      "type": "Simple",
-      "percentage": 100
+      "name": "World-Spanning",
+      "type": "NamedVariant",
+      "default": "Others only",
+      "variations": [
+        {
+          "key": "Others only",
+          "value": 50
+        },
+        {
+          "key": "Others plus current",
+          "value": 100
+        }
+      ]
     }
   ]
 }''';

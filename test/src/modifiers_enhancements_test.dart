@@ -2,9 +2,324 @@ import 'package:gurps_modifiers/modifier_data.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
-import 'package:test/test.dart' as prefix0;
 
 main() {
+  group('Simple', () {
+    test('Aura', () {
+      var mod = Modifiers.instance().byName('Aura');
+      expect(mod.percentage, 80);
+      expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Aura');
+    });
+
+    test('Based on (Attribute)', () {
+      var mod = Modifiers.instance().byName('Based On');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Based On (Attribute)');
+
+      var m2 = Modifier.copyWith(mod, detail: 'ST');
+      expect(m2.percentage, 20);
+      expect(m2.description, 'Based On ST');
+    });
+
+    test('Based on (Attribute), Own Roll', () {
+      var mod = Modifiers.instance().byName('Based On, Own Roll');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Based On (Attribute), Own Roll');
+
+      var m2 = Modifier.copyWith(mod, detail: 'Will');
+      expect(m2.description, 'Based On Will, Own Roll');
+    });
+
+    test('Decreased Immunity 0', () {
+      var mod = Modifiers.instance().byName('Decreased Immunity 0');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Dehydration', () {
+      var mod = Modifiers.instance().byName('Dehydration');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Destructive Parry', () {
+      var mod = Modifiers.instance().byName('Destructive Parry');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Double Blunt Trauma', () {
+      var mod = Modifiers.instance().byName('Double Blunt Trauma');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Double Knockback', () {
+      var mod = Modifiers.instance().byName('Double Knockback');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    //TODO: Mobile is mutually exclusive with Drifting.
+    test('Drifting', () {
+      var mod = Modifiers.instance().byName('Drifting');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Drowning', () {
+      var mod = Modifiers.instance().byName('Drowning');
+      expect(mod.percentage, 0);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Dual', () {
+      var mod = Modifiers.instance().byName('Dual');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Erosive', () {
+      var mod = Modifiers.instance().byName('Erosive');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Fixed Duration', () {
+      var mod = Modifiers.instance().byName('Fixed Duration');
+      expect(mod.percentage, 0);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Force Field', () {
+      var mod = Modifiers.instance().byName('Force Field');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Freezing', () {
+      var mod = Modifiers.instance().byName('Freezing');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Game Time', () {
+      var mod = Modifiers.instance().byName('Game Time');
+      expect(mod.percentage, 0);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Guided', () {
+      var mod = Modifiers.instance().byName('Guided');
+      expect(mod.percentage, 50);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Heat', () {
+      var mod = Modifiers.instance().byName('Heat');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Incendiary, Non-burning', () {
+      var mod = Modifiers.instance().byName('Incendiary, Non-burning');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Jet', () {
+      var mod = Modifiers.instance().byName('Jet');
+      expect(mod.percentage, 0);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Low Signature', () {
+      var mod = Modifiers.instance().byName('Low Signature');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Mental Defense Only', () {
+      var mod = Modifiers.instance().byName('Mental Defense Only');
+      expect(mod.percentage, 250);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Missed Sleep', () {
+      var mod = Modifiers.instance().byName('Missed Sleep');
+      expect(mod.percentage, 50);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('No Signature', () {
+      var mod = Modifiers.instance().byName('No Signature');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Once On, Stays On', () {
+      var mod = Modifiers.instance().byName('Once On, Stays On');
+      expect(mod.percentage, 50);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Overhead', () {
+      var mod = Modifiers.instance().byName('Overhead');
+      expect(mod.percentage, 30);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Persistent', () {
+      var mod = Modifiers.instance().byName('Persistent');
+      expect(mod.percentage, 40);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Ranged', () {
+      var mod = Modifiers.instance().byName('Ranged');
+      expect(mod.percentage, 40);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: Incompatible with Always On, as well as Active Defense and Usually On (both from Powers).
+    test('Reflexive', () {
+      var mod = Modifiers.instance().byName('Reflexive');
+      expect(mod.name, 'Reflexive');
+      expect(mod.percentage, 40);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: You may only add this enhancement to an Affliction or to an Innate Attack that inflicts toxic or fatigue damage, and you must combine it with one of Area Effect, Cone, or Jet.
+    //TODO: Respiratory Agent is a “penetration modifier”; you cannot combine
+    // it with other penetration modifiers, such as Follow-Up.
+    test('Respiratory Agent', () {
+      var mod = Modifiers.instance().byName('Respiratory Agent');
+      expect(mod.name, 'Respiratory Agent');
+      expect(mod.percentage, 50);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Ricochet', () {
+      var mod = Modifiers.instance().byName('Ricochet');
+      expect(mod.name, 'Ricochet');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, true);
+    });
+
+    // TODO You may add this enhancement to any Area Effect or Cone attack.
+    test('Selective Area', () {
+      var mod = Modifiers.instance().byName('Selective Area');
+      expect(mod.name, 'Selective Area');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Selective Effect', () {
+      var mod = Modifiers.instance().byName('Selective Effect');
+      expect(mod.name, 'Selective Effect');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Selectivity', () {
+      var mod = Modifiers.instance().byName('Selectivity');
+      expect(mod.name, 'Selectivity');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, false);
+    });
+
+    //TODO: Incompatible with any modifiers that don’t suit a muscle-powered attack.
+    // These include Area Effect, Blood Agent, Cone, Contact Agent,
+    // Cyclic, Explosion, Follow-Up, Jet, Malediction, Onset, Resistible,
+    // Respiratory Agent, Sense-Based, and any modifier that has one of these
+    // modifiers as a prerequisite.
+    test('ST-Based', () {
+      var mod = Modifiers.instance().byName('ST-Based');
+      expect(mod.name, 'ST-Based');
+      expect(mod.percentage, 100);
+      expect(mod.isAttackModifier, true);
+    });
+
+    // TODO It must be combined with the Melee Attack limitation.
+    // When making a cutting attack, you may only use your swing damage. When
+    // making an impaling attack, you may only use your thrust damage. Crushing
+    // attacks may use either. The total damage added by your ST cannot exceed
+    // that of the Innate Attack. All-Out Attack (Strong), Mighty Blows, etc.,
+    // can still be applied to this capped damage.
+    test('ST-Based, Limited', () {
+      var mod = Modifiers.instance().byName('ST-Based, Limited');
+      expect(mod.name, 'ST-Based, Limited');
+      expect(mod.percentage, 30);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Starvation', () {
+      var mod = Modifiers.instance().byName('Starvation');
+      expect(mod.name, 'Starvation');
+      expect(mod.percentage, 40);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Suffocation', () {
+      var mod = Modifiers.instance().byName('Suffocation');
+      expect(mod.name, 'Suffocation');
+      expect(mod.percentage, 0);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Super Attribute', () {
+      var mod = Modifiers.instance().byName('Super Attribute');
+      expect(mod.name, 'Super Attribute');
+      expect(mod.percentage, 25);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Surprise Attack', () {
+      var mod = Modifiers.instance().byName('Surprise Attack');
+      expect(mod.name, 'Surprise Attack');
+      expect(mod.percentage, 150);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Switchable', () {
+      var mod = Modifiers.instance().byName('Switchable');
+      expect(mod.name, 'Switchable');
+      expect(mod.percentage, 10);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Thrusting Blade', () {
+      var mod = Modifiers.instance().byName('Thrusting Blade');
+      expect(mod.name, 'Thrusting Blade');
+      expect(mod.percentage, 15);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Underwater', () {
+      var mod = Modifiers.instance().byName('Underwater');
+      expect(mod.name, 'Underwater');
+      expect(mod.percentage, 20);
+      expect(mod.isAttackModifier, true);
+    });
+
+    test('Usually On', () {
+      var mod = Modifiers.instance().byName('Usually On');
+      expect(mod.name, 'Usually On');
+      expect(mod.percentage, 5);
+      expect(mod.isAttackModifier, false);
+    });
+
+    test('Variable', () {
+      var mod = Modifiers.instance().byName('Variable');
+      expect(mod.name, 'Variable');
+      expect(mod.percentage, 5);
+      expect(mod.isAttackModifier, true);
+    });
+  }, skip: false);
+
   group('Named Variants', () {
     group('Affects', () {
       Modifier insub;
@@ -358,6 +673,97 @@ main() {
         expect(mod.description, 'Surge, Arcing');
       });
     });
+
+    group('Time-Spanning', () {
+      Modifier ts;
+      setUp(() {
+        ts = Modifiers.instance().byName('Time-Spanning');
+      });
+
+      test('default', () {
+        expect(ts.percentage, 50);
+        expect(ts.isAttackModifier, false);
+        expect(ts.description, 'Time-Spanning, Past or future');
+      });
+
+      test('Past or future', () {
+        var mod = Modifier.copyWith(ts, detail: 'Past or future');
+        expect(mod.percentage, 50);
+        expect(mod.description, 'Time-Spanning, Past or future');
+      });
+
+      test('Universal', () {
+        var mod = Modifier.copyWith(ts, detail: 'Universal');
+        expect(mod.name, 'Time-Spanning');
+        expect(mod.description, 'Time-Spanning, Universal');
+        expect(mod.percentage, 100);
+      });
+
+      test('Past and future only', () {
+        var mod = Modifier.copyWith(ts, detail: 'Past and future only');
+        expect(mod.name, 'Time-Spanning');
+        expect(mod.description, 'Time-Spanning, Past and future only');
+        expect(mod.percentage, 50);
+      });
+
+      test('Past or future only', () {
+        var mod = Modifier.copyWith(ts, detail: 'Past or future only');
+        expect(mod.name, 'Time-Spanning');
+        expect(mod.description, 'Time-Spanning, Past or future only');
+        expect(mod.percentage, 0);
+      });
+    });
+
+    group('Wall', () {
+      Modifier wall;
+
+      setUp(() {
+        wall = Modifiers.instance().byName('Wall');
+      });
+
+      test('Wall', () {
+        expect(wall.name, 'Wall');
+        expect(wall.percentage, 30);
+        expect(wall.isAttackModifier, true);
+        expect(wall.description, 'Wall');
+      });
+
+      test('Variable', () {
+        var mod = Modifier.copyWith(wall, detail: 'Variable');
+        expect(mod.name, 'Wall');
+        expect(mod.percentage, 60);
+        expect(mod.description, 'Wall, Variable');
+      });
+    });
+
+    group('World-Spanning', () {
+      Modifier span;
+
+      setUp(() {
+        span = Modifiers.instance().byName('World-Spanning');
+      });
+
+      test('default', () {
+        expect(span.name, 'World-Spanning');
+        expect(span.description, 'World-Spanning, Others only');
+        expect(span.percentage, 50);
+        expect(span.isAttackModifier, false);
+      });
+
+      test('Others only', () {
+        var mod = Modifier.copyWith(span, detail: 'Others only');
+        expect(mod.name, 'World-Spanning');
+        expect(mod.description, 'World-Spanning, Others only');
+        expect(mod.percentage, 50);
+      });
+
+      test('Others plus current', () {
+        var mod = Modifier.copyWith(span, detail: 'Others plus current');
+        expect(mod.name, 'World-Spanning');
+        expect(mod.description, 'World-Spanning, Others plus current');
+        expect(mod.percentage, 100);
+      });
+    });
   });
 
   group('Categorized', () {
@@ -436,386 +842,20 @@ main() {
     });
   });
 
-  group('Simple enhancers', () {
-    test('Aura', () {
-      var mod = Modifiers.instance().byName('Aura');
-      expect(mod.percentage, 80);
-      expect(mod.isAttackModifier, true);
-      expect(mod.description, 'Aura');
-    });
-
-    test('Based on (Attribute)', () {
-      var mod = Modifiers.instance().byName('Based On');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, false);
-      expect(mod.description, 'Based On (Attribute)');
-
-      var m2 = Modifier.copyWith(mod, detail: 'ST');
-      expect(m2.percentage, 20);
-      expect(m2.description, 'Based On ST');
-    });
-
-    test('Based on (Attribute), Own Roll', () {
-      var mod = Modifiers.instance().byName('Based On, Own Roll');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, false);
-      expect(mod.description, 'Based On (Attribute), Own Roll');
-
-      var m2 = Modifier.copyWith(mod, detail: 'Will');
-      expect(m2.description, 'Based On Will, Own Roll');
-    });
-
-    test('Decreased Immunity 0', () {
-      var mod = Modifiers.instance().byName('Decreased Immunity 0');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Dehydration', () {
-      var mod = Modifiers.instance().byName('Dehydration');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Destructive Parry', () {
-      var mod = Modifiers.instance().byName('Destructive Parry');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Double Blunt Trauma', () {
-      var mod = Modifiers.instance().byName('Double Blunt Trauma');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Double Knockback', () {
-      var mod = Modifiers.instance().byName('Double Knockback');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Mobile is mutually exclusive with Drifting.
-    test('Drifting', () {
-      var mod = Modifiers.instance().byName('Drifting');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Drowning', () {
-      var mod = Modifiers.instance().byName('Drowning');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Dual', () {
-      var mod = Modifiers.instance().byName('Dual');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Erosive', () {
-      var mod = Modifiers.instance().byName('Erosive');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Fixed Duration', () {
-      var mod = Modifiers.instance().byName('Fixed Duration');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Force Field', () {
-      var mod = Modifiers.instance().byName('Force Field');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Freezing', () {
-      var mod = Modifiers.instance().byName('Freezing');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Game Time', () {
-      var mod = Modifiers.instance().byName('Game Time');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Guided', () {
-      var mod = Modifiers.instance().byName('Guided');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Heat', () {
-      var mod = Modifiers.instance().byName('Heat');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Incendiary, Non-burning', () {
-      var mod = Modifiers.instance().byName('Incendiary, Non-burning');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Jet', () {
-      var mod = Modifiers.instance().byName('Jet');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Low Signature', () {
-      var mod = Modifiers.instance().byName('Low Signature');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Mental Defense Only', () {
-      var mod = Modifiers.instance().byName('Mental Defense Only');
-      expect(mod.percentage, 250);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Missed Sleep', () {
-      var mod = Modifiers.instance().byName('Missed Sleep');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('No Signature', () {
-      var mod = Modifiers.instance().byName('No Signature');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Once On, Stays On', () {
-      var mod = Modifiers.instance().byName('Once On, Stays On');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Overhead', () {
-      var mod = Modifiers.instance().byName('Overhead');
-      expect(mod.percentage, 30);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Persistent', () {
-      var mod = Modifiers.instance().byName('Persistent');
-      expect(mod.percentage, 40);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Ranged', () {
-      var mod = Modifiers.instance().byName('Ranged');
-      expect(mod.percentage, 40);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Incompatible with Always On, as well as Active Defense and Usually On (both from Powers).
-    test('Reflexive', () {
-      var mod = Modifiers.instance().byName('Reflexive');
-      expect(mod.name, 'Reflexive');
-      expect(mod.percentage, 40);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: You may only add this enhancement to an Affliction or to an Innate Attack that inflicts toxic or fatigue damage, and you must combine it with one of Area Effect, Cone, or Jet.
-    //TODO: Respiratory Agent is a “penetration modifier”; you cannot combine
-    // it with other penetration modifiers, such as Follow-Up.
-    test('Respiratory Agent', () {
-      var mod = Modifiers.instance().byName('Respiratory Agent');
-      expect(mod.name, 'Respiratory Agent');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Ricochet', () {
-      var mod = Modifiers.instance().byName('Ricochet');
-      expect(mod.name, 'Ricochet');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-    });
-
-    // TODO You may add this enhancement to any Area Effect or Cone attack.
-    test('Selective Area', () {
-      var mod = Modifiers.instance().byName('Selective Area');
-      expect(mod.name, 'Selective Area');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Selective Effect', () {
-      var mod = Modifiers.instance().byName('Selective Effect');
-      expect(mod.name, 'Selective Effect');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Selectivity', () {
-      var mod = Modifiers.instance().byName('Selectivity');
-      expect(mod.name, 'Selectivity');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Incompatible with any modifiers that don’t suit a muscle-powered attack.
-    // These include Area Effect, Blood Agent, Cone, Contact Agent,
-    // Cyclic, Explosion, Follow-Up, Jet, Malediction, Onset, Resistible,
-    // Respiratory Agent, Sense-Based, and any modifier that has one of these
-    // modifiers as a prerequisite.
-    test('ST-Based', () {
-      var mod = Modifiers.instance().byName('ST-Based');
-      expect(mod.name, 'ST-Based');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, true);
-    });
-
-    // TODO It must be combined with the Melee Attack limitation.
-    // When making a cutting attack, you may only use your swing damage. When
-    // making an impaling attack, you may only use your thrust damage. Crushing
-    // attacks may use either. The total damage added by your ST cannot exceed
-    // that of the Innate Attack. All-Out Attack (Strong), Mighty Blows, etc.,
-    // can still be applied to this capped damage.
-    test('ST-Based, Limited', () {
-      var mod = Modifiers.instance().byName('ST-Based, Limited');
-      expect(mod.name, 'ST-Based, Limited');
-      expect(mod.percentage, 30);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Starvation', () {
-      var mod = Modifiers.instance().byName('Starvation');
-      expect(mod.name, 'Starvation');
-      expect(mod.percentage, 40);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Suffocation', () {
-      var mod = Modifiers.instance().byName('Suffocation');
-      expect(mod.name, 'Suffocation');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Super Attribute', () {
-      var mod = Modifiers.instance().byName('Super Attribute');
-      expect(mod.name, 'Super Attribute');
-      expect(mod.percentage, 25);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Surprise Attack', () {
-      var mod = Modifiers.instance().byName('Surprise Attack');
-      expect(mod.name, 'Surprise Attack');
-      expect(mod.percentage, 150);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Switchable', () {
-      var mod = Modifiers.instance().byName('Switchable');
-      expect(mod.name, 'Switchable');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Thrusting Blade', () {
-      var mod = Modifiers.instance().byName('Thrusting Blade');
-      expect(mod.name, 'Thrusting Blade');
-      expect(mod.percentage, 15);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Time-Spanning, Past or future plus present', () {
-      var mod = Modifiers.instance()
-          .byName('Time-Spanning, Past or future plus present');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Time-Spanning, Universal', () {
-      var mod = Modifiers.instance().byName('Time-Spanning, Universal');
-      expect(mod.name, 'Time-Spanning, Universal');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Time-Spanning, Past and future only', () {
-      var mod =
-          Modifiers.instance().byName('Time-Spanning, Past and future only');
-      expect(mod.name, 'Time-Spanning, Past and future only');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Time-Spanning, Past or future only', () {
-      var mod =
-          Modifiers.instance().byName('Time-Spanning, Past or future only');
-      expect(mod.name, 'Time-Spanning, Past or future only');
-      expect(mod.percentage, 0);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Underwater', () {
-      var mod = Modifiers.instance().byName('Underwater');
-      expect(mod.name, 'Underwater');
-      expect(mod.percentage, 20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Usually On', () {
-      var mod = Modifiers.instance().byName('Usually On');
-      expect(mod.name, 'Usually On');
-      expect(mod.percentage, 5);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Variable', () {
-      var mod = Modifiers.instance().byName('Variable');
-      expect(mod.name, 'Variable');
-      expect(mod.percentage, 5);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Wall, Fixed shape', () {
-      var mod = Modifiers.instance().byName('Wall, Fixed shape');
-      expect(mod.name, 'Wall, Fixed shape');
-      expect(mod.percentage, 30);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Wall, Variable shape', () {
-      var mod = Modifiers.instance().byName('Wall, Variable shape');
-      expect(mod.name, 'Wall, Variable shape');
-      expect(mod.percentage, 60);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('World-Spanning, Others only', () {
-      var mod = Modifiers.instance().byName('World-Spanning, Others only');
-      expect(mod.name, 'World-Spanning, Others only');
-      expect(mod.percentage, 50);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('World-Spanning, Others plus current', () {
-      var mod =
-          Modifiers.instance().byName('World-Spanning, Others plus current');
-      expect(mod.name, 'World-Spanning, Others plus current');
-      expect(mod.percentage, 100);
-      expect(mod.isAttackModifier, false);
-    });
-  }, skip: false);
-
-  group('Leveled enhancers', () {
+  group('Leveled', () {
     test('Accurate', () {
       var mod = Modifiers.instance().byName('Accurate');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 5);
+      expect(mod.description, 'Accurate 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 10);
+      expect(mod.description, 'Accurate 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 15);
+      expect(mod.description, 'Accurate 3');
     });
 
     test('Affects Others', () {
@@ -970,7 +1010,7 @@ main() {
     });
   }, skip: false);
 
-  group('Variable enhancers', () {
+  group('Variable', () {
     test('Armor Divisor', () {
       var mod = Modifiers.instance().byName('Armor Divisor');
       expect(mod.isAttackModifier, true);
@@ -1227,35 +1267,29 @@ main() {
     });
   }, skip: false);
 
-  //TODO: Blood Agent: -40% limitation UNLESS combined with Area Effect or
-  // Cone, in which case it is a 100% enhancement. This is a “penetration
-  // modifier”; you cannot combine it with other penetration modifiers,
-  // such as Follow-Up.
+  //TODO: Blood Agent: -40% limitation UNLESS combined with Area Effect or Cone, in which case it is a 100% enhancement.
+  // This is a “penetration modifier”; you cannot combine it with other
+  // penetration modifiers, such as Follow-Up.
 
-  //TODO: Contact Agent: -30% limitation UNLESS combined with Area Effect or
-  // Cone, in which case it is a 150% enhancement. This is a “penetration
-  // modifier”; you cannot combine it with other penetration modifiers,
-  // such as Follow-Up.
+  //TODO: Contact Agent: -30% limitation UNLESS combined with Area Effect or Cone, in which case it is a 150% enhancement.
+  // This is a “penetration modifier”; you cannot combine it with other
+  // penetration modifiers, such as Follow-Up.
 
-  //TODO: Corrupting: A trait with this limitation causes you to accumulate
-  // Corruption each time it’s used. You gain 1 point of Corruption per point
-  // by which Corrupting reduces the cost of the modified trait. Corrupting can
-  // also be applied to a disadvantage that offers a self-control roll. In that
-  // case, it’s a +20% enhancement, wors- ening the disadvantage. You gain 1
-  // point of Corruption per 5 points of unmodified disadvantage value each
-  // time you fail a self-control roll.
+  //TODO: Corrupting: A trait with this limitation causes you to accumulate Corruption each time it’s used.
+  // You gain 1 point of Corruption per point by which Corrupting reduces the
+  // cost of the modified trait. Corrupting can also be applied to a disadvantage
+  // that offers a self-control roll. In that case, it’s a +20% enhancement,
+  // worsening the disadvantage.
 
-  //TODO: Decide how Homing seeks its target: with ordinary vision or a
-  // sensory advantage such as Detect, Infravision, Night Vision, Scanning
-  // Sense, or Vibration Sense. Homing costs a base +50%, plus 1% per point
-  // the chosen homing mechanism would cost if bought as an advantage (with-
-  // out any modifiers); e.g., Infravision costs 10 points, making Homing
-  // (Infravision) +60%. Ordinary vision uses the base +50%.
+  //TODO: Decide how Homing seeks its target: with ordinary vision or a sensory advantage such as Detect, Infravision, Night Vision, Scanning Sense, or Vibration Sense.
+  // Homing costs a base +50%, plus 1% per point the chosen homing mechanism
+  // would cost if bought as an advantage (without any modifiers); e.g., Infra-
+  // vision costs 10 points, making Homing (Infravision) +60%. Ordinary vision
+  // uses the base +50%.
 
-  //TODO: The cost of Melee-Capable is +40%, plus whatever the value of the
-  // equivalent Melee Attack (p B112) limitation would be. For example, Melee-
-  // Capable, Reach 1-4, is a +25% enhancement, while Melee-Capable, Reach C,
-  // Cannot Parry, is a +5% one.
+  //TODO: The cost of Melee-Capable is +40%, plus whatever the value of the equivalent Melee Attack (p B112) limitation would be.
+  // For example, Melee-Capable, Reach 1-4, is a +25% enhancement, while Melee-
+  // Capable, Reach C, Cannot Parry, is a +5% one.
   // You may switch between the two modes as a free action at the beginning of
   // your turn; if it takes a Ready maneuver to switch, add -5% to the final
   // value of this enhancement; this cannot reduce cost below +5%.
