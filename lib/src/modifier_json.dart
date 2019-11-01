@@ -157,7 +157,11 @@ String modifierDataString = '''
       "name": "Affects Others",
       "type": "Leveled",
       "valuePerLevel": 50,
-      "levelPrompt": "Number affected"
+      "levelPrompt": "Number affected",
+      "formatter": {
+        "type": "Level",
+        "template": "%name, %f subject%s"
+      }
     },
     {
       "name": "Affects Substantial",

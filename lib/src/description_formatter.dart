@@ -97,7 +97,8 @@ class LevelTextFormatter extends DescriptionFormatter {
 
   String describe({String name, ModifierData data}) => super
       .describe(name: name, data: data)
-      .replaceFirst('%f', _f_value(data.level));
+      .replaceFirst('%f', _f_value(data.level))
+      .replaceFirst('%s', (data.level > 1) ? 's' : '');
 
   ///
   /// Given a level, return the value to use to replace the %f token.

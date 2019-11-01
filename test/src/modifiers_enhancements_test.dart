@@ -862,6 +862,15 @@ main() {
       var mod = Modifiers.instance().byName('Affects Others');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 50);
+      expect(mod.description, 'Affects Others, 1 subject');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 100);
+      expect(mod.description, 'Affects Others, 2 subjects');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 150);
+      expect(mod.description, 'Affects Others, 3 subjects');
     });
 
     test('Area Effect', () {
