@@ -113,6 +113,11 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
 
   @override
   Modifier createModifier({ModifierData data}) {
+    if (data?.level != null && maxLevel != null) {
+      if (data.level > maxLevel) {
+        throw RangeError('Level ${data.level} > $maxLevel');
+      }
+    }
     return Modifier(
         template: this, level: data?.level ?? 1, detail: data?.detail);
   }

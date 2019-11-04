@@ -877,32 +877,79 @@ main() {
       var mod = Modifiers.instance().byName('Area Effect');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 50);
+      expect(mod.description, 'Area Effect, 2 yards');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 100);
+      expect(mod.description, 'Area Effect, 4 yards');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 150);
+      expect(mod.description, 'Area Effect, 8 yards');
     });
 
-    //TODO: You cannot combine Cone with Area Effect, Aura, Jet, Melee Attack,
-    // Rapid Fire, or Emanation.
+    //TODO: You cannot combine Cone with Area Effect, Aura, Jet, Melee Attack, Rapid Fire, or Emanation.
     test('Cone', () {
       var mod = Modifiers.instance().byName('Cone');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 60);
+      expect(mod.description, 'Cone 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 70);
+      expect(mod.description, 'Cone 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 80);
+      expect(mod.description, 'Cone 3');
     });
 
     test('Decreased Immunity', () {
       var mod = Modifiers.instance().byName('Decreased Immunity');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 50);
+      expect(mod.description, 'Decreased Immunity 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 100);
+      expect(mod.description, 'Decreased Immunity 2');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, 200);
+      expect(mod.description, 'Decreased Immunity 4');
+
+      expect(
+          () => Modifier.copyWith(mod, level: 5), throwsA(isA<RangeError>()));
     });
 
     test('Explosion', () {
       var mod = Modifiers.instance().byName('Explosion');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 50);
+      expect(mod.description, 'Explosion 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 100);
+      expect(mod.description, 'Explosion 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 150);
+      expect(mod.description, 'Explosion 3');
     });
 
     test('Extra Passes', () {
       var mod = Modifiers.instance().byName('Extra Passes');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 10);
+      expect(mod.description, 'Extra Passes 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 20);
+      expect(mod.description, 'Extra Passes 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 30);
+      expect(mod.description, 'Extra Passes 3');
     });
 
     test('Fragmentation, Cutting', () {
@@ -986,6 +1033,11 @@ main() {
         expect(mod.percentage, 200);
         expect(mod.level, 3);
         expect(mod.description, 'Malediction 3');
+      });
+
+      test('level greater than max', () {
+        expect(
+            () => Modifier.copyWith(mal, level: 4), throwsA(isA<RangeError>()));
       });
     });
 
