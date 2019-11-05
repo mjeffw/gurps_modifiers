@@ -97,6 +97,16 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
   final String levelPrompt;
 
   ///
+  /// The base percentage of the Modifier.
+  ///
+  final int baseValue;
+
+  ///
+  /// The multiplicative percentage per level.
+  ///
+  final int valuePerLevel;
+
+  ///
   /// Create a [BaseLeveledTemplate] with the required fields.
   ///
   const BaseLeveledTemplate(
@@ -104,7 +114,9 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
       String name,
       LevelTextFormatter formatter,
       bool isAttackModifier = false,
-      this.levelPrompt})
+      this.levelPrompt,
+      this.valuePerLevel,
+      this.baseValue})
       : assert(1 <= (maxLevel ?? 1000000)),
         super(
             name: name,
@@ -140,6 +152,8 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
 /// contagious, number of cycles.
 ///
 class CyclicModifierTemplate extends ModifierTemplate {
+  static final String KEY = 'Cyclic';
+
   static const levelValues = <int>[100, 50, 40, 20, 10];
   static const intervalText = <String>[
     '1 second',

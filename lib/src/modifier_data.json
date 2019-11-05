@@ -156,7 +156,11 @@
       "name": "Affects Others",
       "type": "Leveled",
       "valuePerLevel": 50,
-      "levelPrompt": "Number affected"
+      "levelPrompt": "Number affected",
+      "formatter": {
+        "type": "Level",
+        "template": "%name, %f subject%s"
+      }
     },
     {
       "name": "Affects Substantial",
@@ -620,19 +624,42 @@
     },
     {
       "name": "Extended Duration",
-      "type": "Leveled",
-      "maxLevel": 14,
-      "valuePerLevel": 20
-    },
-    {
-      "name": "Extended Duration, Permanent",
-      "type": "Simple",
-      "percentage": 300
-    },
-    {
-      "name": "Extended Duration, Permanent, dispellable",
-      "type": "Simple",
-      "percentage": 150
+      "type": "NamedVariant",
+      "default": "3x",
+      "variations": [
+        {
+          "key": "3x",
+          "value": 20
+        },
+        {
+          "key": "10x",
+          "value": 40
+        },
+        {
+          "key": "30x",
+          "value": 60
+        },
+        {
+          "key": "100x",
+          "value": 80
+        },
+        {
+          "key": "300x",
+          "value": 100
+        },
+        {
+          "key": "1,000x",
+          "value": 120
+        },
+        {
+          "key": "Permanent but dispellable",
+          "value": 150
+        },
+        {
+          "key": "Permanent",
+          "value": 300
+        }
+      ]
     },
     {
       "name": "Extra Passes",
@@ -658,14 +685,24 @@
       "percentage": 0
     },
     {
-      "name": "Follow-Up, Natural weapon",
-      "type": "Simple",
-      "percentage": 0
-    },
-    {
-      "name": "Follow-Up, Universal",
-      "type": "Simple",
-      "percentage": 50
+      "name": "Follow-Up",
+      "type": "NamedVariant",
+      "default": "Natural weapon",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Natural weapon",
+          "value": 0
+        },
+        {
+          "key": "Universal",
+          "value": 50
+        },
+        {
+          "key": "Passive carrier",
+          "value": -50
+        }
+      ]
     },
     {
       "name": "Force Field",
@@ -673,28 +710,50 @@
       "percentage": 20
     },
     {
-      "name": "Fragmentation, Cutting",
-      "type": "Leveled",
+      "name": "Fragmentation",
+      "type": "Leveled_Named_Variant",
       "isAttackModifier": true,
-      "valuePerLevel": 15
-    },
-    {
-      "name": "Fragmentation, Hot",
-      "type": "Leveled",
-      "isAttackModifier": true,
-      "valuePerLevel": 15
-    },
-    {
-      "name": "Fragmentation, Impaling",
-      "type": "Leveled",
-      "isAttackModifier": true,
-      "valuePerLevel": 20
-    },
-    {
-      "name": "Fragmentation, Large Piercing",
-      "type": "Leveled",
-      "isAttackModifier": true,
-      "valuePerLevel": 15
+      "default": "Cutting",
+      "variations": [
+        {
+          "key": "Cutting",
+          "value": 15
+        },
+        {
+          "key": "Hot",
+          "value": 15
+        },
+        {
+          "key": "Impaling",
+          "value": 20
+        },
+        {
+          "key": "Large Piercing",
+          "value": 15
+        }
+      ],
+      "formatter": {
+        "type": "Alias",
+        "template": "%name, %fd %detail",
+        "aliases": [
+          {
+            "key": "Cutting",
+            "value": "cut"
+          },
+          {
+            "key": "Hot",
+            "value": "burn"
+          },
+          {
+            "key": "Impaling",
+            "value": "imp"
+          },
+          {
+            "key": "Large Piercing",
+            "value": "pi+"
+          }
+        ]
+      }
     },
     {
       "name": "Freezing",
@@ -741,22 +800,24 @@
       "isAttackModifier": true
     },
     {
-      "name": "HP Ammo, Large piercing",
-      "type": "Simple",
-      "percentage": 20,
-      "isAttackModifier": true
-    },
-    {
-      "name": "HP Ammo, Piercing",
-      "type": "Simple",
-      "percentage": 20,
-      "isAttackModifier": true
-    },
-    {
-      "name": "HP Ammo, Small piercing",
-      "type": "Simple",
-      "percentage": 40,
-      "isAttackModifier": true
+      "name": "HP Ammo",
+      "type": "NamedVariant",
+      "default": "Piercing",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Piercing",
+          "value": 20
+        },
+        {
+          "key": "Large Piercing",
+          "value": 20
+        },
+        {
+          "key": "Small Piercing",
+          "value": 40
+        }
+      ]
     },
     {
       "name": "Immediate Preparation Required",
@@ -815,13 +876,14 @@
     },
     {
       "name": "Independent",
-      "type": "Simple",
-      "percentage": 40
-    },
-    {
-      "name": "Independent, Simultaneous uses",
-      "type": "Simple",
-      "percentage": 70
+      "type": "NamedVariant",
+      "percentage": 40,
+      "variations": [
+        {
+          "key": "Simultaneous uses",
+          "value": 70
+        }
+      ]
     },
     {
       "name": "Informal",
@@ -859,14 +921,15 @@
       "valuePerLevel": -10
     },
     {
-      "name": "Link, Independent",
-      "type": "Simple",
-      "percentage": 20
-    },
-    {
-      "name": "Link, Permanent",
-      "type": "Simple",
-      "percentage": 10
+      "name": "Link",
+      "type": "NamedVariant",
+      "percentage": 10,
+      "variations": [
+        {
+          "key": "Independent",
+          "value": 20
+        }
+      ]
     },
     {
       "name": "Long-Range",
@@ -898,22 +961,12 @@
       "percentage": -50
     },
     {
-      "name": "Malediction, -1 per yard",
-      "type": "Simple",
-      "percentage": 100,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Malediction, Long-Distance Modifiers",
-      "type": "Simple",
-      "percentage": 200,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Malediction, Size and Speed/Range Table",
-      "type": "Simple",
-      "percentage": 150,
-      "isAttackModifier": true
+      "name": "Malediction",
+      "type": "Leveled",
+      "baseValue": 50,
+      "isAttackModifier": true,
+      "maxLevel": 3,
+      "valuePerLevel": 50
     },
     {
       "name": "Mana-Sensitive",
@@ -992,16 +1045,20 @@
       "valuePerLevel": 40
     },
     {
-      "name": "Multi-Ammo, Large piercing",
-      "type": "Simple",
-      "percentage": 65,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Multi-Ammo, Piercing",
-      "type": "Simple",
-      "percentage": 40,
-      "isAttackModifier": true
+      "name": "Multi-Ammo",
+      "type": "NamedVariant",
+      "default": "Piercing",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Piercing",
+          "value": 40
+        },
+        {
+          "key": "Large Piercing",
+          "value": 65
+        }
+      ]
     },
     {
       "name": "No Blunt Trauma",
@@ -1093,6 +1150,22 @@
         -30,
         -50,
         -60
+      ]
+    },
+    {
+      "name": "Radiation",
+      "type": "NamedVariant",
+      "default": "Toxic",
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Toxic",
+          "value": 25
+        },
+        {
+          "key": "Burning",
+          "value": 100
+        }
       ]
     },
     {
@@ -1309,15 +1382,15 @@
     },
     {
       "name": "Surge",
-      "type": "Simple",
+      "type": "NamedVariant",
       "percentage": 20,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Surge, Arcing",
-      "type": "Simple",
-      "percentage": 100,
-      "isAttackModifier": true
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Arcing",
+          "value": 100
+        }
+      ]
     },
     {
       "name": "Surprise Attack",
@@ -1337,24 +1410,27 @@
       "isAttackModifier": true
     },
     {
-      "name": "Time-Spanning, Past and future only",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "Time-Spanning, Past or future only",
-      "type": "Simple",
-      "percentage": 0
-    },
-    {
-      "name": "Time-Spanning, Past or future plus present",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "Time-Spanning, Universal",
-      "type": "Simple",
-      "percentage": 100
+      "name": "Time-Spanning",
+      "type": "NamedVariant",
+      "default": "Past or future",
+      "variations": [
+        {
+          "key": "Past or future",
+          "value": 50
+        },
+        {
+          "key": "Past or future only",
+          "value": 0
+        },
+        {
+          "key": "Universal",
+          "value": 100
+        },
+        {
+          "key": "Past and future only",
+          "value": 50
+        }
+      ]
     },
     {
       "name": "Unconscious Only",
@@ -1414,16 +1490,16 @@
       "percentage": -10
     },
     {
-      "name": "Wall, Fixed shape",
-      "type": "Simple",
+      "name": "Wall",
+      "type": "NamedVariant",
       "percentage": 30,
-      "isAttackModifier": true
-    },
-    {
-      "name": "Wall, Variable shape",
-      "type": "Simple",
-      "percentage": 60,
-      "isAttackModifier": true
+      "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "Variable",
+          "value": 60
+        }
+      ]
     },
     {
       "name": "Weakened Without Preparation",
@@ -1436,14 +1512,19 @@
       ]
     },
     {
-      "name": "World-Spanning, Others only",
-      "type": "Simple",
-      "percentage": 50
-    },
-    {
-      "name": "World-Spanning, Others plus current",
-      "type": "Simple",
-      "percentage": 100
+      "name": "World-Spanning",
+      "type": "NamedVariant",
+      "default": "Others only",
+      "variations": [
+        {
+          "key": "Others only",
+          "value": 50
+        },
+        {
+          "key": "Others plus current",
+          "value": 100
+        }
+      ]
     }
   ]
 }

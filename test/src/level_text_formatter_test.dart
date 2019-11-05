@@ -48,9 +48,9 @@ void main() {
 
       test('toJSON', () {
         expect(LevelTextFormatter().toJSON(),
-            '{ "type": "Level", "template": "%name %f" }');
+            ' {\n "type": "Level",\n "template": "%name %f"\n }');
         expect(LevelTextFormatter(template: 'One %name to %f').toJSON(),
-            '{ "type": "Level", "template": "One %name to %f" }');
+            ' {\n "type": "Level",\n "template": "One %name to %f"\n }');
       });
     });
 

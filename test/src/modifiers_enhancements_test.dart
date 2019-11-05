@@ -952,29 +952,44 @@ main() {
       expect(mod.description, 'Extra Passes 3');
     });
 
-    test('Fragmentation, Cutting', () {
-      var mod = Modifiers.instance().byName('Fragmentation, Cutting');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, 15);
-    });
+    group('Fragmentation', () {
+      Modifier frag;
 
-    test('Fragmentation, Hot', () {
-      var mod = Modifiers.instance().byName('Fragmentation, Hot');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, 15);
-    });
+      setUp(() {
+        frag = Modifiers.instance().byName('Fragmentation');
+      });
 
-    test('Fragmentation, Impaling', () {
-      var mod = Modifiers.instance().byName('Fragmentation, Impaling');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, 20);
-    });
+      test('default', () {
+        expect(frag.isAttackModifier, true);
+        expect(frag.percentage, 15);
+        expect(frag.level, 1);
+        expect(frag.description, 'Fragmentation, 1d cut');
+      });
 
-    test('Fragmentation, Large Piercing', () {
-      var mod = Modifiers.instance().byName('Fragmentation, Large Piercing');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, 15);
-    });
+      test('Cutting', () {
+        var mod = Modifier.copyWith(frag, detail: 'Cutting');
+        expect(mod.percentage, 15);
+        expect(mod.description, 'Fragmentation, 1d cut');
+      }, skip: false);
+
+      test('Hot', () {
+        var mod = Modifier.copyWith(frag, detail: 'Hot');
+        expect(mod.percentage, 15);
+        expect(mod.description, 'Fragmentation, 1d burn');
+      }, skip: false);
+
+      test('Impaling', () {
+        var mod = Modifier.copyWith(frag, detail: 'Impaling');
+        expect(mod.description, 'Fragmentation, 1d imp');
+        expect(mod.percentage, 20);
+      }, skip: false);
+
+      test('Large Piercing', () {
+        var mod = Modifier.copyWith(frag, detail: 'Large Piercing');
+        expect(mod.percentage, 15);
+        expect(mod.description, 'Fragmentation, 1d pi+');
+      }, skip: false);
+    }, skip: false);
 
     test('Incendiary, Burning', () {
       var mod = Modifiers.instance().byName('Incendiary, Burning');

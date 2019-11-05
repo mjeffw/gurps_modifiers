@@ -40,12 +40,14 @@ class _Modifiers implements ModifierTemplates, Modifiers {
   static _Modifiers _instance;
 
   static Map<String, Function> _constructors = {
-    'Simple': (x) => SimpleModifierTemplate.fromJSON(x),
-    'Leveled': (x) => LeveledTemplate.fromJSON(x),
-    'Variable': (x) => VariableLeveledTemplate.fromJSON(x),
-    'Cyclic': (x) => CyclicModifierTemplate.fromJSON(x),
-    'NamedVariant': (x) => NamedVariantTemplate.fromJSON(x),
-    'Categorized': (x) => CategorizedTemplate.fromJSON(x),
+    SimpleModifierTemplate.KEY: (x) => SimpleModifierTemplate.fromJSON(x),
+    LeveledTemplate.KEY: (x) => LeveledTemplate.fromJSON(x),
+    VariableLeveledTemplate.KEY: (x) => VariableLeveledTemplate.fromJSON(x),
+    CyclicModifierTemplate.KEY: (x) => CyclicModifierTemplate.fromJSON(x),
+    NamedVariantTemplate.KEY: (x) => NamedVariantTemplate.fromJSON(x),
+    CategorizedTemplate.KEY: (x) => CategorizedTemplate.fromJSON(x),
+    LeveledNamedVariantTemplate.KEY: (x) =>
+        LeveledNamedVariantTemplate.fromJSON(x),
   };
 
   static Map<String, _ModifierFactory> _map = {};
@@ -79,7 +81,7 @@ class _Modifiers implements ModifierTemplates, Modifiers {
     var data = keys.map((f) => templateByName(f).toJSON()).toList();
     var line = data.reduce((x, y) => '$x,\n$y');
 
-    return '{ "modifiers": [\n'
+    return '{\n  "modifiers": [\n'
         '$line\n'
         ']\n'
         '}';

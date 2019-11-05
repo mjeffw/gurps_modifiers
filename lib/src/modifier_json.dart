@@ -688,8 +688,8 @@ String modifierDataString = '''
     {
       "name": "Follow-Up",
       "type": "NamedVariant",
-      "isAttackModifier": true,
       "default": "Natural weapon",
+      "isAttackModifier": true,
       "variations": [
         {
           "key": "Natural weapon",
@@ -711,28 +711,50 @@ String modifierDataString = '''
       "percentage": 20
     },
     {
-      "name": "Fragmentation, Cutting",
-      "type": "Leveled",
+      "name": "Fragmentation",
+      "type": "Leveled_Named_Variant",
       "isAttackModifier": true,
-      "valuePerLevel": 15
-    },
-    {
-      "name": "Fragmentation, Hot",
-      "type": "Leveled",
-      "isAttackModifier": true,
-      "valuePerLevel": 15
-    },
-    {
-      "name": "Fragmentation, Impaling",
-      "type": "Leveled",
-      "isAttackModifier": true,
-      "valuePerLevel": 20
-    },
-    {
-      "name": "Fragmentation, Large Piercing",
-      "type": "Leveled",
-      "isAttackModifier": true,
-      "valuePerLevel": 15
+      "default": "Cutting",
+      "variations": [
+        {
+          "key": "Cutting",
+          "value": 15
+        },
+        {
+          "key": "Hot",
+          "value": 15
+        },
+        {
+          "key": "Impaling",
+          "value": 20
+        },
+        {
+          "key": "Large Piercing",
+          "value": 15
+        }
+      ],
+      "formatter": {
+        "type": "Alias",
+        "template": "%name, %fd %detail",
+        "aliases": [
+          {
+            "key": "Cutting",
+            "value": "cut"
+          },
+          {
+            "key": "Hot",
+            "value": "burn"
+          },
+          {
+            "key": "Impaling",
+            "value": "imp"
+          },
+          {
+            "key": "Large Piercing",
+            "value": "pi+"
+          }
+        ]
+      }
     },
     {
       "name": "Freezing",
@@ -943,9 +965,9 @@ String modifierDataString = '''
       "name": "Malediction",
       "type": "Leveled",
       "baseValue": 50,
-      "valuePerLevel": 50,
+      "isAttackModifier": true,
       "maxLevel": 3,
-      "isAttackModifier": true
+      "valuePerLevel": 50
     },
     {
       "name": "Mana-Sensitive",
@@ -1362,8 +1384,8 @@ String modifierDataString = '''
     {
       "name": "Surge",
       "type": "NamedVariant",
-      "isAttackModifier": true,
       "percentage": 20,
+      "isAttackModifier": true,
       "variations": [
         {
           "key": "Arcing",

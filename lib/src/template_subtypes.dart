@@ -6,6 +6,7 @@ import 'package:quiver/core.dart';
 import '../modifier_data.dart';
 import 'description_formatter.dart';
 import 'modifier_template.dart';
+import 'util/generic.dart';
 
 String _combineJsonFragments(List<String> strings) => strings
     .where((it) => it != null && it.isNotEmpty)
@@ -16,6 +17,8 @@ String _combineJsonFragments(List<String> strings) => strings
 /// Simple modifiers have just a flat percentage.
 ///
 class SimpleModifierTemplate extends ModifierTemplate {
+  static final String KEY = 'Simple';
+
   ///
   /// Modifiers adjust the base cost of a trait in proportion to their effects.
   /// This is expressed as a percentage.
@@ -94,27 +97,9 @@ class SimpleModifierTemplate extends ModifierTemplate {
       Modifier(template: this, detail: data?.detail ?? defaultDetail);
 }
 
-String _mapToJson(Map<String, int> map) {
-  var reduce = map.keys.map((key) {
-    var entry = '\t\t\t"key": "$key",\n\t\t\t"value": ${map[key]}';
-    return '\t\t{\n${entry}\n\t\t}';
-  }).reduce((a, b) => '$a,\n$b');
-  return reduce;
-}
-
-// {
-//   "name": "Affects Substantial",
-//   "type": "NamedVariant",
-//   "percentage": 40,
-//   "variations": [
-//     {
-//       "key": "Selective",
-//       "value": 50
-//     }
-//   ]
-// },
-
 class NamedVariantTemplate extends ModifierTemplate {
+  static final String KEY = 'NamedVariant';
+
   final Map<String, int> variations;
 
   // final int _percentage;
@@ -127,8 +112,7 @@ class NamedVariantTemplate extends ModifierTemplate {
   int percentage(ModifierData data) =>
       variations[data.detail ?? defaultVariation] ?? _percentage.value;
 
-  bool containsVariation(String detail) =>
-      detail == null || variations.containsKey(detail);
+  bool containsVariation(String detail) => variations.containsKey(detail);
 
   NamedVariantTemplate(
       {String name,
@@ -158,22 +142,16 @@ class NamedVariantTemplate extends ModifierTemplate {
     List<String> attributes = [
       '"name": "$name"',
       '"type": "NamedVariant"',
-      if (_percentage.isPresent) '"percentage": $_percentage',
+      if (_percentage.isPresent) '"percentage": ${_percentage.value}',
       if (defaultVariation != null) '"default": "$defaultVariation"',
       if (isAttackModifier) '"isAttackModifier": true',
-      '"variations": [\n${_mapToJson(variations)}\n\t]'
+      '"variations": [\n${mapToJson(variations, prefix: "\t\t")}\n\t]'
     ];
     return '{\n${_combineJsonFragments(attributes)}\n}';
   }
 
   factory NamedVariantTemplate.fromJSON(Map<String, dynamic> json) {
-    List<dynamic> x = json['variations'];
-    Map<String, int> variations = {};
-    x.forEach((f) {
-      String name = f['key'];
-      int value = f['value'] as int;
-      variations[name] = value;
-    });
+    Map<String, int> variations = jsonToMap(json, 'variations');
     return NamedVariantTemplate(
         name: json['name'],
         percentage: json['percentage'],
@@ -191,15 +169,7 @@ class NamedVariantTemplate extends ModifierTemplate {
 ///  base percentage + (value per level × level).
 ///
 class LeveledTemplate extends BaseLeveledTemplate {
-  ///
-  /// The base percentage of the Modifier.
-  ///
-  final int baseValue;
-
-  ///
-  /// The multiplicative percentage per level.
-  ///
-  final int valuePerLevel;
+  static final String KEY = 'Leveled';
 
   @override
   int percentage(ModifierData data) => data.level * valuePerLevel + baseValue;
@@ -207,15 +177,16 @@ class LeveledTemplate extends BaseLeveledTemplate {
   const LeveledTemplate(
       {String name,
       int baseValue = 0,
-      this.valuePerLevel,
+      int valuePerLevel,
       int maxLevel,
       String levelPrompt,
       LevelTextFormatter formatter = const DefaultLevelTextFormatter(),
       bool isAttackModifier = false})
       : assert(valuePerLevel != null),
-        baseValue = baseValue ?? 0,
         super(
             maxLevel: maxLevel,
+            valuePerLevel: valuePerLevel,
+            baseValue: baseValue ?? 0,
             levelPrompt: levelPrompt ?? 'Level',
             name: name,
             isAttackModifier: isAttackModifier,
@@ -279,6 +250,8 @@ class LeveledTemplate extends BaseLeveledTemplate {
 /// percentage increment per level.
 ///
 class VariableLeveledTemplate extends BaseLeveledTemplate {
+  static final String KEY = 'Variable';
+
   ///
   /// The cost of each level.
   ///
@@ -301,7 +274,7 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
 
   factory VariableLeveledTemplate.fromJSON(Map<String, dynamic> json) {
     var type = json['type'];
-    assert(type == 'Variable');
+    assert(type == KEY);
     return VariableLeveledTemplate(
         levelValues: List<int>.from(json['levelValues'] as List),
         isAttackModifier: (json['isAttackModifier'] ?? false) as bool,
@@ -336,6 +309,92 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
             super == other &&
             listsEqual(this._levelValues, other._levelValues));
   }
+}
+
+class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
+  static final String KEY = 'Leveled_Named_Variant';
+
+  final Map<String, int> variations;
+
+  final String defaultVariation;
+
+  @override
+  bool get hasLevels => true;
+
+  const LeveledNamedVariantTemplate(
+      {String name,
+      this.variations,
+      this.defaultVariation,
+      int baseValue = 0,
+      int maxLevel,
+      String levelPrompt,
+      LevelTextFormatter formatter = const DefaultLevelTextFormatter(),
+      bool isAttackModifier = false})
+      : super(
+            name: name,
+            isAttackModifier: isAttackModifier,
+            baseValue: baseValue,
+            maxLevel: maxLevel,
+            levelPrompt: levelPrompt ?? 'Level',
+            formatter: formatter);
+
+  factory LeveledNamedVariantTemplate.fromJSON(Map<String, dynamic> json) {
+    var type = json['type'];
+    assert(type == KEY);
+
+    return LeveledNamedVariantTemplate(
+        name: json['name'],
+        baseValue: (json['baseValue'] as int) ?? 0,
+        maxLevel: (json['maxLevel'] as int),
+        levelPrompt: json['levelPrompt'],
+        isAttackModifier: json['isAttackModifier'] as bool,
+        defaultVariation: json['default'],
+        variations: jsonToMap(json, 'variations'),
+        formatter: json['formatter'] == null
+            ? const DefaultLevelTextFormatter()
+            : DescriptionFormatter.fromJSON(json['formatter']));
+  }
+
+  @override
+  int percentage(ModifierData data) =>
+      data.level * _valuePerLevel(data.detail) + baseValue;
+
+  int _valuePerLevel(String variation) => variations[variation];
+
+  @override
+  String toJSON() {
+    var elements = <String>[
+      '"name": "$name"',
+      '"type": "$KEY"',
+      if (baseValue != 0 && baseValue != null) '"baseValue": $baseValue',
+      if (maxLevel != null) '"maxLevel": $maxLevel',
+      if (levelPrompt != null && levelPrompt != 'Level')
+        '"levelPrompt": "$levelPrompt"',
+      if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
+      if (defaultVariation != null) '"default": "$defaultVariation"',
+      '"variations": [\n${mapToJson(variations)}\n]',
+      if (formatter != const DefaultLevelTextFormatter())
+        '"formatter": ${formatter.toJSON()}'
+    ];
+    return "{\n${elements.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
+    ;
+  }
+
+  @override
+  Modifier createModifier({ModifierData data}) {
+    if (data?.detail != null) {
+      if (!containsVariation(data.detail)) {
+        throw AssertionError('invalid variation');
+      }
+    }
+    return Modifier(
+        template: this,
+        level: data?.level ?? 1,
+        detail: data?.detail ?? defaultVariation);
+  }
+
+  bool containsVariation(String detail) =>
+      detail == null || variations.containsKey(detail);
 }
 
 ///
@@ -414,6 +473,8 @@ const Category NullCategory =
     const Category(name: 'NULL', cost: null, items: []);
 
 class CategorizedTemplate extends ModifierTemplate {
+  static final String KEY = 'Categorized';
+
   ///
   /// The list of [Category].
   ///

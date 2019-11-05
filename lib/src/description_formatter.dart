@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:gurps_modifiers/src/util/generic.dart';
 import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
@@ -55,13 +56,15 @@ class DescriptionFormatter {
     } else if (type == 'Array') {
       return _ArrayFormatter.fromJSON(json);
     } else if (type == 'Level') {
-      return LevelTextFormatter(template: json['template']);
+      return LevelTextFormatter.fromJSON(json);
+    } else if (type == 'Alias') {
+      return DetailAliasFormatter.fromJSON(json);
     } else {
       return DescriptionFormatter(template: json['template']);
     }
   }
 
-  String toJSON() => '"formatter": { "template": "$template" }';
+  String toJSON() => '"formatter": {\n "template": "$template"\n }';
 
   @override
   bool operator ==(dynamic other) {
@@ -95,6 +98,9 @@ class LevelTextFormatter extends DescriptionFormatter {
       : assert(template != null),
         super(template: template);
 
+  factory LevelTextFormatter.fromJSON(Map<String, dynamic> json) =>
+      LevelTextFormatter(template: json['template']);
+
   String describe({String name, ModifierData data}) => super
       .describe(name: name, data: data)
       .replaceFirst('%f', _f_value(data.level))
@@ -103,16 +109,12 @@ class LevelTextFormatter extends DescriptionFormatter {
   ///
   /// Given a level, return the value to use to replace the %f token.
   ///
-  String _f_value(int level) {
-    return level.toString();
-  }
+  String _f_value(int level) => level.toString();
 
   ///
   /// Return the formatter as a JSON object
   ///
-  String toJSON() {
-    return '{ "type": "Level", "template": "$template" }';
-  }
+  String toJSON() => ' {\n "type": "Level",\n "template": "$template"\n }';
 
   @override
   bool operator ==(dynamic other) {
@@ -257,4 +259,40 @@ class _ExponentialFormatter extends LevelTextFormatter {
 
   @override
   int get hashCode => hash3(a, b, template);
+}
+
+class DetailAliasFormatter extends LevelTextFormatter {
+  final Map<String, String> aliases;
+
+  DetailAliasFormatter({String template, this.aliases})
+      : super(template: template);
+
+  factory DetailAliasFormatter.fromJSON(Map<String, dynamic> json) {
+    return DetailAliasFormatter(
+        template: json['template'], aliases: jsonToMap(json, 'aliases'));
+  }
+
+  @override
+  String toJSON() {
+    return '''{
+      "type": "Alias",
+      "template": "$template",
+      "aliases": [\n ${mapToJson(aliases)}\n ]
+    }''';
+  }
+
+  @override
+  String _detail(ModifierData data) =>
+      aliases[data.detail] ?? data.detail ?? '';
+
+  @override
+  bool operator ==(dynamic other) {
+    return other is DetailAliasFormatter &&
+        this.template == other.template &&
+        mapsEqual(this.aliases, other.aliases);
+  }
+
+  @override
+  int get hashCode =>
+      hashObjects([template, ...aliases.keys, ...aliases.values]);
 }
