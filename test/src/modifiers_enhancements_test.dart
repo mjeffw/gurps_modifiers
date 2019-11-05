@@ -970,24 +970,64 @@ main() {
         var mod = Modifier.copyWith(frag, detail: 'Cutting');
         expect(mod.percentage, 15);
         expect(mod.description, 'Fragmentation, 1d cut');
+
+        var m = Modifier.copyWith(mod, level: 2);
+        expect(m.percentage, 30);
+        expect(m.level, 2);
+        expect(m.description, 'Fragmentation, 2d cut');
+
+        m = Modifier.copyWith(mod, level: 3);
+        expect(m.percentage, 45);
+        expect(m.level, 3);
+        expect(m.description, 'Fragmentation, 3d cut');
       }, skip: false);
 
       test('Hot', () {
         var mod = Modifier.copyWith(frag, detail: 'Hot');
         expect(mod.percentage, 15);
         expect(mod.description, 'Fragmentation, 1d burn');
+
+        var m = Modifier.copyWith(mod, level: 2);
+        expect(m.percentage, 30);
+        expect(m.level, 2);
+        expect(m.description, 'Fragmentation, 2d burn');
+
+        m = Modifier.copyWith(mod, level: 3);
+        expect(m.percentage, 45);
+        expect(m.level, 3);
+        expect(m.description, 'Fragmentation, 3d burn');
       }, skip: false);
 
       test('Impaling', () {
         var mod = Modifier.copyWith(frag, detail: 'Impaling');
         expect(mod.description, 'Fragmentation, 1d imp');
         expect(mod.percentage, 20);
+
+        var m = Modifier.copyWith(mod, level: 2);
+        expect(m.percentage, 40);
+        expect(m.level, 2);
+        expect(m.description, 'Fragmentation, 2d imp');
+
+        m = Modifier.copyWith(mod, level: 3);
+        expect(m.percentage, 60);
+        expect(m.level, 3);
+        expect(m.description, 'Fragmentation, 3d imp');
       }, skip: false);
 
       test('Large Piercing', () {
         var mod = Modifier.copyWith(frag, detail: 'Large Piercing');
         expect(mod.percentage, 15);
         expect(mod.description, 'Fragmentation, 1d pi+');
+
+        var m = Modifier.copyWith(mod, level: 2);
+        expect(m.percentage, 30);
+        expect(m.level, 2);
+        expect(m.description, 'Fragmentation, 2d pi+');
+
+        m = Modifier.copyWith(mod, level: 3);
+        expect(m.percentage, 45);
+        expect(m.level, 3);
+        expect(m.description, 'Fragmentation, 3d pi+');
       }, skip: false);
     }, skip: false);
 
