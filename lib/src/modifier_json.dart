@@ -837,16 +837,11 @@ String modifierDataString = '''
       "valuePerLevel": -5
     },
     {
-      "name": "Incendiary, Burning",
+      "name": "Incendiary",
       "type": "Leveled",
       "isAttackModifier": true,
-      "valuePerLevel": 10
-    },
-    {
-      "name": "Incendiary, Non-burning",
-      "type": "Simple",
-      "percentage": 10,
-      "isAttackModifier": true
+      "valuePerLevel": 10,
+      "maxLevel": 4
     },
     {
       "name": "Increased Immunity",

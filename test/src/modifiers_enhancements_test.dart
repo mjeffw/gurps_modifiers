@@ -124,12 +124,6 @@ main() {
       expect(mod.isAttackModifier, true);
     });
 
-    test('Incendiary, Non-burning', () {
-      var mod = Modifiers.instance().byName('Incendiary, Non-burning');
-      expect(mod.percentage, 10);
-      expect(mod.isAttackModifier, true);
-    });
-
     test('Jet', () {
       var mod = Modifiers.instance().byName('Jet');
       expect(mod.percentage, 0);
@@ -1031,10 +1025,31 @@ main() {
       }, skip: false);
     }, skip: false);
 
-    test('Incendiary, Burning', () {
-      var mod = Modifiers.instance().byName('Incendiary, Burning');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, 10);
+    test('Incendiary', () {
+      Modifier inc = Modifiers.instance().byName('Incendiary');
+
+      expect(inc.isAttackModifier, true);
+      expect(inc.percentage, 10);
+      expect(inc.description, 'Incendiary 1');
+      expect(inc.level, 1);
+
+      var mod = Modifier.copyWith(inc, level: 2);
+      expect(mod.percentage, 20);
+      expect(mod.description, 'Incendiary 2');
+      expect(mod.level, 2);
+
+      mod = Modifier.copyWith(inc, level: 3);
+      expect(mod.percentage, 30);
+      expect(mod.description, 'Incendiary 3');
+      expect(mod.level, 3);
+
+      mod = Modifier.copyWith(inc, level: 4);
+      expect(mod.percentage, 40);
+      expect(mod.description, 'Incendiary 4');
+      expect(mod.level, 4);
+
+      expect(
+          () => Modifier.copyWith(inc, level: 5), throwsA(isA<RangeError>()));
     });
 
     test('Increased Range', () {
