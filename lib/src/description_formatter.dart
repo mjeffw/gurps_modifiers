@@ -59,6 +59,8 @@ class DescriptionFormatter {
       return LevelTextFormatter.fromJSON(json);
     } else if (type == 'Alias') {
       return DetailAliasFormatter.fromJSON(json);
+    } else if (type == 'ExponentialPattern') {
+      return ExponentialPatternFormatter.fromJSON(json);
     } else {
       return DescriptionFormatter(template: json['template']);
     }
@@ -235,9 +237,7 @@ class _ExponentialFormatter extends LevelTextFormatter {
   /// Return the level value by calculating the exponential value.
   ///
   @override
-  String _f_value(int level) {
-    return (a * pow(b, level)).toString();
-  }
+  String _f_value(int level) => (a * pow(b, level)).toString();
 
   @override
   String toJSON() {
@@ -259,6 +259,56 @@ class _ExponentialFormatter extends LevelTextFormatter {
 
   @override
   int get hashCode => hash3(a, b, template);
+}
+
+class ExponentialPatternFormatter extends LevelTextFormatter {
+  final int numberOfSteps; // 3
+  final int exponent; // 2
+  final int constant; // 1
+
+  ExponentialPatternFormatter(
+      {this.numberOfSteps, this.exponent, this.constant, String template})
+      : super(template: template);
+
+  factory ExponentialPatternFormatter.fromJSON(Map<String, dynamic> json) {
+    return ExponentialPatternFormatter(
+        numberOfSteps: json['numberOfSteps'],
+        exponent: json['exponent'],
+        constant: json['constant'],
+        template: json['template']);
+  }
+
+  @override
+  String toJSON() {
+    return ''' {
+    "type": "ExponentialPattern",
+    "numberOfSteps": $numberOfSteps,
+    "exponent": $exponent,
+    "constant": $constant,
+    "template": "$template"
+  }''';
+  }
+
+  int _mult(int level) => pow((level % numberOfSteps), exponent) + constant;
+
+  int _powerOfTen(int level) => pow(10, level ~/ numberOfSteps);
+
+  int _equation(int level) => _mult(level) * _powerOfTen(level);
+
+  @override
+  String _f_value(int level) => (_equation(level)).toString();
+
+  @override
+  bool operator ==(dynamic other) {
+    return other is ExponentialPatternFormatter &&
+        this.template == other.template &&
+        this.numberOfSteps == other.numberOfSteps &&
+        this.exponent == other.exponent &&
+        this.constant == other.constant;
+  }
+
+  @override
+  int get hashCode => hash4(numberOfSteps, exponent, constant, template);
 }
 
 class DetailAliasFormatter extends LevelTextFormatter {

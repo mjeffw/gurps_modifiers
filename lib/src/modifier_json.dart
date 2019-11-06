@@ -852,7 +852,14 @@ String modifierDataString = '''
     {
       "name": "Increased Range",
       "type": "Leveled",
-      "valuePerLevel": 10
+      "valuePerLevel": 10,
+      "formatter": {
+        "type": "ExponentialPattern",
+        "numberOfSteps": 3,
+        "exponent": 2,
+        "constant": 1,
+        "template": "%name, %fx"
+      }
     },
     {
       "name": "Increased Range, LOS",

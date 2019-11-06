@@ -1056,6 +1056,7 @@ main() {
       var mod = Modifiers.instance().byName('Increased Range');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 10);
+      expect(mod.description, 'Increased Range, 2x');
     });
 
     test('Long-Range', () {
