@@ -237,6 +237,9 @@ String modifierDataString = '''
       "type": "NamedVariant",
       "default": "(2)",
       "isAttackModifier": true,
+      "formatter": {
+        "template": "%name %detail"
+      },
       "variations": [
         {
           "key": "(2)",
@@ -266,10 +269,7 @@ String modifierDataString = '''
           "key": "(0.1)",
           "value": -70
         }
-      ],
-      "formatter": {
-        "template": "%name %detail"
-      }
+      ]
     },
     {
       "name": "Aspected",
@@ -868,26 +868,8 @@ String modifierDataString = '''
       "name": "Incendiary",
       "type": "Leveled",
       "isAttackModifier": true,
-      "valuePerLevel": 10,
-      "maxLevel": 4
-    },
-    {
-      "name": "Increased Immunity",
-      "type": "Leveled",
       "maxLevel": 4,
-      "valuePerLevel": -10
-    },
-    {
-      "name": "Increased Range",
-      "type": "Leveled",
-      "valuePerLevel": 10,
-      "formatter": {
-        "type": "ExponentialPattern",
-        "numberOfSteps": 3,
-        "exponent": 2,
-        "constant": 1,
-        "template": "%name, %fx"
-      }
+      "valuePerLevel": 10
     },
     {
       "name": "Increased 1/2D",
@@ -902,9 +884,27 @@ String modifierDataString = '''
       }
     },
     {
+      "name": "Increased Immunity",
+      "type": "Leveled",
+      "maxLevel": 4,
+      "valuePerLevel": -10
+    },
+    {
       "name": "Increased Max",
       "type": "Leveled",
       "valuePerLevel": 5,
+      "formatter": {
+        "type": "ExponentialPattern",
+        "numberOfSteps": 3,
+        "exponent": 2,
+        "constant": 1,
+        "template": "%name, %fx"
+      }
+    },
+    {
+      "name": "Increased Range",
+      "type": "Leveled",
+      "valuePerLevel": 10,
       "formatter": {
         "type": "ExponentialPattern",
         "numberOfSteps": 3,
@@ -1582,4 +1582,5 @@ String modifierDataString = '''
       ]
     }
   ]
-}''';
+}
+''';

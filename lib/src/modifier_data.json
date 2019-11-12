@@ -233,30 +233,42 @@
     },
     {
       "name": "Armor Divisor",
-      "type": "Variable",
-      "levelValues": [
-        -70,
-        -50,
-        -30,
-        50,
-        100,
-        150,
-        200
-      ],
+      "type": "NamedVariant",
+      "default": "(2)",
       "isAttackModifier": true,
       "formatter": {
-        "type": "Array",
-        "array": [
-          "(0.1)",
-          "(0.2)",
-          "(0.5)",
-          "(2)",
-          "(3)",
-          "(5)",
-          "(10)"
-        ],
-        "template": "%name %f"
-      }
+        "template": "%name %detail"
+      },
+      "variations": [
+        {
+          "key": "(2)",
+          "value": 50
+        },
+        {
+          "key": "(3)",
+          "value": 100
+        },
+        {
+          "key": "(5)",
+          "value": 150
+        },
+        {
+          "key": "(10)",
+          "value": 200
+        },
+        {
+          "key": "(0.5)",
+          "value": -30
+        },
+        {
+          "key": "(0.2)",
+          "value": -50
+        },
+        {
+          "key": "(0.1)",
+          "value": -70
+        }
+      ]
     },
     {
       "name": "Aspected",
@@ -363,13 +375,29 @@
     },
     {
       "name": "Can Carry Objects",
-      "type": "Variable",
-      "levelValues": [
-        10,
-        20,
-        50,
-        100,
-        150
+      "type": "NamedVariant",
+      "default": "No encumbrance",
+      "variations": [
+        {
+          "key": "No encumbrance",
+          "value": 10
+        },
+        {
+          "key": "Light",
+          "value": 20
+        },
+        {
+          "key": "Medium",
+          "value": 50
+        },
+        {
+          "key": "Heavy",
+          "value": 100
+        },
+        {
+          "key": "Extra Heavy",
+          "value": 150
+        }
       ]
     },
     {
@@ -836,16 +864,23 @@
       "valuePerLevel": -5
     },
     {
-      "name": "Incendiary, Burning",
+      "name": "Incendiary",
       "type": "Leveled",
       "isAttackModifier": true,
+      "maxLevel": 4,
       "valuePerLevel": 10
     },
     {
-      "name": "Incendiary, Non-burning",
-      "type": "Simple",
-      "percentage": 10,
-      "isAttackModifier": true
+      "name": "Increased 1/2D",
+      "type": "Leveled",
+      "valuePerLevel": 5,
+      "formatter": {
+        "type": "ExponentialPattern",
+        "numberOfSteps": 3,
+        "exponent": 2,
+        "constant": 1,
+        "template": "%name, %fx"
+      }
     },
     {
       "name": "Increased Immunity",
@@ -854,9 +889,28 @@
       "valuePerLevel": -10
     },
     {
+      "name": "Increased Max",
+      "type": "Leveled",
+      "valuePerLevel": 5,
+      "formatter": {
+        "type": "ExponentialPattern",
+        "numberOfSteps": 3,
+        "exponent": 2,
+        "constant": 1,
+        "template": "%name, %fx"
+      }
+    },
+    {
       "name": "Increased Range",
       "type": "Leveled",
-      "valuePerLevel": 10
+      "valuePerLevel": 10,
+      "formatter": {
+        "type": "ExponentialPattern",
+        "numberOfSteps": 3,
+        "exponent": 2,
+        "constant": 1,
+        "template": "%name, %fx"
+      }
     },
     {
       "name": "Increased Range, LOS",
@@ -934,7 +988,7 @@
     {
       "name": "Long-Range",
       "type": "Leveled",
-      "maxLevel": 3,
+      "maxLevel": 4,
       "valuePerLevel": 50
     },
     {
