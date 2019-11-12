@@ -1052,29 +1052,235 @@ main() {
           () => Modifier.copyWith(inc, level: 5), throwsA(isA<RangeError>()));
     });
 
-    test('Increased Range', () {
-      var mod = Modifiers.instance().byName('Increased Range');
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage, 10);
-      expect(mod.description, 'Increased Range, 2x');
+    group('Increased Range', () {
+      var mod;
+      setUp(() {
+        mod = Modifiers.instance().byName('Increased Range');
+      });
+      test('default', () {
+        expect(mod.isAttackModifier, false);
+        expect(mod.percentage, 10);
+        expect(mod.description, 'Increased Range, 2x');
+        expect(mod.level, 1);
+      });
+
+      test('level 1', () {
+        var m = Modifier.copyWith(mod, level: 1);
+        expect(m.percentage, 10);
+        expect(m.description, 'Increased Range, 2x');
+        expect(m.level, 1);
+      });
+
+      test('level 2', () {
+        var m = Modifier.copyWith(mod, level: 2);
+        expect(m.percentage, 20);
+        expect(m.description, 'Increased Range, 5x');
+        expect(m.level, 2);
+      });
+
+      test('level 3', () {
+        var m = Modifier.copyWith(mod, level: 3);
+        expect(m.percentage, 30);
+        expect(m.description, 'Increased Range, 10x');
+        expect(m.level, 3);
+      });
+
+      test('level 4', () {
+        var m = Modifier.copyWith(mod, level: 4);
+        expect(m.percentage, 40);
+        expect(m.description, 'Increased Range, 20x');
+        expect(m.level, 4);
+      });
+
+      test('level 5', () {
+        var m = Modifier.copyWith(mod, level: 5);
+        expect(m.percentage, 50);
+        expect(m.description, 'Increased Range, 50x');
+        expect(m.level, 5);
+      });
+
+      test('level 6', () {
+        var m = Modifier.copyWith(mod, level: 6);
+        expect(m.percentage, 60);
+        expect(m.description, 'Increased Range, 100x');
+        expect(m.level, 6);
+      });
+    });
+
+    group('Increased 1/2D', () {
+      var mod;
+      setUp(() {
+        mod = Modifiers.instance().byName('Increased 1/2D');
+      });
+      test('default', () {
+        expect(mod.isAttackModifier, false);
+        expect(mod.percentage, 5);
+        expect(mod.description, 'Increased 1/2D, 2x');
+        expect(mod.level, 1);
+      });
+
+      test('level 1', () {
+        var m = Modifier.copyWith(mod, level: 1);
+        expect(m.percentage, 5);
+        expect(m.description, 'Increased 1/2D, 2x');
+        expect(m.level, 1);
+      });
+
+      test('level 2', () {
+        var m = Modifier.copyWith(mod, level: 2);
+        expect(m.percentage, 10);
+        expect(m.description, 'Increased 1/2D, 5x');
+        expect(m.level, 2);
+      });
+
+      test('level 3', () {
+        var m = Modifier.copyWith(mod, level: 3);
+        expect(m.percentage, 15);
+        expect(m.description, 'Increased 1/2D, 10x');
+        expect(m.level, 3);
+      });
+
+      test('level 4', () {
+        var m = Modifier.copyWith(mod, level: 4);
+        expect(m.percentage, 20);
+        expect(m.description, 'Increased 1/2D, 20x');
+        expect(m.level, 4);
+      });
+
+      test('level 5', () {
+        var m = Modifier.copyWith(mod, level: 5);
+        expect(m.percentage, 25);
+        expect(m.description, 'Increased 1/2D, 50x');
+        expect(m.level, 5);
+      });
+
+      test('level 6', () {
+        var m = Modifier.copyWith(mod, level: 6);
+        expect(m.percentage, 30);
+        expect(m.description, 'Increased 1/2D, 100x');
+        expect(m.level, 6);
+      });
+    });
+
+    group('Increased Max', () {
+      var mod;
+      setUp(() {
+        mod = Modifiers.instance().byName('Increased Max');
+      });
+      test('default', () {
+        expect(mod.isAttackModifier, false);
+        expect(mod.percentage, 5);
+        expect(mod.description, 'Increased Max, 2x');
+        expect(mod.level, 1);
+      });
+
+      test('level 1', () {
+        var m = Modifier.copyWith(mod, level: 1);
+        expect(m.percentage, 5);
+        expect(m.description, 'Increased Max, 2x');
+        expect(m.level, 1);
+      });
+
+      test('level 2', () {
+        var m = Modifier.copyWith(mod, level: 2);
+        expect(m.percentage, 10);
+        expect(m.description, 'Increased Max, 5x');
+        expect(m.level, 2);
+      });
+
+      test('level 3', () {
+        var m = Modifier.copyWith(mod, level: 3);
+        expect(m.percentage, 15);
+        expect(m.description, 'Increased Max, 10x');
+        expect(m.level, 3);
+      });
+
+      test('level 4', () {
+        var m = Modifier.copyWith(mod, level: 4);
+        expect(m.percentage, 20);
+        expect(m.description, 'Increased Max, 20x');
+        expect(m.level, 4);
+      });
+
+      test('level 5', () {
+        var m = Modifier.copyWith(mod, level: 5);
+        expect(m.percentage, 25);
+        expect(m.description, 'Increased Max, 50x');
+        expect(m.level, 5);
+      });
+
+      test('level 6', () {
+        var m = Modifier.copyWith(mod, level: 6);
+        expect(m.percentage, 30);
+        expect(m.description, 'Increased Max, 100x');
+        expect(m.level, 6);
+      });
     });
 
     test('Long-Range', () {
       var mod = Modifiers.instance().byName('Long-Range');
-      expect(mod.isAttackModifier, false);
       expect(mod.percentage, 50);
+      expect(mod.level, 1);
+      expect(mod.description, 'Long-Range 1');
+      expect(mod.isAttackModifier, false);
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 100);
+      expect(mod.level, 2);
+      expect(mod.description, 'Long-Range 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 150);
+      expect(mod.level, 3);
+      expect(mod.description, 'Long-Range 3');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, 200);
+      expect(mod.level, 4);
+      expect(mod.description, 'Long-Range 4');
+
+      expect(
+          () => Modifier.copyWith(mod, level: 5), throwsA(isA<RangeError>()));
     });
 
     test('Low Psychic Signature', () {
       var mod = Modifiers.instance().byName('Low Psychic Signature');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 5);
+      expect(mod.description, 'Low Psychic Signature 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 10);
+      expect(mod.description, 'Low Psychic Signature 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 15);
+      expect(mod.description, 'Low Psychic Signature 3');
+
+      mod = Modifier.copyWith(mod, level: 5);
+      expect(mod.percentage, 25);
+      expect(mod.description, 'Low Psychic Signature 5');
+
+      expect(
+          () => Modifier.copyWith(mod, level: 6), throwsA(isA<RangeError>()));
     });
 
     test('Low Signature, Variable', () {
       var mod = Modifiers.instance().byName('Low Signature, Variable');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 5);
+      expect(mod.description, 'Low Signature, Variable 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 10);
+      expect(mod.description, 'Low Signature, Variable 2');
+
+      mod = Modifier.copyWith(mod, level: 5);
+      expect(mod.percentage, 25);
+      expect(mod.description, 'Low Signature, Variable 5');
+
+      expect(
+          () => Modifier.copyWith(mod, level: 6), throwsA(isA<RangeError>()));
     });
 
     group('Malediction', () {
@@ -1112,33 +1318,74 @@ main() {
       });
     });
 
-    //TODO: You may only add this enhancement to an attack that has both Area
-    // Effect and Persistent.
+    //TODO: You may only add this enhancement to an attack that has both Area Effect and Persistent.
     //TODO: Mobile is mutually exclusive with Drifting.
     test('Mobile', () {
       var mod = Modifiers.instance().byName('Mobile');
       expect(mod.isAttackModifier, true);
       expect(mod.percentage, 40);
+      expect(mod.description, 'Mobile 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 80);
+      expect(mod.description, 'Mobile 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 120);
+      expect(mod.description, 'Mobile 3');
     });
 
     test('Reduced Fatigue Cost', () {
       var mod = Modifiers.instance().byName('Reduced Fatigue Cost');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 20);
+      expect(mod.description, 'Reduced Fatigue Cost 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 40);
+      expect(mod.description, 'Reduced Fatigue Cost 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 60);
+      expect(mod.description, 'Reduced Fatigue Cost 3');
     });
 
-    //TODO: You cannot add Reduced Time to attack powers, to traits that list
-    // any kind of special modifier that affects activation time, or to Magery.
+    //TODO: You cannot add Reduced Time to attack powers, to traits that list any kind of special modifier that affects activation time, or to Magery.
     test('Reduced Time', () {
       var mod = Modifiers.instance().byName('Reduced Time');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 20);
+      expect(mod.description, 'Reduced Time 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 40);
+      expect(mod.description, 'Reduced Time 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 60);
+      expect(mod.description, 'Reduced Time 3');
     });
 
     test('Reliable', () {
       var mod = Modifiers.instance().byName('Reliable');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, 5);
+      expect(mod.description, 'Reliable 1');
+
+      mod = Modifier.copyWith(mod, level: 2);
+      expect(mod.percentage, 10);
+      expect(mod.description, 'Reliable 2');
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.percentage, 15);
+      expect(mod.description, 'Reliable 3');
+
+      mod = Modifier.copyWith(mod, level: 10);
+      expect(mod.percentage, 50);
+      expect(mod.description, 'Reliable 10');
+
+      expect(
+          () => Modifier.copyWith(mod, level: 11), throwsA(isA<RangeError>()));
     });
   }, skip: false);
 

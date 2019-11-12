@@ -862,6 +862,30 @@ String modifierDataString = '''
       }
     },
     {
+      "name": "Increased 1/2D",
+      "type": "Leveled",
+      "valuePerLevel": 5,
+      "formatter": {
+        "type": "ExponentialPattern",
+        "numberOfSteps": 3,
+        "exponent": 2,
+        "constant": 1,
+        "template": "%name, %fx"
+      }
+    },
+    {
+      "name": "Increased Max",
+      "type": "Leveled",
+      "valuePerLevel": 5,
+      "formatter": {
+        "type": "ExponentialPattern",
+        "numberOfSteps": 3,
+        "exponent": 2,
+        "constant": 1,
+        "template": "%name, %fx"
+      }
+    },
+    {
       "name": "Increased Range, LOS",
       "type": "Variable",
       "levelValues": [
@@ -937,7 +961,7 @@ String modifierDataString = '''
     {
       "name": "Long-Range",
       "type": "Leveled",
-      "maxLevel": 3,
+      "maxLevel": 4,
       "valuePerLevel": 50
     },
     {
