@@ -119,9 +119,13 @@ class NamedVariantTemplate extends ModifierTemplate {
       bool isAttackModifier = false,
       int percentage,
       this.variations,
+      DescriptionFormatter formatter = const DefaultFormatter(),
       this.defaultVariation})
       : _percentage = Optional.fromNullable(percentage),
-        super(name: name, isAttackModifier: isAttackModifier ?? false);
+        super(
+            name: name,
+            isAttackModifier: isAttackModifier ?? false,
+            formatter: formatter);
 
   @override
   Modifier createModifier({ModifierData data}) {
@@ -145,6 +149,8 @@ class NamedVariantTemplate extends ModifierTemplate {
       if (_percentage.isPresent) '"percentage": ${_percentage.value}',
       if (defaultVariation != null) '"default": "$defaultVariation"',
       if (isAttackModifier) '"isAttackModifier": true',
+      if (formatter != null && formatter != const DefaultFormatter())
+        formatter.toJSON(),
       '"variations": [\n${mapToJson(variations, prefix: "\t\t")}\n\t]'
     ];
     return '{\n${_combineJsonFragments(attributes)}\n}';
@@ -157,6 +163,9 @@ class NamedVariantTemplate extends ModifierTemplate {
         percentage: json['percentage'],
         variations: variations,
         defaultVariation: json['default'],
+        formatter: json['formatter'] == null
+            ? const DefaultFormatter()
+            : DescriptionFormatter.fromJSON(json['formatter']),
         isAttackModifier: json['isAttackModifier']);
   }
 }

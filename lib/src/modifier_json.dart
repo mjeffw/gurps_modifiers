@@ -234,29 +234,41 @@ String modifierDataString = '''
     },
     {
       "name": "Armor Divisor",
-      "type": "Variable",
-      "levelValues": [
-        -70,
-        -50,
-        -30,
-        50,
-        100,
-        150,
-        200
-      ],
+      "type": "NamedVariant",
+      "default": "(2)",
       "isAttackModifier": true,
+      "variations": [
+        {
+          "key": "(2)",
+          "value": 50
+        },
+        {
+          "key": "(3)",
+          "value": 100
+        },
+        {
+          "key": "(5)",
+          "value": 150
+        },
+        {
+          "key": "(10)",
+          "value": 200
+        },
+        {
+          "key": "(0.5)",
+          "value": -30
+        },
+        {
+          "key": "(0.2)",
+          "value": -50
+        },
+        {
+          "key": "(0.1)",
+          "value": -70
+        }
+      ],
       "formatter": {
-        "type": "Array",
-        "array": [
-          "(0.1)",
-          "(0.2)",
-          "(0.5)",
-          "(2)",
-          "(3)",
-          "(5)",
-          "(10)"
-        ],
-        "template": "%name %f"
+        "template": "%name %detail"
       }
     },
     {
@@ -364,13 +376,29 @@ String modifierDataString = '''
     },
     {
       "name": "Can Carry Objects",
-      "type": "Variable",
-      "levelValues": [
-        10,
-        20,
-        50,
-        100,
-        150
+      "type": "NamedVariant",
+      "default": "No encumbrance",
+      "variations": [
+        {
+          "key": "No encumbrance",
+          "value": 10
+        },
+        {
+          "key": "Light",
+          "value": 20
+        },
+        {
+          "key": "Medium",
+          "value": 50
+        },
+        {
+          "key": "Heavy",
+          "value": 100
+        },
+        {
+          "key": "Extra Heavy",
+          "value": 150
+        }
       ]
     },
     {

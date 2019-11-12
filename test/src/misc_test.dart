@@ -20,7 +20,7 @@ void main() {
       expect(text, isNot(contains('formatter')));
     });
 
-    test('armor divison', () {
+    test('armor divisor', () {
       var template =
           ModifierTemplates.instance().templateByName('Armor Divisor');
       var text = template.toJSON();

@@ -448,6 +448,112 @@ main() {
       });
     });
 
+    group('Armor Divisor', () {
+      Modifier div;
+      setUp(() {
+        div = Modifiers.instance().byName('Armor Divisor');
+      });
+
+      test('default', () {
+        expect(div.percentage, 50);
+        expect(div.description, 'Armor Divisor (2)');
+      });
+
+      test('(2)', () {
+        var mod = Modifier.copyWith(div, detail: '(2)');
+        expect(mod.percentage, 50);
+        expect(mod.description, 'Armor Divisor (2)');
+      });
+
+      test('(3)', () {
+        var mod = Modifier.copyWith(div, detail: '(3)');
+        expect(mod.percentage, 100);
+        expect(mod.description, 'Armor Divisor (3)');
+      });
+
+      test('(5)', () {
+        var mod = Modifier.copyWith(div, detail: '(5)');
+        expect(mod.percentage, 150);
+        expect(mod.description, 'Armor Divisor (5)');
+      });
+
+      test('(10)', () {
+        var mod = Modifier.copyWith(div, detail: '(10)');
+        expect(mod.percentage, 200);
+        expect(mod.description, 'Armor Divisor (10)');
+      });
+
+      test('(0.5)', () {
+        var mod = Modifier.copyWith(div, detail: '(0.5)');
+        expect(mod.percentage, -30);
+        expect(mod.description, 'Armor Divisor (0.5)');
+      });
+
+      test('(0.2)', () {
+        var mod = Modifier.copyWith(div, detail: '(0.2)');
+        expect(mod.percentage, -50);
+        expect(mod.description, 'Armor Divisor (0.2)');
+      });
+
+      test('(0.1)', () {
+        var mod = Modifier.copyWith(div, detail: '(0.1)');
+        expect(mod.percentage, -70);
+        expect(mod.description, 'Armor Divisor (0.1)');
+      });
+
+      test('bad variation', () {
+        expect(() => Modifier.copyWith(div, detail: '(0)'),
+            throwsA(isA<AssertionError>()));
+      });
+    });
+
+    group('Can Carry Objects', () {
+      Modifier car;
+      setUp(() {
+        car = Modifiers.instance().byName('Can Carry Objects');
+      });
+
+      test('default', () {
+        expect(car.percentage, 10);
+        expect(car.description, 'Can Carry Objects, No encumbrance');
+      });
+
+      test('No encumbrance', () {
+        var mod = Modifier.copyWith(car, detail: 'No encumbrance');
+        expect(mod.percentage, 10);
+        expect(mod.description, 'Can Carry Objects, No encumbrance');
+      });
+
+      test('Light', () {
+        var mod = Modifier.copyWith(car, detail: 'Light');
+        expect(mod.percentage, 20);
+        expect(mod.description, 'Can Carry Objects, Light');
+      });
+
+      test('Medium', () {
+        var mod = Modifier.copyWith(car, detail: 'Medium');
+        expect(mod.percentage, 50);
+        expect(mod.description, 'Can Carry Objects, Medium');
+      });
+
+      test('Heavy', () {
+        var mod = Modifier.copyWith(car, detail: 'Heavy');
+        expect(mod.percentage, 100);
+        expect(mod.description, 'Can Carry Objects, Heavy');
+      });
+
+      test('Extra Heavy', () {
+        var mod = Modifier.copyWith(car, detail: 'Extra Heavy');
+        expect(mod.percentage, 150);
+        expect(mod.description, 'Can Carry Objects, Extra Heavy');
+      });
+
+      test('bad variation', () {
+        expect(() => Modifier.copyWith(car, detail: 'None'),
+            throwsA(isA<AssertionError>()));
+      });
+    });
+
     group('Delay', () {
       Modifier m1;
 
@@ -1390,52 +1496,6 @@ main() {
   }, skip: false);
 
   group('Variable', () {
-    test('Armor Divisor', () {
-      var mod = Modifiers.instance().byName('Armor Divisor');
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage, -70);
-      expect(mod.description, 'Armor Divisor (0.1)');
-
-      mod = Modifier.copyWith(mod, level: 2);
-      expect(mod.percentage, -50);
-      expect(mod.description, 'Armor Divisor (0.2)');
-      mod = Modifier.copyWith(mod, level: 3);
-      expect(mod.percentage, -30);
-      expect(mod.description, 'Armor Divisor (0.5)');
-      mod = Modifier.copyWith(mod, level: 4);
-      expect(mod.percentage, 50);
-      expect(mod.description, 'Armor Divisor (2)');
-      mod = Modifier.copyWith(mod, level: 5);
-      expect(mod.percentage, 100);
-      expect(mod.description, 'Armor Divisor (3)');
-      mod = Modifier.copyWith(mod, level: 6);
-      expect(mod.percentage, 150);
-      expect(mod.description, 'Armor Divisor (5)');
-      mod = Modifier.copyWith(mod, level: 7);
-      expect(mod.percentage, 200);
-      expect(mod.description, 'Armor Divisor (10)');
-    });
-
-    test('Can Carry Objects', () {
-      var mod = Modifiers.instance().byName('Can Carry Objects');
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage, 10);
-
-      // TODO description?
-
-      mod = Modifier.copyWith(mod, level: 2);
-      expect(mod.percentage, 20);
-
-      mod = Modifier.copyWith(mod, level: 3);
-      expect(mod.percentage, 50);
-
-      mod = Modifier.copyWith(mod, level: 4);
-      expect(mod.percentage, 100);
-
-      mod = Modifier.copyWith(mod, level: 5);
-      expect(mod.percentage, 150);
-    });
-
     group('Cyclic', () {
       test('constructor', () {
         var mod = Modifiers.instance().byName('Cyclic');
