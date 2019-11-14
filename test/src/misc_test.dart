@@ -25,7 +25,7 @@ void main() {
           ModifierTemplates.instance().templateByName('Armor Divisor');
       var text = template.toJSON();
       expect(text, contains('formatter'));
-    });
+    }, skip: true);
 
     test('cosmic', () {
       var template = ModifierTemplates.instance().templateByName('Cosmic');
@@ -33,7 +33,7 @@ void main() {
       print(text);
       expect(text, isNot(null));
     });
-  });
+  }, skip: true);
 
   group('pattern', () {
     group('1, 2, 5, 10, 20, 50, ...', () {
@@ -66,7 +66,7 @@ void main() {
         expect(equation(6), 100);
       });
     });
-  });
+  }, skip: true);
 }
 
 int mult(int i) => pow((i % 3), 2) + 1;

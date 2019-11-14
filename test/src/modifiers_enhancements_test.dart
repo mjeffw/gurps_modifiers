@@ -312,7 +312,7 @@ main() {
       expect(mod.percentage, 5);
       expect(mod.isAttackModifier, true);
     });
-  }, skip: false);
+  }, skip: true);
 
   group('Named Variants', () {
     group('Affects', () {
@@ -864,7 +864,7 @@ main() {
         expect(mod.percentage, 100);
       });
     });
-  });
+  }, skip: true);
 
   group('Categorized', () {
     group('Cosmic', () {
@@ -940,7 +940,7 @@ main() {
         expect(m2.description, 'Cosmic, Unrestricted powers');
       });
     });
-  });
+  }, skip: true);
 
   group('Leveled', () {
     test('Accurate', () {
@@ -1080,7 +1080,7 @@ main() {
         expect(m.percentage, 45);
         expect(m.level, 3);
         expect(m.description, 'Fragmentation, 3d cut');
-      }, skip: false);
+      });
 
       test('Hot', () {
         var mod = Modifier.copyWith(frag, detail: 'Hot');
@@ -1096,7 +1096,7 @@ main() {
         expect(m.percentage, 45);
         expect(m.level, 3);
         expect(m.description, 'Fragmentation, 3d burn');
-      }, skip: false);
+      });
 
       test('Impaling', () {
         var mod = Modifier.copyWith(frag, detail: 'Impaling');
@@ -1112,7 +1112,7 @@ main() {
         expect(m.percentage, 60);
         expect(m.level, 3);
         expect(m.description, 'Fragmentation, 3d imp');
-      }, skip: false);
+      });
 
       test('Large Piercing', () {
         var mod = Modifier.copyWith(frag, detail: 'Large Piercing');
@@ -1128,8 +1128,8 @@ main() {
         expect(m.percentage, 45);
         expect(m.level, 3);
         expect(m.description, 'Fragmentation, 3d pi+');
-      }, skip: false);
-    }, skip: false);
+      });
+    }, skip: true);
 
     test('Incendiary', () {
       Modifier inc = Modifiers.instance().byName('Incendiary');
@@ -1493,7 +1493,7 @@ main() {
       expect(
           () => Modifier.copyWith(mod, level: 11), throwsA(isA<RangeError>()));
     });
-  }, skip: false);
+  }, skip: true);
 
   group('Variable', () {
     group('Cyclic', () {
@@ -1704,7 +1704,7 @@ main() {
       mod = Modifier.copyWith(mod, level: 6);
       expect(mod.percentage, 310);
     });
-  }, skip: false);
+  }, skip: true);
 
   //TODO: Blood Agent: -40% limitation UNLESS combined with Area Effect or Cone, in which case it is a 100% enhancement.
   // This is a “penetration modifier”; you cannot combine it with other

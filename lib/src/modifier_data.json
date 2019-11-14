@@ -225,10 +225,10 @@
       "valuePerLevel": 50,
       "levelPrompt": "Radius (yards)",
       "formatter": {
-        "type": "Exponential",
+        "type": "Exponent",
+        "template": "%name, %f yards",
         "a": 1,
-        "b": 2,
-        "template": "%name, %f yards"
+        "b": 2
       }
     },
     {
@@ -236,9 +236,7 @@
       "type": "NamedVariant",
       "default": "(2)",
       "isAttackModifier": true,
-      "formatter": {
-        "template": "%name %detail"
-      },
+      "formatter": {},
       "variations": [
         {
           "key": "(2)",
@@ -763,24 +761,12 @@
       "formatter": {
         "type": "Alias",
         "template": "%name, %fd %detail",
-        "aliases": [
-          {
-            "key": "Cutting",
-            "value": "cut"
-          },
-          {
-            "key": "Hot",
-            "value": "burn"
-          },
-          {
-            "key": "Impaling",
-            "value": "imp"
-          },
-          {
-            "key": "Large Piercing",
-            "value": "pi+"
-          }
-        ]
+        "aliases": {
+          "Cutting": "cut",
+          "Hot": "burn",
+          "Impaling": "imp",
+          "Large Piercing": "pi+"
+        }
       }
     },
     {
@@ -875,11 +861,11 @@
       "type": "Leveled",
       "valuePerLevel": 5,
       "formatter": {
-        "type": "ExponentialPattern",
+        "type": "Pattern",
+        "template": "%name, %fx",
         "numberOfSteps": 3,
         "exponent": 2,
-        "constant": 1,
-        "template": "%name, %fx"
+        "constant": 1
       }
     },
     {
@@ -893,11 +879,11 @@
       "type": "Leveled",
       "valuePerLevel": 5,
       "formatter": {
-        "type": "ExponentialPattern",
+        "type": "Pattern",
+        "template": "%name, %fx",
         "numberOfSteps": 3,
         "exponent": 2,
-        "constant": 1,
-        "template": "%name, %fx"
+        "constant": 1
       }
     },
     {
@@ -905,11 +891,11 @@
       "type": "Leveled",
       "valuePerLevel": 10,
       "formatter": {
-        "type": "ExponentialPattern",
+        "type": "Pattern",
+        "template": "%name, %fx",
         "numberOfSteps": 3,
         "exponent": 2,
-        "constant": 1,
-        "template": "%name, %fx"
+        "constant": 1
       }
     },
     {

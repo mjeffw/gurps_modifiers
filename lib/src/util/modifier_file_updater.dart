@@ -10,6 +10,8 @@ String modifierDataString = \'\'\'
 \'\'\';
 ''';
 
+  print(contents);
+
   // Write file
   var fileCopy =
       await File('lib/src/modifier_data.dart').writeAsString(contents);

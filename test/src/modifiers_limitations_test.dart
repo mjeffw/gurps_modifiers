@@ -259,8 +259,7 @@ main() {
       expect(mod.isAttackModifier, false);
     });
 
-    // TODO: You can’t combine this with All-Out, All-Out Concentrate, or
-    // Requires Ready.
+    // TODO: You can’t combine this with All-Out, All-Out Concentrate, or Requires Ready.
     test('Requires Concentrate', () {
       var mod =
           ModifierTemplates.instance().templateByName('Requires Concentrate');
@@ -436,8 +435,7 @@ main() {
       expect(mod.isAttackModifier, false);
     });
 
-    //TODO: Requires (Attribute) Roll - perhaps a better implementation is to
-    // select the Attribute and use that to derive the value.
+    //TODO: Requires (Attribute) Roll - perhaps a better implementation is to select the Attribute and use that to derive the value.
     test('Requires (Attribute) Roll, DX or IQ or HT', () {
       var mod = ModifierTemplates.instance()
           .templateByName('Requires (Attribute) Roll, DX or IQ or HT');
@@ -452,8 +450,7 @@ main() {
       expect(mod.isAttackModifier, false);
     });
 
-    //TODO: Requires (Skill) Roll - perhaps a better implementation is to
-    // select the Skill and use that to derive the value.
+    //TODO: Requires (Skill) Roll - perhaps a better implementation is to select the Skill and use that to derive the value.
     test('Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder', () {
       var mod = ModifierTemplates.instance().templateByName(
           'Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder');
@@ -496,7 +493,7 @@ main() {
       expect(mod.percentage(Data()), -10);
       expect(mod.isAttackModifier, false);
     });
-  }, skip: false);
+  }, skip: true);
 
   //TODO: This is the catch-all limitation. Must provide someway to enter
   // limitation information (and potentially save it).
@@ -626,7 +623,7 @@ main() {
           .templateByName('Accessibility, Useless under stress');
       expect(mod.percentage(Data()), -60);
     });
-  }, skip: false);
+  }, skip: true);
 
   group('Leveled limitations', () {
     test('Cardiac Stress', () {
@@ -906,7 +903,7 @@ main() {
       expect(mod.percentage(Data(level: 1)), -10);
       expect(mod.percentage(Data(level: 3)), -30);
     });
-  }, skip: false);
+  }, skip: true);
 
   //TODO: Pact - The limitation value is numerically equivalent to the point
   // cost of the required disadvantages; e.g., a -10-point Vow gives a -10%

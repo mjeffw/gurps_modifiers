@@ -75,7 +75,7 @@ class SimpleModifierTemplate extends ModifierTemplate {
       if (isAttackModifier) '"isAttackModifier": true',
       if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
       if (formatter != null && formatter != const DefaultFormatter())
-        '${formatter.toJSON()}'
+        '"formatter":${formatter.toJSON()}'
     ];
     return "{\n${_combineJsonFragments(strings)}\n}";
   }
@@ -150,7 +150,7 @@ class NamedVariantTemplate extends ModifierTemplate {
       if (defaultVariation != null) '"default": "$defaultVariation"',
       if (isAttackModifier) '"isAttackModifier": true',
       if (formatter != null && formatter != const DefaultFormatter())
-        formatter.toJSON(),
+        '"formatter":${formatter.toJSON()}',
       '"variations": [\n${mapToJson(variations, prefix: "\t\t")}\n\t]'
     ];
     return '{\n${_combineJsonFragments(attributes)}\n}';
@@ -189,7 +189,7 @@ class LeveledTemplate extends BaseLeveledTemplate {
       int valuePerLevel,
       int maxLevel,
       String levelPrompt,
-      LevelTextFormatter formatter = const DefaultLevelTextFormatter(),
+      LevelFormatter formatter = const DefaultLevelTextFormatter(),
       bool isAttackModifier = false})
       : assert(valuePerLevel != null),
         super(
@@ -273,7 +273,7 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
       {List<int> levelValues,
       String name,
       bool isAttackModifier = false,
-      LevelTextFormatter formatter})
+      LevelFormatter formatter})
       : _levelValues = levelValues,
         super(
             formatter: formatter,
@@ -291,7 +291,7 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
         formatter: json['formatter'] == null
             ? null
             : DescriptionFormatter.fromJSON(json['formatter'])
-                as LevelTextFormatter);
+                as LevelFormatter);
   }
 
   @override
@@ -337,7 +337,7 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
       int baseValue = 0,
       int maxLevel,
       String levelPrompt,
-      LevelTextFormatter formatter = const DefaultLevelTextFormatter(),
+      DescriptionFormatter formatter = const DefaultLevelTextFormatter(),
       bool isAttackModifier = false})
       : super(
             name: name,

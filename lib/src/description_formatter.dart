@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:gurps_modifiers/src/util/generic.dart';
@@ -6,6 +7,14 @@ import 'package:quiver/core.dart';
 
 import '../modifier_data.dart';
 
+Map<String, Function> _factoryDictionary = {
+  AliasFormatter.TYPE: (json) => AliasFormatter.fromJSON(json),
+  PatternFormatter.TYPE: (json) => PatternFormatter.fromJSON(json),
+  LevelFormatter.TYPE: (json) => LevelFormatter.fromJSON(json),
+  ArrayFormatter.TYPE: (json) => ArrayFormatter.fromJSON(json),
+  ExponentFormatter.TYPE: (json) => ExponentFormatter.fromJSON(json)
+};
+
 ///
 /// [DescriptionFormatter] is responsible for creating the printable description of a Modifier.
 ///
@@ -13,6 +22,12 @@ import '../modifier_data.dart';
 /// Modifier, as passed into the describe method.
 ///
 class DescriptionFormatter {
+  static const TEMPLATE = '%name %detail';
+
+  String get _type => null;
+
+  String get _defaultTemplate => TEMPLATE;
+
   ///
   /// The template to use when formatting a description.
   ///
@@ -45,28 +60,18 @@ class DescriptionFormatter {
   String _detail(ModifierData data) => data.detail ?? '';
 
   ///
-  /// Build a LevetTextFormatter from a JSON structure
+  /// Build a DescriptionFormatter from a JSON structure
   ///
   factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) {
     if (json == null) return const DefaultFormatter();
 
-    String type = json['type'];
-    if (type == 'Exponential') {
-      return _ExponentialFormatter.fromJSON(json);
-    } else if (type == 'Array') {
-      return _ArrayFormatter.fromJSON(json);
-    } else if (type == 'Level') {
-      return LevelTextFormatter.fromJSON(json);
-    } else if (type == 'Alias') {
-      return DetailAliasFormatter.fromJSON(json);
-    } else if (type == 'ExponentialPattern') {
-      return ExponentialPatternFormatter.fromJSON(json);
-    } else {
-      return DescriptionFormatter(template: json['template']);
-    }
+    var factoryMethod = _factoryDictionary[json['type']] ??
+        (json) => DescriptionFormatter(template: json['template']);
+
+    return factoryMethod.call(json);
   }
 
-  String toJSON() => '"formatter": {\n "template": "$template"\n }';
+  String toJSON() => json.encode(toAttributeMap());
 
   @override
   bool operator ==(dynamic other) {
@@ -76,6 +81,11 @@ class DescriptionFormatter {
 
   @override
   int get hashCode => template.hashCode;
+
+  Map<String, dynamic> toAttributeMap() => {
+        if (_type != null) 'type': _type,
+        if (template != _defaultTemplate) 'template': template,
+      };
 }
 
 class DefaultFormatter extends DescriptionFormatter {
@@ -92,16 +102,25 @@ class DefaultFormatter extends DescriptionFormatter {
 /// This formatter adds the %f symbol to the list of possible replacement
 /// symbols. The %f value is typically the level of the modifier.
 ///
-class LevelTextFormatter extends DescriptionFormatter {
+class LevelFormatter extends DescriptionFormatter {
+  static const TYPE = 'Level';
+  static const String TEMPLATE = '%name %f';
+
+  @override
+  String get _type => TYPE;
+
+  @override
+  String get _defaultTemplate => TEMPLATE;
+
   ///
-  /// Create a constant [LevelTextFormatter]. By default, the description is <name> <level>.
+  /// Create a constant [LevelFormatter]. By default, the description is <name> <level>.
   ///
-  const LevelTextFormatter({String template = '%name %f'})
+  const LevelFormatter({String template = TEMPLATE})
       : assert(template != null),
         super(template: template);
 
-  factory LevelTextFormatter.fromJSON(Map<String, dynamic> json) =>
-      LevelTextFormatter(template: json['template']);
+  factory LevelFormatter.fromJSON(Map<String, dynamic> json) =>
+      LevelFormatter(template: json['template']);
 
   String describe({String name, ModifierData data}) => super
       .describe(name: name, data: data)
@@ -113,21 +132,16 @@ class LevelTextFormatter extends DescriptionFormatter {
   ///
   String _f_value(int level) => level.toString();
 
-  ///
-  /// Return the formatter as a JSON object
-  ///
-  String toJSON() => ' {\n "type": "Level",\n "template": "$template"\n }';
-
   @override
-  bool operator ==(dynamic other) {
-    return other is LevelTextFormatter && this.template == other.template;
-  }
+  bool operator ==(dynamic other) =>
+      identical(this, other) ||
+      (other is LevelFormatter && this.template == other.template);
 
   @override
   int get hashCode => template.hashCode;
 }
 
-class DefaultLevelTextFormatter extends LevelTextFormatter {
+class DefaultLevelTextFormatter extends LevelFormatter {
   const DefaultLevelTextFormatter() : super(template: "%name %f");
 }
 
@@ -147,27 +161,32 @@ class DefaultLevelTextFormatter extends LevelTextFormatter {
 ///
 ///     var formatter = _ArrayFormatter(array: ['(2)', '(3)', '(5)', '(10)']);
 ///
-class _ArrayFormatter extends LevelTextFormatter {
+class ArrayFormatter extends LevelFormatter {
+  static const String TYPE = 'Array';
+
+  @override
+  String get _type => TYPE;
+
   ///
   /// The array of values to use.
   ///
   final List<String> array;
 
   ///
-  /// Create an [_ArrayFormatter] with the given string list and template.
+  /// Create an [ArrayFormatter] with the given string list and template.
   /// The template defaults to '%name %f' if not provided.
   ///
-  const _ArrayFormatter({this.array, String template = '%name %f'})
+  const ArrayFormatter({this.array, String template = LevelFormatter.TEMPLATE})
       : assert(array != null),
         super(template: template);
 
   ///
-  /// Create an [_ArrayFormatter] from the JSON data.
+  /// Create an [ArrayFormatter] from the JSON data.
   ///
-  factory _ArrayFormatter.fromJSON(Map<String, dynamic> json) {
+  factory ArrayFormatter.fromJSON(Map<String, dynamic> json) {
     var list =
         json['array'] != null ? List<String>.from(json['array'] as List) : null;
-    return _ArrayFormatter(
+    return ArrayFormatter(
       array: list,
       template: json['template'],
     );
@@ -177,29 +196,21 @@ class _ArrayFormatter extends LevelTextFormatter {
   /// Use (level - 1) as the index into array; return the value at that index.
   ///
   @override
-  String _f_value(int level) {
-    return array[level - 1];
-  }
-
-  @override
-  String toJSON() {
-    String a = array.map((f) => '"$f"').reduce((a, b) => '$a, $b');
-    return ''' {
-    "type": "Array",
-    "array": [$a],
-    "template": "$template"
-  }''';
-  }
+  String _f_value(int level) => array[level - 1];
 
   @override
   bool operator ==(dynamic other) {
-    return other is _ArrayFormatter &&
+    return other is ArrayFormatter &&
         this.template == other.template &&
         listsEqual(this.array, other.array);
   }
 
   @override
   int get hashCode => hashObjects(array) ^ template.hashCode;
+
+  @override
+  Map<String, dynamic> toAttributeMap() =>
+      {...super.toAttributeMap(), "array": array};
 }
 
 ///
@@ -210,7 +221,12 @@ class _ArrayFormatter extends LevelTextFormatter {
 /// each level, such as Area Effect (level 1 = 2 yards, level 2 = 4 yards,
 /// level 3 = 8 yards, etc.).
 ///
-class _ExponentialFormatter extends LevelTextFormatter {
+class ExponentFormatter extends LevelFormatter {
+  static const String TYPE = 'Exponent';
+
+  @override
+  String get _type => TYPE;
+
   ///
   /// The constant multiplier.
   ///
@@ -221,15 +237,16 @@ class _ExponentialFormatter extends LevelTextFormatter {
   final int b;
 
   ///
-  /// Create a [_ExponentialFormatter] with the given parameters.
+  /// Create a [ExponentFormatter] with the given parameters.
   ///
-  const _ExponentialFormatter({this.a, this.b, String template})
+  const ExponentFormatter(
+      {this.a, this.b, String template = LevelFormatter.TEMPLATE})
       : assert(a != null),
         assert(b != null),
         super(template: template);
 
-  factory _ExponentialFormatter.fromJSON(Map<String, dynamic> json) {
-    return _ExponentialFormatter(
+  factory ExponentFormatter.fromJSON(Map<String, dynamic> json) {
+    return ExponentFormatter(
         a: json['a'], b: json['b'], template: json['template']);
   }
 
@@ -239,19 +256,14 @@ class _ExponentialFormatter extends LevelTextFormatter {
   @override
   String _f_value(int level) => (a * pow(b, level)).toString();
 
-  @override
-  String toJSON() {
-    return ''' {
-    "type": "Exponential",
-    "a": $a,
-    "b": $b,
-    "template": "$template"
-  }''';
-  }
+  // @override
+  // String toJSON() {
+  //   return '''{"type":"$TYPE","a":$a,"b":$b,"template":"$template"}''';
+  // }
 
   @override
   bool operator ==(dynamic other) {
-    return other is _ExponentialFormatter &&
+    return other is ExponentFormatter &&
         this.template == other.template &&
         this.a == other.a &&
         this.b == other.b;
@@ -259,34 +271,35 @@ class _ExponentialFormatter extends LevelTextFormatter {
 
   @override
   int get hashCode => hash3(a, b, template);
+
+  @override
+  Map<String, dynamic> toAttributeMap() =>
+      {...super.toAttributeMap(), "a": a, "b": b};
 }
 
-class ExponentialPatternFormatter extends LevelTextFormatter {
+class PatternFormatter extends LevelFormatter {
+  static const TYPE = 'Pattern';
+
+  @override
+  String get _type => TYPE;
+
   final int numberOfSteps; // 3
   final int exponent; // 2
   final int constant; // 1
 
-  ExponentialPatternFormatter(
-      {this.numberOfSteps, this.exponent, this.constant, String template})
+  PatternFormatter(
+      {this.numberOfSteps,
+      this.exponent,
+      this.constant,
+      String template = LevelFormatter.TEMPLATE})
       : super(template: template);
 
-  factory ExponentialPatternFormatter.fromJSON(Map<String, dynamic> json) {
-    return ExponentialPatternFormatter(
+  factory PatternFormatter.fromJSON(Map<String, dynamic> json) {
+    return PatternFormatter(
         numberOfSteps: json['numberOfSteps'],
         exponent: json['exponent'],
         constant: json['constant'],
         template: json['template']);
-  }
-
-  @override
-  String toJSON() {
-    return ''' {
-    "type": "ExponentialPattern",
-    "numberOfSteps": $numberOfSteps,
-    "exponent": $exponent,
-    "constant": $constant,
-    "template": "$template"
-  }''';
   }
 
   int _mult(int level) => pow((level % numberOfSteps), exponent) + constant;
@@ -300,7 +313,7 @@ class ExponentialPatternFormatter extends LevelTextFormatter {
 
   @override
   bool operator ==(dynamic other) {
-    return other is ExponentialPatternFormatter &&
+    return other is PatternFormatter &&
         this.template == other.template &&
         this.numberOfSteps == other.numberOfSteps &&
         this.exponent == other.exponent &&
@@ -309,26 +322,31 @@ class ExponentialPatternFormatter extends LevelTextFormatter {
 
   @override
   int get hashCode => hash4(numberOfSteps, exponent, constant, template);
-}
-
-class DetailAliasFormatter extends LevelTextFormatter {
-  final Map<String, String> aliases;
-
-  DetailAliasFormatter({String template, this.aliases})
-      : super(template: template);
-
-  factory DetailAliasFormatter.fromJSON(Map<String, dynamic> json) {
-    return DetailAliasFormatter(
-        template: json['template'], aliases: jsonToMap(json, 'aliases'));
-  }
 
   @override
-  String toJSON() {
-    return '''{
-      "type": "Alias",
-      "template": "$template",
-      "aliases": [\n ${mapToJson(aliases)}\n ]
-    }''';
+  Map<String, dynamic> toAttributeMap() => {
+        ...super.toAttributeMap(),
+        'numberOfSteps': numberOfSteps,
+        'exponent': exponent,
+        'constant': constant
+      };
+}
+
+class AliasFormatter extends DescriptionFormatter {
+  static const String TYPE = 'Alias';
+
+  @override
+  String get _type => TYPE;
+
+  final Map<String, String> aliases;
+
+  AliasFormatter(
+      {String template = DescriptionFormatter.TEMPLATE, this.aliases})
+      : super(template: template);
+
+  factory AliasFormatter.fromJSON(Map<String, dynamic> json) {
+    return AliasFormatter(
+        template: json['template'], aliases: jsonToMap(json, 'aliases'));
   }
 
   @override
@@ -337,7 +355,7 @@ class DetailAliasFormatter extends LevelTextFormatter {
 
   @override
   bool operator ==(dynamic other) {
-    return other is DetailAliasFormatter &&
+    return other is AliasFormatter &&
         this.template == other.template &&
         mapsEqual(this.aliases, other.aliases);
   }
@@ -345,4 +363,9 @@ class DetailAliasFormatter extends LevelTextFormatter {
   @override
   int get hashCode =>
       hashObjects([template, ...aliases.keys, ...aliases.values]);
+
+  Map<String, dynamic> toAttributeMap() => {
+        ...super.toAttributeMap(),
+        'aliases': aliases,
+      };
 }

@@ -7,14 +7,14 @@ main() {
       var m1 = ModifierTemplates.instance().templateByName('Accurate');
       var m2 = ModifierTemplates.instance().templateByName('Accurate');
       expect(m1, isNot(same(m2)));
-    }, skip: false);
+    });
 
     test('printSourceData', () {
       print(ModifierTemplates.instance().printSourceData());
-    }, skip: false);
+    });
 
     test('fetchKeys', () {
       expect(ModifierTemplates.instance().fetchKeys(), contains('Accurate'));
     });
-  }, skip: false);
+  }, skip: true);
 }

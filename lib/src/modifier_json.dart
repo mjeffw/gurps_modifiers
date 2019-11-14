@@ -226,7 +226,7 @@ String modifierDataString = '''
       "valuePerLevel": 50,
       "levelPrompt": "Radius (yards)",
       "formatter": {
-        "type": "Exponential",
+        "type": "Exponent",
         "a": 1,
         "b": 2,
         "template": "%name, %f yards"
@@ -876,7 +876,7 @@ String modifierDataString = '''
       "type": "Leveled",
       "valuePerLevel": 5,
       "formatter": {
-        "type": "ExponentialPattern",
+        "type": "Pattern",
         "numberOfSteps": 3,
         "exponent": 2,
         "constant": 1,
@@ -894,7 +894,7 @@ String modifierDataString = '''
       "type": "Leveled",
       "valuePerLevel": 5,
       "formatter": {
-        "type": "ExponentialPattern",
+        "type": "Pattern",
         "numberOfSteps": 3,
         "exponent": 2,
         "constant": 1,
@@ -906,7 +906,7 @@ String modifierDataString = '''
       "type": "Leveled",
       "valuePerLevel": 10,
       "formatter": {
-        "type": "ExponentialPattern",
+        "type": "Pattern",
         "numberOfSteps": 3,
         "exponent": 2,
         "constant": 1,

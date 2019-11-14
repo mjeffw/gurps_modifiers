@@ -112,7 +112,7 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
   const BaseLeveledTemplate(
       {this.maxLevel,
       String name,
-      LevelTextFormatter formatter,
+      DescriptionFormatter formatter,
       bool isAttackModifier = false,
       this.levelPrompt,
       this.valuePerLevel,
@@ -121,7 +121,7 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
         super(
             name: name,
             isAttackModifier: isAttackModifier,
-            formatter: formatter ?? const LevelTextFormatter());
+            formatter: formatter ?? const LevelFormatter());
 
   @override
   Modifier createModifier({ModifierData data}) {
