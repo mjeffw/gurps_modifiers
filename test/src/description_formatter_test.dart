@@ -1,26 +1,12 @@
 import 'dart:convert';
 
-import 'package:gurps_modifiers/modifier_data.dart';
 import 'package:gurps_modifiers/src/description_formatter.dart';
 import 'package:test/test.dart';
 
 import 'data.dart';
 
-class _Data with ModifierData {
-  @override
-  String detail;
-
-  @override
-  int level;
-}
-
 void main() {
   group('toJSON', () {
-    test('DescriptionFormatter', () {
-      var formatter = const DescriptionFormatter(template: 'Andf asdf er2');
-      expect(formatter.toJSON(), '''{"template":"Andf asdf er2"}''');
-    });
-
     test('LevelFormatter', () {
       var formatter = const LevelFormatter(template: 'Andf asdf er2');
       expect(formatter.toJSON(),
@@ -88,37 +74,129 @@ void main() {
   });
 
   group('formatters', () {
-    group('LevelTextFormatter', () {
-      test('constructor', () {
-        var f = LevelFormatter();
-        expect(f.describe(name: 'name', data: Data(level: 1)), 'name 1');
+    group('DescriptionFormatter', () {
+      test('no-args constructor', () {
+        expect(DescriptionFormatter().template, DescriptionFormatter.TEMPLATE);
       });
 
-      test('null template', () {
-        expect(() => LevelFormatter(template: null),
-            throwsA(isA<AssertionError>()));
+      test('null template constructor', () {
+        expect(DescriptionFormatter(template: null).template,
+            DescriptionFormatter.TEMPLATE);
       });
 
-      test('template', () {
-        var f = LevelFormatter(template: 'One %name is %f');
-        expect(f.describe(name: 'name', data: Data(level: 7)), 'One name is 7');
+      test('template constructor', () {
+        expect(DescriptionFormatter(template: 'One %name is %f').template,
+            'One %name is %f');
       });
 
-      test('null args', () {
-        var f = LevelFormatter();
-        expect(() => f.describe(), throwsA(isA<Error>()));
+      test('describe', () {
+        var f = DescriptionFormatter();
+        expect(
+            f.describe(data: Data(detail: 'test'), name: 'foo'), 'foo, test');
+        expect(f.describe(data: Data(), name: 'foo'), 'foo');
+
+        var f2 = DescriptionFormatter(template: '%detail :: %name');
+        expect(f2.describe(data: Data(detail: 'test'), name: 'foo'),
+            'test :: foo');
+        expect(f2.describe(data: Data(), name: 'foo'), ':: foo');
       });
 
-      test('fromJSON', () {
-        String text = '{ "type": "Level", "template": "%name %f" }';
+      test('null args describe', () {
+        expect(() => DescriptionFormatter().describe(), throwsA(isA<Error>()));
+        expect(() => DescriptionFormatter().describe(data: null),
+            throwsA(isA<Error>()));
+        expect(() => DescriptionFormatter().describe(data: null, name: null),
+            throwsA(isA<Error>()));
+        expect(() => DescriptionFormatter().describe(name: null),
+            throwsA(isA<Error>()));
+      });
+
+      test('fromJSON without template', () {
+        var f = DescriptionFormatter.fromJSON(json.decode('{}'));
+        expect(f, isA<DescriptionFormatter>());
+        expect(f.template, DescriptionFormatter.TEMPLATE);
+        expect(
+            f.describe(name: 'name', data: Data(detail: 'boo')), 'name, boo');
+      });
+
+      test('fromJSON with template', () {
+        String text = '{ "type": "Simple", "template": "%name %detail" }';
         var f = DescriptionFormatter.fromJSON(json.decode(text));
+        expect(f, isA<DescriptionFormatter>());
+        expect(f.template, '%name %detail');
+        expect(f.describe(name: 'name', data: Data(detail: '9', level: 1)),
+            'name 9');
+      });
+
+      test('const constructor', () {
+        expect(
+            const DescriptionFormatter(), same(const DescriptionFormatter()));
+        expect(const DescriptionFormatter(template: '%name, %detail'),
+            same(const DescriptionFormatter()));
+      });
+
+      test('object methods', () {
+        var f1 = DescriptionFormatter();
+        var f2 = DescriptionFormatter(template: '%name, %detail');
+        var f3 = DescriptionFormatter(template: '%name %f, %detail');
+        var f4 = LevelFormatter(template: '%name, %detail');
+
+        expect(f1, equals(f1));
+        expect(f1, equals(f2));
+        expect(f1, isNot(equals(f3)));
+        expect(f1 == f4, isFalse);
+        expect(f4 == f1, isFalse);
+
+        expect(f1.hashCode, equals(f2.hashCode));
+        expect(f1.hashCode, isNot(equals(f3.hashCode)));
+      });
+
+      test('DescriptionFormatter', () {
+        var formatter = const DescriptionFormatter(template: 'Andf asdf er2');
+        expect(formatter.toJSON(), '{"template":"Andf asdf er2"}');
+      });
+
+      test('DescriptionFormatter, null template', () {
+        var formatter = const DescriptionFormatter(template: null);
+        expect(formatter.toJSON(), '{}');
+      });
+    }, skip: false);
+
+    group('LevelTextFormatter', () {
+      test('no-args constructor', () {
+        var f = LevelFormatter();
+        expect(f.template, LevelFormatter.TEMPLATE);
+      });
+
+      test('null template constructor', () {
+        var f = LevelFormatter(template: null);
+        expect(f.template, LevelFormatter.TEMPLATE);
+      });
+
+      test('template constructor', () {
+        var f = LevelFormatter(template: 'One %name is %f');
+        expect(f.template, 'One %name is %f');
+      });
+
+      test('null args describe', () {
+        expect(() => LevelFormatter().describe(), throwsA(isA<Error>()));
+      });
+
+      test('fromJSON without template', () {
+        String text = '{ "type": "Level" }';
+        var f = DescriptionFormatter.fromJSON(json.decode(text));
+        expect(f, isA<LevelFormatter>());
+        expect(f.template, LevelFormatter.TEMPLATE);
         expect(f.describe(name: 'name', data: Data(level: 9)), 'name 9');
       });
 
-      test('fromJSON 2', () {
-        String text = '{ "type": "Simple", "template": "%name %detail" }';
+      test('fromJSON with template', () {
+        String text = '{ "type": "Level", "template": "%name %detail" }';
         var f = DescriptionFormatter.fromJSON(json.decode(text));
-        expect(f.describe(name: 'name', data: Data(detail: '9')), 'name 9');
+        expect(f, isA<LevelFormatter>());
+        expect(f.template, '%name %detail');
+        expect(f.describe(name: 'name', data: Data(detail: '9', level: 1)),
+            'name 9');
       });
 
       test('const constructor', () {
@@ -127,13 +205,22 @@ void main() {
             same(const LevelFormatter()));
       });
 
-      test('toJSON', () {
-        expect(LevelFormatter().toJSON(),
-            ' {\n "type": "Level",\n "template": "%name %f"\n }');
-        expect(LevelFormatter(template: 'One %name to %f').toJSON(),
-            ' {\n "type": "Level",\n "template": "One %name to %f"\n }');
+      test('object methods', () {
+        var f1 = LevelFormatter();
+        var f2 = LevelFormatter(template: '%name %f');
+        var f3 = LevelFormatter(template: '%name %f, %detail');
+        var f4 = DescriptionFormatter(template: '%name %f');
+
+        expect(f1, equals(f1));
+        expect(f1, equals(f2));
+        expect(f1, isNot(equals(f3)));
+        expect(f1 == f4, isFalse);
+        expect(f4 == f1, isFalse);
+
+        expect(f1.hashCode, equals(f2.hashCode));
+        expect(f1.hashCode, isNot(equals(f3.hashCode)));
       });
-    });
+    }, skip: false);
 
     group('_ArrayFormatter', () {
       var text = '''

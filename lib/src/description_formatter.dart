@@ -1,31 +1,46 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:gurps_modifiers/src/util/generic.dart';
 import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
 import '../modifier_data.dart';
+import 'util/generic.dart';
 
-Map<String, Function> _factoryDictionary = {
-  AliasFormatter.TYPE: (json) => AliasFormatter.fromJSON(json),
-  PatternFormatter.TYPE: (json) => PatternFormatter.fromJSON(json),
-  LevelFormatter.TYPE: (json) => LevelFormatter.fromJSON(json),
-  ArrayFormatter.TYPE: (json) => ArrayFormatter.fromJSON(json),
-  ExponentFormatter.TYPE: (json) => ExponentFormatter.fromJSON(json)
-};
+class FormatterFactory {
+  static Map<String, Function> _factoryDictionary = {
+    AliasFormatter.TYPE: (json) => AliasFormatter.fromJSON(json),
+    PatternFormatter.TYPE: (json) => PatternFormatter.fromJSON(json),
+    LevelFormatter.TYPE: (json) => LevelFormatter.fromJSON(json),
+    ArrayFormatter.TYPE: (json) => ArrayFormatter.fromJSON(json),
+    ExponentFormatter.TYPE: (json) => ExponentFormatter.fromJSON(json)
+  };
+
+  static Function get(Map<String, dynamic> json) {
+    return Optional.fromNullable(_factoryDictionary[json['type']])
+        .or((json) => DescriptionFormatter(template: json['template']));
+  }
+}
 
 ///
 /// [DescriptionFormatter] is responsible for creating the printable description of a Modifier.
 ///
 /// By default (i.e., given no data) the description is only the name of the
-/// Modifier, as passed into the describe method.
+/// Modifier, and optionally, the detail text separated from each other with a comma.
+///
+/// If detail is blank or null, the default description is simply the name.
 ///
 class DescriptionFormatter {
-  static const TEMPLATE = '%name %detail';
+  static const TEMPLATE = '%name, %detail';
 
+  ///
+  /// Return the String that identifies this formatter in JSON.
+  ///
   String get _type => null;
 
+  ///
+  /// The default template to use, if none are provided.
+  ///
   String get _defaultTemplate => TEMPLATE;
 
   ///
@@ -39,7 +54,8 @@ class DescriptionFormatter {
   ///
   /// Create a [DescriptionFormatter] with the given template.
   ///
-  const DescriptionFormatter({this.template}) : assert(template != null);
+  const DescriptionFormatter({String template = TEMPLATE})
+      : template = template ?? TEMPLATE;
 
   ///
   /// Given a Modifier template name and instance data, return the description.
@@ -49,50 +65,46 @@ class DescriptionFormatter {
         .replaceFirst('%name', _name(name))
         .replaceFirst('%detail', _detail(data))
         .trim();
-    if (text.endsWith(',')) {
-      text = text.substring(0, text.length - 1);
-    }
-    return text;
+    return deleteTrailing(text, ',');
   }
 
+  ///
+  /// The Modifier name. This getter exists to allow subclasses to respond with
+  /// something other than the default name, if needed.
+  ///
   String _name(String name) => name;
 
+  ///
+  /// The Modifier detail. This method exists to allow subtypes to respond with
+  /// something other than the default detail, if needed.
+  ///
   String _detail(ModifierData data) => data.detail ?? '';
 
   ///
   /// Build a DescriptionFormatter from a JSON structure
   ///
-  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) {
-    if (json == null) return const DefaultFormatter();
-
-    var factoryMethod = _factoryDictionary[json['type']] ??
-        (json) => DescriptionFormatter(template: json['template']);
-
-    return factoryMethod.call(json);
-  }
+  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) =>
+      (json == null)
+          ? const DescriptionFormatter()
+          : FormatterFactory.get(json).call(json);
 
   String toJSON() => json.encode(toAttributeMap());
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    return other is DescriptionFormatter && this.template == other.template;
-  }
-
-  @override
-  int get hashCode => template.hashCode;
 
   Map<String, dynamic> toAttributeMap() => {
         if (_type != null) 'type': _type,
         if (template != _defaultTemplate) 'template': template,
       };
-}
-
-class DefaultFormatter extends DescriptionFormatter {
-  const DefaultFormatter() : super(template: '%name, %detail');
 
   @override
-  String toJSON() => null;
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) return true;
+    return other is DescriptionFormatter &&
+        identical(this.runtimeType, other.runtimeType) &&
+        template == other.template;
+  }
+
+  @override
+  int get hashCode => template.hashCode;
 }
 
 ///
@@ -116,8 +128,7 @@ class LevelFormatter extends DescriptionFormatter {
   /// Create a constant [LevelFormatter]. By default, the description is <name> <level>.
   ///
   const LevelFormatter({String template = TEMPLATE})
-      : assert(template != null),
-        super(template: template);
+      : super(template: template ?? TEMPLATE);
 
   factory LevelFormatter.fromJSON(Map<String, dynamic> json) =>
       LevelFormatter(template: json['template']);
@@ -135,14 +146,12 @@ class LevelFormatter extends DescriptionFormatter {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is LevelFormatter && this.template == other.template);
+      (other is LevelFormatter &&
+          identical(this.runtimeType, other.runtimeType) &&
+          template == other.template);
 
   @override
   int get hashCode => template.hashCode;
-}
-
-class DefaultLevelTextFormatter extends LevelFormatter {
-  const DefaultLevelTextFormatter() : super(template: "%name %f");
 }
 
 ///
@@ -346,7 +355,10 @@ class AliasFormatter extends DescriptionFormatter {
 
   factory AliasFormatter.fromJSON(Map<String, dynamic> json) {
     return AliasFormatter(
-        template: json['template'], aliases: jsonToMap(json, 'aliases'));
+      template: json['template'],
+      aliases: json['aliases'].map<String, String>(
+          (key, value) => MapEntry(key.toString(), value.toString())),
+    );
   }
 
   @override

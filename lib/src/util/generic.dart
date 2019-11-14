@@ -26,3 +26,10 @@ String mapToJson<T>(Map<String, T> map, {String prefix = ''}) {
   }).reduce((a, b) => '$a,\n$b');
   return reduce;
 }
+
+String deleteTrailing(String text, String other) {
+  if (text.endsWith(other)) {
+    text = text.substring(0, text.length - other.length);
+  }
+  return text.trim();
+}

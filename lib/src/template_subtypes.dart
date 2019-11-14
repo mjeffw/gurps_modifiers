@@ -74,7 +74,7 @@ class SimpleModifierTemplate extends ModifierTemplate {
       if (percentage != null) '"percentage": $_percentage',
       if (isAttackModifier) '"isAttackModifier": true',
       if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
-      if (formatter != null && formatter != const DefaultFormatter())
+      if (formatter != null && formatter != const DescriptionFormatter())
         '"formatter":${formatter.toJSON()}'
     ];
     return "{\n${_combineJsonFragments(strings)}\n}";
@@ -119,7 +119,7 @@ class NamedVariantTemplate extends ModifierTemplate {
       bool isAttackModifier = false,
       int percentage,
       this.variations,
-      DescriptionFormatter formatter = const DefaultFormatter(),
+      DescriptionFormatter formatter = const DescriptionFormatter(),
       this.defaultVariation})
       : _percentage = Optional.fromNullable(percentage),
         super(
@@ -149,7 +149,9 @@ class NamedVariantTemplate extends ModifierTemplate {
       if (_percentage.isPresent) '"percentage": ${_percentage.value}',
       if (defaultVariation != null) '"default": "$defaultVariation"',
       if (isAttackModifier) '"isAttackModifier": true',
-      if (formatter != null && formatter != const DefaultFormatter())
+      if (formatter != null &&
+          formatter != const DescriptionFormatter() &&
+          formatter.toJSON().isNotEmpty)
         '"formatter":${formatter.toJSON()}',
       '"variations": [\n${mapToJson(variations, prefix: "\t\t")}\n\t]'
     ];
@@ -164,7 +166,7 @@ class NamedVariantTemplate extends ModifierTemplate {
         variations: variations,
         defaultVariation: json['default'],
         formatter: json['formatter'] == null
-            ? const DefaultFormatter()
+            ? const DescriptionFormatter()
             : DescriptionFormatter.fromJSON(json['formatter']),
         isAttackModifier: json['isAttackModifier']);
   }
@@ -189,7 +191,7 @@ class LeveledTemplate extends BaseLeveledTemplate {
       int valuePerLevel,
       int maxLevel,
       String levelPrompt,
-      LevelFormatter formatter = const DefaultLevelTextFormatter(),
+      LevelFormatter formatter = const LevelFormatter(),
       bool isAttackModifier = false})
       : assert(valuePerLevel != null),
         super(
@@ -215,7 +217,7 @@ class LeveledTemplate extends BaseLeveledTemplate {
         maxLevel: json['maxLevel'] as int,
         levelPrompt: json['levelPrompt'],
         formatter: json['formatter'] == null
-            ? const DefaultLevelTextFormatter()
+            ? const LevelFormatter()
             : DescriptionFormatter.fromJSON(json['formatter']));
   }
 
@@ -233,7 +235,7 @@ class LeveledTemplate extends BaseLeveledTemplate {
       '"valuePerLevel": $valuePerLevel',
       if (levelPrompt != null && levelPrompt != 'Level')
         '"levelPrompt": "$levelPrompt"',
-      if (formatter != null && formatter != DefaultLevelTextFormatter())
+      if (formatter != null && formatter != LevelFormatter())
         '"formatter":${formatter.toJSON()}'
     ];
     return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
@@ -301,7 +303,7 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
       '"type": "Variable"',
       '"levelValues": $_levelValues',
       if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
-      if (formatter != null && formatter != const DefaultLevelTextFormatter())
+      if (formatter != null && formatter != const LevelFormatter())
         '"formatter":${formatter.toJSON()}'
     ];
     return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
@@ -337,7 +339,7 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
       int baseValue = 0,
       int maxLevel,
       String levelPrompt,
-      DescriptionFormatter formatter = const DefaultLevelTextFormatter(),
+      DescriptionFormatter formatter = const LevelFormatter(),
       bool isAttackModifier = false})
       : super(
             name: name,
@@ -360,7 +362,7 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
         defaultVariation: json['default'],
         variations: jsonToMap(json, 'variations'),
         formatter: json['formatter'] == null
-            ? const DefaultLevelTextFormatter()
+            ? const LevelFormatter()
             : DescriptionFormatter.fromJSON(json['formatter']));
   }
 
@@ -382,11 +384,10 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
       if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
       if (defaultVariation != null) '"default": "$defaultVariation"',
       '"variations": [\n${mapToJson(variations)}\n]',
-      if (formatter != const DefaultLevelTextFormatter())
+      if (formatter != const LevelFormatter())
         '"formatter": ${formatter.toJSON()}'
     ];
     return "{\n${elements.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-    ;
   }
 
   @override
@@ -495,7 +496,7 @@ class CategorizedTemplate extends ModifierTemplate {
       {String name,
       bool isAttackModifier = false,
       this.defaultDetail,
-      DescriptionFormatter formatter = const DefaultFormatter(),
+      DescriptionFormatter formatter = const DescriptionFormatter(),
       this.categories})
       : super(
             name: name,
@@ -533,14 +534,12 @@ class CategorizedTemplate extends ModifierTemplate {
 
   @override
   String toJSON() {
-    // TODO: implement toJSON
-    // return null;
     List<String> strings = [
       '"name": "$name"',
       '"type": "Categorized"',
       if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
       if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
-      if (formatter != null && formatter != const DefaultFormatter())
+      if (formatter != null && formatter != const DescriptionFormatter())
         '"formatter":${formatter.toJSON()}',
       '"categories": ${Category.listToJSON(categories)}'
     ];

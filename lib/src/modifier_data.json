@@ -236,7 +236,6 @@
       "type": "NamedVariant",
       "default": "(2)",
       "isAttackModifier": true,
-      "formatter": {},
       "variations": [
         {
           "key": "(2)",

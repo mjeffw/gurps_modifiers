@@ -36,7 +36,7 @@ abstract class ModifierTemplate {
   const ModifierTemplate(
       {this.name,
       this.isAttackModifier,
-      this.formatter = const DefaultFormatter()})
+      this.formatter = const DescriptionFormatter()})
       : assert(name != null),
         assert(isAttackModifier != null);
 

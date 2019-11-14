@@ -227,9 +227,9 @@ String modifierDataString = '''
       "levelPrompt": "Radius (yards)",
       "formatter": {
         "type": "Exponent",
+        "template": "%name, %f yards",
         "a": 1,
-        "b": 2,
-        "template": "%name, %f yards"
+        "b": 2
       }
     },
     {
@@ -237,9 +237,6 @@ String modifierDataString = '''
       "type": "NamedVariant",
       "default": "(2)",
       "isAttackModifier": true,
-      "formatter": {
-        "template": "%name %detail"
-      },
       "variations": [
         {
           "key": "(2)",
@@ -764,24 +761,12 @@ String modifierDataString = '''
       "formatter": {
         "type": "Alias",
         "template": "%name, %fd %detail",
-        "aliases": [
-          {
-            "key": "Cutting",
-            "value": "cut"
-          },
-          {
-            "key": "Hot",
-            "value": "burn"
-          },
-          {
-            "key": "Impaling",
-            "value": "imp"
-          },
-          {
-            "key": "Large Piercing",
-            "value": "pi+"
-          }
-        ]
+        "aliases": {
+          "Cutting": "cut",
+          "Hot": "burn",
+          "Impaling": "imp",
+          "Large Piercing": "pi+"
+        }
       }
     },
     {
@@ -877,10 +862,10 @@ String modifierDataString = '''
       "valuePerLevel": 5,
       "formatter": {
         "type": "Pattern",
+        "template": "%name, %fx",
         "numberOfSteps": 3,
         "exponent": 2,
-        "constant": 1,
-        "template": "%name, %fx"
+        "constant": 1
       }
     },
     {
@@ -895,10 +880,10 @@ String modifierDataString = '''
       "valuePerLevel": 5,
       "formatter": {
         "type": "Pattern",
+        "template": "%name, %fx",
         "numberOfSteps": 3,
         "exponent": 2,
-        "constant": 1,
-        "template": "%name, %fx"
+        "constant": 1
       }
     },
     {
@@ -907,10 +892,10 @@ String modifierDataString = '''
       "valuePerLevel": 10,
       "formatter": {
         "type": "Pattern",
+        "template": "%name, %fx",
         "numberOfSteps": 3,
         "exponent": 2,
-        "constant": 1,
-        "template": "%name, %fx"
+        "constant": 1
       }
     },
     {
@@ -1582,5 +1567,4 @@ String modifierDataString = '''
       ]
     }
   ]
-}
-''';
+}''';
