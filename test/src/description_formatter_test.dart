@@ -7,29 +7,6 @@ import 'data.dart';
 
 void main() {
   group('toJSON', () {
-    test('LevelFormatter', () {
-      var formatter = const LevelFormatter(template: 'Andf asdf er2');
-      expect(formatter.toJSON(),
-          '''{"type":"Level","template":"Andf asdf er2"}''');
-    });
-
-    test('LevelFormatter, default template', () {
-      var formatter = const LevelFormatter();
-      expect(formatter.toJSON(), '''{"type":"Level"}''');
-    });
-
-    test('ArrayFormatter, default template', () {
-      var formatter = const ArrayFormatter(array: ['a', 'b', 'c']);
-      expect(formatter.toJSON(), '{"type":"Array","array":["a","b","c"]}');
-    });
-
-    test('ArrayFormatter', () {
-      var formatter = const ArrayFormatter(
-          array: ['a', 'b', 'c'], template: '%name level %f');
-      expect(formatter.toJSON(),
-          '{"type":"Array","template":"%name level %f","array":["a","b","c"]}');
-    });
-
     test('ExponentFormatter, default template ', () {
       var formatter = const ExponentFormatter(a: 2, b: 3);
       expect(formatter.toJSON(), '{"type":"Exponent","a":2,"b":3}');
@@ -151,18 +128,18 @@ void main() {
         expect(f1.hashCode, isNot(equals(f3.hashCode)));
       });
 
-      test('DescriptionFormatter', () {
+      test('toJSON', () {
         var formatter = const DescriptionFormatter(template: 'Andf asdf er2');
         expect(formatter.toJSON(), '{"template":"Andf asdf er2"}');
       });
 
-      test('DescriptionFormatter, null template', () {
+      test('toJSON, null template', () {
         var formatter = const DescriptionFormatter(template: null);
         expect(formatter.toJSON(), '{}');
       });
     }, skip: false);
 
-    group('LevelTextFormatter', () {
+    group('LevelFormatter', () {
       test('no-args constructor', () {
         var f = LevelFormatter();
         expect(f.template, LevelFormatter.TEMPLATE);
@@ -220,12 +197,21 @@ void main() {
         expect(f1.hashCode, equals(f2.hashCode));
         expect(f1.hashCode, isNot(equals(f3.hashCode)));
       });
+
+      test('LevelFormatter', () {
+        var formatter = const LevelFormatter(template: 'Andf asdf er2');
+        expect(formatter.toJSON(),
+            '''{"type":"Level","template":"Andf asdf er2"}''');
+      });
+
+      test('LevelFormatter, default template', () {
+        var formatter = const LevelFormatter();
+        expect(formatter.toJSON(), '''{"type":"Level"}''');
+      });
     }, skip: false);
 
-    group('_ArrayFormatter', () {
-      var text = '''
-      { "type": "Array", "template": "%name %f", "array": ["A", "B", "C"] }
-      ''';
+    group('ArrayFormatter', () {
+      var text = '{"type":"Array","template":"%name %f","array":["A","B","C"]}';
       var f1 = DescriptionFormatter.fromJSON(json.decode(text));
       var expected = ''' {
     "type": "Array",
@@ -233,57 +219,103 @@ void main() {
     "template": "%template"
   }''';
 
+      test('no-args constuctor', () {
+        expect(() => ArrayFormatter(), throwsA(isA<AssertionError>()));
+      });
+
+      test('null template constuctor', () {
+        expect(ArrayFormatter(array: ['a', 'b', 'c']).template, '%name %f');
+      });
+      test('template constuctor', () {
+        expect(ArrayFormatter(template: 'Boo', array: ['a', 'b', 'c']).template,
+            'Boo');
+      });
+
+      test('describe', () {
+        var f = ArrayFormatter(array: ['a', 'b', 'c']);
+        expect(f.describe(data: Data(level: 2), name: 'foo'), 'foo b');
+        expect(f.describe(data: Data(level: 1), name: 'foo'), 'foo a');
+
+        var f2 =
+            ArrayFormatter(array: ['a', 'b', 'c'], template: '%f :: %name');
+        expect(f2.describe(data: Data(level: 2), name: 'foo'), 'b :: foo');
+        expect(f2.describe(data: Data(level: 3), name: 'foo'), 'c :: foo');
+      });
+
+      test('null args describe', () {
+        var f = ArrayFormatter(array: ['a', 'b', 'c']);
+        expect(() => f.describe(), throwsA(isA<Error>()));
+        expect(
+            () => f.describe(data: null, name: 'foo'), throwsA(isA<Error>()));
+        expect(() => f.describe(data: null, name: null), throwsA(isA<Error>()));
+        expect(() => f.describe(name: null), throwsA(isA<Error>()));
+        expect(() => f.describe(name: 'foo', data: Data(level: null)),
+            throwsA(isA<Error>()));
+      });
+
       test('fromJSON', () {
         expect(f1.describe(name: 'name', data: Data(level: 1)), 'name A');
         expect(f1.describe(name: 'bob', data: Data(level: 2)), 'bob B');
       });
 
-      test('fromJSON varying template', () {
-        var text = '''
-      { "type": "Array", "template": "AA %f --** %name!", "array": ["A", "B", "C"] }
-      ''';
-        var f = DescriptionFormatter.fromJSON(json.decode(text));
+      test('fromJSON without template', () {
+        var text = '{ "type": "Array", "array": ["A", "B", "C"] }';
+        expect(ArrayFormatter.fromJSON(json.decode(text)).template, '%name %f');
+      });
+
+      test('fromJSON missing array', () {
+        var text = '{ "type": "Array", "template": "%name %f" }';
+        expect(() => ArrayFormatter.fromJSON(json.decode(text)),
+            throwsA(isA<AssertionError>()));
+      });
+
+      test('fromJSON with template', () {
+        var text =
+            '{"type":"Array","template":"AA %f --** %name!","array":["A","B"]}';
+        var f = ArrayFormatter.fromJSON(json.decode(text));
+        expect(f.template, 'AA %f --** %name!');
         expect(
             f.describe(name: 'name', data: Data(level: 1)), 'AA A --** name!');
         expect(f.describe(name: 'bob', data: Data(level: 2)), 'AA B --** bob!');
       });
 
-      test('fromJSON missing template', () {
-        var text = '''
-      { "type": "Array", "array": ["A", "B", "C"] }
-      ''';
-        expect(() => DescriptionFormatter.fromJSON(json.decode(text)),
-            throwsA(isA<AssertionError>()));
-      });
-
-      test('fromJSON missing array', () {
-        var text = '''
-      { "type": "Array", "template": "%name %f" }
-      ''';
-        expect(() => DescriptionFormatter.fromJSON(json.decode(text)),
-            throwsA(isA<AssertionError>()));
+      test('toJSON, default template', () {
+        var formatter = const ArrayFormatter(array: ['a', 'b', 'c']);
+        expect(formatter.toJSON(), '{"type":"Array","array":["a","b","c"]}');
       });
 
       test('toJSON', () {
-        expect(
-            f1.toJSON(),
-            expected
-                .replaceAll('%array', '["A", "B", "C"]')
-                .replaceAll('%template', '%name %f'));
+        var formatter = const ArrayFormatter(
+            array: ['a', 'b', 'c'], template: '%name level %f');
+        expect(formatter.toJSON(),
+            '{"type":"Array","template":"%name level %f","array":["a","b","c"]}');
       });
 
-      test('toJSON -- variation', () {
-        var text = '''
-      { "type": "Array", "template": "AA %name some %f template", "array": ["any", "old", "hole"] }
-      ''';
-        var f1 = DescriptionFormatter.fromJSON(json.decode(text));
+      test('const constructor', () {
+        expect(const ArrayFormatter(array: ['a', 'b', 'c']),
+            same(const ArrayFormatter(array: ['a', 'b', 'c'])));
         expect(
-            f1.toJSON(),
-            expected
-                .replaceAll('%array', '["any", "old", "hole"]')
-                .replaceAll('%template', 'AA %name some %f template'));
+            const ArrayFormatter(array: ['a', 'b', 'c'], template: '%name %f'),
+            same(const ArrayFormatter(array: ['a', 'b', 'c'])));
       });
-    });
+
+      test('object methods', () {
+        var f1 = ArrayFormatter(array: ['a', 'b', 'c']);
+        var f2 = ArrayFormatter(array: ['a', 'b', 'c'], template: '%name %f');
+        var f3 = ArrayFormatter(
+            array: ['a', 'b', 'c'], template: '%name %f, %detail');
+        var f4 = LevelFormatter(template: '%name %f');
+
+        expect(f1, equals(f1));
+        expect(f1, equals(f2));
+        expect(f1, isNot(equals(f3)));
+        expect(f1 == f4, isFalse);
+        expect(f4 == f1, isFalse);
+
+        expect(f1.hashCode, equals(f2.hashCode));
+        expect(f1.hashCode, isNot(equals(f3.hashCode)));
+      });
+    }, skip: false);
 
     group('_ExponentialFormatter', () {
       test('fromJSON -- missing a', () {

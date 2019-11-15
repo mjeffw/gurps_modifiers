@@ -210,6 +210,7 @@ class ArrayFormatter extends LevelFormatter {
   @override
   bool operator ==(dynamic other) {
     return other is ArrayFormatter &&
+        identical(this.runtimeType, other.runtimeType) &&
         this.template == other.template &&
         listsEqual(this.array, other.array);
   }
