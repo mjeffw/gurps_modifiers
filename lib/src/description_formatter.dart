@@ -8,7 +8,6 @@ import 'util/generic.dart';
 
 class FormatterFactory {
   static Map<String, Function> _factoryDictionary = {
-    AliasFormatter.TYPE: (json) => AliasFormatter.fromJSON(json),
     PatternFormatter.TYPE: (json) => PatternFormatter.fromJSON(json),
     LevelFormatter.TYPE: (json) => LevelFormatter.fromJSON(json),
     ArrayFormatter.TYPE: (json) => ArrayFormatter.fromJSON(json),
@@ -263,7 +262,6 @@ class ExponentFormatter extends LevelFormatter {
       {...super._attributeMap, "a": a, "b": b};
 }
 
-// TODO change to accept the pattern (like [2,3,5,10]) instead of doing the exponential calculation
 class PatternFormatter extends LevelFormatter {
   static const TYPE = 'Pattern';
 
@@ -297,39 +295,5 @@ class PatternFormatter extends LevelFormatter {
   Map<String, dynamic> get _attributeMap => {
         ...super._attributeMap,
         'pattern': pattern,
-      };
-}
-
-// TODO change to a Detail Alias class with no template
-class AliasFormatter extends DescriptionFormatter {
-  static const String TYPE = 'Alias';
-
-  @override
-  String get _type => TYPE;
-
-  final MyMap<String, String> aliases;
-
-  AliasFormatter(
-      {String template = DescriptionFormatter.TEMPLATE,
-      Map<String, String> aliases})
-      : assert(aliases != null),
-        aliases = MyMap(delegate: aliases),
-        super(template: template);
-
-  factory AliasFormatter.fromJSON(Map<String, dynamic> json) {
-    return AliasFormatter(
-      template: json['template'],
-      aliases: json['aliases'].map<String, String>(
-          (key, value) => MapEntry(key.toString(), value.toString())),
-    );
-  }
-
-  @override
-  String _detail(ModifierData data) =>
-      aliases[data.detail] ?? data.detail ?? '';
-
-  Map<String, dynamic> get _attributeMap => {
-        ...super._attributeMap,
-        'aliases': aliases,
       };
 }

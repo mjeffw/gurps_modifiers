@@ -173,13 +173,8 @@ void main() {
     }, skip: false);
 
     group('ArrayFormatter', () {
-      var text = '{"type":"Array","template":"%name %f","array":["A","B","C"]}';
-      var f1 = DescriptionFormatter.fromJSON(json.decode(text));
-      var expected = ''' {
-    "type": "Array",
-    "array": %array,
-    "template": "%template"
-  }''';
+      const text =
+          '{"type":"Array","template":"%name %f","array":["A","B","C"]}';
 
       test('no-args constuctor', () {
         expect(() => ArrayFormatter(), throwsA(isA<AssertionError>()));
@@ -216,6 +211,7 @@ void main() {
       });
 
       test('fromJSON', () {
+        var f1 = DescriptionFormatter.fromJSON(json.decode(text));
         expect(f1.describe(name: 'name', data: Data(level: 1)), 'name A');
         expect(f1.describe(name: 'bob', data: Data(level: 2)), 'bob B');
       });
@@ -476,110 +472,6 @@ void main() {
         var f2 = PatternFormatter(pattern: [2, 4, 9], template: '%name %f');
         var f3 = PatternFormatter(
             pattern: [2, 3, 5, 10], template: '%name %f, %detail');
-        var f4 = LevelFormatter();
-
-        expect(f1, equals(f1));
-        expect(f1, equals(f2));
-        expect(f2, equals(f1));
-        expect(f1, isNot(equals(f3)));
-        expect(f3, isNot(equals(f1)));
-        expect(f1, isNot(equals(f4)));
-        expect(f4, isNot(equals(f1)));
-
-        expect(f1.hashCode, equals(f2.hashCode));
-        expect(f1.hashCode, isNot(equals(f3.hashCode)));
-      });
-    });
-    group('AliasFormatter', () {
-      test('no-args constructor', () {
-        expect(() => AliasFormatter(), throwsA(isA<AssertionError>()));
-      });
-
-      test('no-aliases constructor', () {
-        expect(() => AliasFormatter(template: "%name, %detail"),
-            throwsA(isA<AssertionError>()));
-      });
-
-      test('null template constructor', () {
-        expect(
-            AliasFormatter(aliases: {'a': 'A', 'b': 'B'}, template: null)
-                .template,
-            DescriptionFormatter.TEMPLATE);
-      });
-
-      test('template constructor', () {
-        expect(
-            AliasFormatter(
-                    aliases: {'a': 'A', 'b': 'B'}, template: 'do something')
-                .template,
-            'do something');
-      });
-
-      test('describe', () {
-        var f = AliasFormatter(aliases: {'a': 'A', 'b': 'B'});
-        expect(f.describe(data: Data(detail: 'b'), name: 'foo'), 'foo, B');
-        expect(f.describe(data: Data(detail: 'a'), name: 'foo'), 'foo, A');
-        expect(f.describe(data: Data(detail: 'c'), name: 'foo'), 'foo, c');
-
-        var f2 = AliasFormatter(
-            aliases: {'a': 'A', 'b': 'B'}, template: '%detail :: %name');
-        expect(f2.describe(data: Data(detail: 'a'), name: 'bar'), 'A :: bar');
-      });
-
-      test('null args describe', () {
-        var f = AliasFormatter(aliases: {'a': 'A', 'b': 'B'});
-        expect(() => f.describe(), throwsA(isA<Error>()));
-        expect(() => f.describe(data: null), throwsA(isA<Error>()));
-        expect(
-            () => f.describe(data: null, name: 'bar'), throwsA(isA<Error>()));
-        expect(() => f.describe(name: null), throwsA(isA<Error>()));
-        expect(f.describe(data: Data(), name: 'baz'), 'baz');
-      });
-
-      test('fromJSON -- missing aliases', () {
-        var text = '{ "type": "Alias", "template": "%name %f" }';
-
-        expect(() => PatternFormatter.fromJSON(json.decode(text)),
-            throwsA(isA<AssertionError>()));
-      });
-
-      test('fromJSON -- missing template', () {
-        var text = '{ "type": "Alias", "aliases": {"a":"A","b":"B","c":"C"} }';
-
-        expect(AliasFormatter.fromJSON(json.decode(text)).template,
-            DescriptionFormatter.TEMPLATE);
-      });
-
-      test('fromJSON', () {
-        var text =
-            '{"type":"Alias","aliases":{"a":"A","b":"B","c":"C"},"template":"%name: %detail"}';
-
-        var f = AliasFormatter.fromJSON(json.decode(text));
-        expect(f.describe(name: 'name', data: Data(detail: 'a')), 'name: A');
-        expect(f.describe(name: 'foo', data: Data(detail: 'c')), 'foo: C');
-      });
-
-      test('toJSON', () {
-        var formatter = AliasFormatter(
-            aliases: {'a': 'A', 'b': 'B', 'c': 'C'}, template: 'boo');
-        expect(formatter.toJSON(),
-            '{"type":"Alias","template":"boo","aliases":{"a":"A","b":"B","c":"C"}}');
-      });
-
-      test('toJSON, default template', () {
-        var formatter = AliasFormatter(aliases: {'a': 'A', 'b': 'B', 'c': 'C'});
-        expect(formatter.toJSON(),
-            '{"type":"Alias","aliases":{"a":"A","b":"B","c":"C"}}');
-      });
-
-      test('object methods', () {
-        var f1 = AliasFormatter(aliases: {'a': 'A', 'b': 'B', 'c': 'C'});
-        var f2 = AliasFormatter(
-            aliases: {'a': 'A', 'b': 'B', 'c': 'C'},
-            template: '%name, %detail');
-        var f3 = AliasFormatter(
-            aliases: {'a': 'A', 'b': 'B', 'c': 'C'},
-            template: '%name %f, %detail');
         var f4 = LevelFormatter();
 
         expect(f1, equals(f1));

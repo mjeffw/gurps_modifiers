@@ -69,7 +69,7 @@ class MyMap<K, V> extends DelegatingMap<K, V> {
   MyMap({this.delegate});
 
   @override
-  int get hashCode => hashObjects(delegate.values);
+  int get hashCode => hashObjects([...delegate.values, ...delegate.keys]);
 }
 
 class MyList<T> extends DelegatingList {
@@ -80,4 +80,24 @@ class MyList<T> extends DelegatingList {
 
   @override
   int get hashCode => hashObjects(delegate);
+}
+
+mixin HasAttributes {
+  Map<String, dynamic> get attributeMap;
+
+  ///
+  /// Inheritable equals operator using the object's attributeMap.
+  ///
+  @override
+  bool operator ==(dynamic other) {
+    if (identical(this, other)) return true;
+    return identical(this.runtimeType, other.runtimeType) &&
+        attributeMapsEqual(this.attributeMap, other.attributeMap);
+  }
+
+  ///
+  /// Inheritable hashCode implementation using the object's attributeMap.
+  ///
+  @override
+  int get hashCode => hashObjects(attributeMap.values);
 }
