@@ -160,13 +160,13 @@ void main() {
         expect(f1.hashCode, isNot(equals(f3.hashCode)));
       });
 
-      test('LevelFormatter', () {
+      test('toJSON', () {
         var formatter = const LevelFormatter(template: 'Andf asdf er2');
         expect(formatter.toJSON(),
             '''{"type":"Level","template":"Andf asdf er2"}''');
       });
 
-      test('LevelFormatter, default template', () {
+      test('toJSON, default template', () {
         var formatter = const LevelFormatter();
         expect(formatter.toJSON(), '''{"type":"Level"}''');
       });
@@ -242,23 +242,15 @@ void main() {
       });
 
       test('toJSON, default template', () {
-        var formatter = const ArrayFormatter(array: ['a', 'b', 'c']);
+        var formatter = ArrayFormatter(array: ['a', 'b', 'c']);
         expect(formatter.toJSON(), '{"type":"Array","array":["a","b","c"]}');
       });
 
       test('toJSON', () {
-        var formatter = const ArrayFormatter(
-            array: ['a', 'b', 'c'], template: '%name level %f');
+        var formatter =
+            ArrayFormatter(array: ['a', 'b', 'c'], template: '%name level %f');
         expect(formatter.toJSON(),
             '{"type":"Array","template":"%name level %f","array":["a","b","c"]}');
-      });
-
-      test('const constructor', () {
-        expect(const ArrayFormatter(array: ['a', 'b', 'c']),
-            same(const ArrayFormatter(array: ['a', 'b', 'c'])));
-        expect(
-            const ArrayFormatter(array: ['a', 'b', 'c'], template: '%name %f'),
-            same(const ArrayFormatter(array: ['a', 'b', 'c'])));
       });
 
       test('object methods', () {
@@ -658,19 +650,6 @@ void main() {
 
         expect(f1.hashCode, equals(f2.hashCode));
         expect(f1.hashCode, isNot(equals(f3.hashCode)));
-      });
-
-      test('const constructor', () {
-        expect(
-            const AliasFormatter(aliases: {'a': 'A', 'b': 'B', 'c': 'C'}),
-            same(
-                const AliasFormatter(aliases: {'a': 'A', 'b': 'B', 'c': 'C'})));
-        expect(
-            const AliasFormatter(
-                aliases: {'a': 'A', 'b': 'B', 'c': 'C'},
-                template: '%name, %detail'),
-            same(
-                const AliasFormatter(aliases: {'a': 'A', 'b': 'B', 'c': 'C'})));
       });
     });
   }, skip: false);

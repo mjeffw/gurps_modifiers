@@ -88,9 +88,9 @@ class DescriptionFormatter {
           ? const DescriptionFormatter()
           : FormatterFactory.get(json).call(json);
 
-  String toJSON() => json.encode(toAttributeMap());
+  String toJSON() => json.encode(_toAttributeMap);
 
-  Map<String, dynamic> toAttributeMap() => {
+  Map<String, dynamic> get _toAttributeMap => {
         if (_type != null) 'type': _type,
         if (template != _defaultTemplate) 'template': template,
       };
@@ -100,11 +100,11 @@ class DescriptionFormatter {
     if (identical(this, other)) return true;
     return other is DescriptionFormatter &&
         identical(this.runtimeType, other.runtimeType) &&
-        template == other.template;
+        attributeMapsEqual(this._toAttributeMap, other._toAttributeMap);
   }
 
   @override
-  int get hashCode => template.hashCode;
+  int get hashCode => hashObjects(_toAttributeMap.values);
 }
 
 ///
@@ -142,16 +142,6 @@ class LevelFormatter extends DescriptionFormatter {
   /// Given a level, return the value to use to replace the %f token.
   ///
   String _f_value(int level) => level.toString();
-
-  @override
-  bool operator ==(dynamic other) =>
-      identical(this, other) ||
-      (other is LevelFormatter &&
-          identical(this.runtimeType, other.runtimeType) &&
-          template == other.template);
-
-  @override
-  int get hashCode => template.hashCode;
 }
 
 ///
@@ -179,14 +169,16 @@ class ArrayFormatter extends LevelFormatter {
   ///
   /// The array of values to use.
   ///
-  final List<String> array;
+  final MyList<String> array;
 
   ///
   /// Create an [ArrayFormatter] with the given string list and template.
   /// The template defaults to '%name %f' if not provided.
   ///
-  const ArrayFormatter({this.array, String template = LevelFormatter.TEMPLATE})
+  ArrayFormatter(
+      {List<String> array, String template = LevelFormatter.TEMPLATE})
       : assert(array != null),
+        array = MyList(delegate: array),
         super(template: template);
 
   ///
@@ -208,19 +200,8 @@ class ArrayFormatter extends LevelFormatter {
   String _f_value(int level) => array[level - 1];
 
   @override
-  bool operator ==(dynamic other) {
-    return other is ArrayFormatter &&
-        identical(this.runtimeType, other.runtimeType) &&
-        this.template == other.template &&
-        listsEqual(this.array, other.array);
-  }
-
-  @override
-  int get hashCode => hashObjects(array) ^ template.hashCode;
-
-  @override
-  Map<String, dynamic> toAttributeMap() =>
-      {...super.toAttributeMap(), "array": array};
+  Map<String, dynamic> get _toAttributeMap =>
+      {...super._toAttributeMap, "array": array};
 }
 
 ///
@@ -267,19 +248,8 @@ class ExponentFormatter extends LevelFormatter {
   String _f_value(int level) => (a * pow(b, level)).toString();
 
   @override
-  bool operator ==(dynamic other) {
-    return other is ExponentFormatter &&
-        this.template == other.template &&
-        this.a == other.a &&
-        this.b == other.b;
-  }
-
-  @override
-  int get hashCode => hash3(a, b, template);
-
-  @override
-  Map<String, dynamic> toAttributeMap() =>
-      {...super.toAttributeMap(), "a": a, "b": b};
+  Map<String, dynamic> get _toAttributeMap =>
+      {...super._toAttributeMap, "a": a, "b": b};
 }
 
 // TODO change to accept the pattern (like [2,3,5,10]) instead of doing the exponential calculation
@@ -321,20 +291,8 @@ class PatternFormatter extends LevelFormatter {
   String _f_value(int level) => (_equation(level)).toString();
 
   @override
-  bool operator ==(dynamic other) {
-    return other is PatternFormatter &&
-        this.template == other.template &&
-        this.numberOfSteps == other.numberOfSteps &&
-        this.exponent == other.exponent &&
-        this.constant == other.constant;
-  }
-
-  @override
-  int get hashCode => hash4(numberOfSteps, exponent, constant, template);
-
-  @override
-  Map<String, dynamic> toAttributeMap() => {
-        ...super.toAttributeMap(),
+  Map<String, dynamic> get _toAttributeMap => {
+        ...super._toAttributeMap,
         'numberOfSteps': numberOfSteps,
         'exponent': exponent,
         'constant': constant
@@ -348,13 +306,13 @@ class AliasFormatter extends DescriptionFormatter {
   @override
   String get _type => TYPE;
 
-  final Map<String, String> aliases;
+  final MyMap<String, String> aliases;
 
-  const AliasFormatter(
+  AliasFormatter(
       {String template = DescriptionFormatter.TEMPLATE,
       Map<String, String> aliases})
       : assert(aliases != null),
-        aliases = aliases,
+        aliases = MyMap(delegate: aliases),
         super(template: template);
 
   factory AliasFormatter.fromJSON(Map<String, dynamic> json) {
@@ -369,19 +327,8 @@ class AliasFormatter extends DescriptionFormatter {
   String _detail(ModifierData data) =>
       aliases[data.detail] ?? data.detail ?? '';
 
-  @override
-  bool operator ==(dynamic other) {
-    return other is AliasFormatter &&
-        this.template == other.template &&
-        mapsEqual(this.aliases, other.aliases);
-  }
-
-  @override
-  int get hashCode =>
-      hashObjects([template, ...aliases.keys, ...aliases.values]);
-
-  Map<String, dynamic> toAttributeMap() => {
-        ...super.toAttributeMap(),
+  Map<String, dynamic> get _toAttributeMap => {
+        ...super._toAttributeMap,
         'aliases': aliases,
       };
 }
