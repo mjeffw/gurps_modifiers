@@ -33,12 +33,11 @@ abstract class ModifierTemplate {
   ///
   /// Constructor
   ///
-  const ModifierTemplate(
-      {this.name,
-      this.isAttackModifier,
-      this.formatter = const DescriptionFormatter()})
+  ModifierTemplate(
+      {this.name, this.isAttackModifier, DescriptionFormatter formatter})
       : assert(name != null),
-        assert(isAttackModifier != null);
+        assert(isAttackModifier != null),
+        this.formatter = formatter ?? DescriptionFormatter();
 
   ///
   /// Export as JSON.
@@ -109,7 +108,7 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
   ///
   /// Create a [BaseLeveledTemplate] with the required fields.
   ///
-  const BaseLeveledTemplate(
+  BaseLeveledTemplate(
       {this.maxLevel,
       String name,
       DescriptionFormatter formatter,
@@ -121,7 +120,7 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
         super(
             name: name,
             isAttackModifier: isAttackModifier,
-            formatter: formatter ?? const LevelFormatter());
+            formatter: formatter ?? LevelFormatter());
 
   @override
   Modifier createModifier({ModifierData data}) {
@@ -193,8 +192,7 @@ class CyclicModifierTemplate extends ModifierTemplate {
         : data.contagion == ContagionType.Mildly ? 20 : 50;
   }
 
-  const CyclicModifierTemplate()
-      : super(name: 'Cyclic', isAttackModifier: true);
+  CyclicModifierTemplate() : super(name: 'Cyclic', isAttackModifier: true);
 
   factory CyclicModifierTemplate.fromJSON(Map<String, dynamic> json) =>
       CyclicModifierTemplate();

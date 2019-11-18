@@ -28,7 +28,7 @@ class FormatterFactory {
 ///
 /// If detail is blank or null, the default description is simply the name.
 ///
-class DescriptionFormatter {
+class DescriptionFormatter with HasAttributes {
   static const TEMPLATE = '%name, %detail';
 
   ///
@@ -52,7 +52,7 @@ class DescriptionFormatter {
   ///
   /// Create a [DescriptionFormatter] with the given template.
   ///
-  const DescriptionFormatter({String template = TEMPLATE})
+  DescriptionFormatter({String template = TEMPLATE})
       : template = template ?? TEMPLATE;
 
   ///
@@ -83,38 +83,21 @@ class DescriptionFormatter {
   ///
   factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) =>
       (json == null)
-          ? const DescriptionFormatter()
+          ? DescriptionFormatter()
           : FormatterFactory.get(json).call(json);
 
   ///
   /// Encode JSON from the object's attributes
   ///
-  String toJSON() => json.encode(_attributeMap);
+  String toJSON() => json.encode(attributeMap);
 
   ///
   /// The object's attributes returned as a map
   ///
-  Map<String, dynamic> get _attributeMap => {
+  Map<String, dynamic> get attributeMap => {
         if (_type != null) 'type': _type,
         if (template != _defaultTemplate) 'template': template,
       };
-
-  ///
-  /// Inheritable equals operator using the object's attributeMap.
-  ///
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    return other is DescriptionFormatter &&
-        identical(this.runtimeType, other.runtimeType) &&
-        attributeMapsEqual(this._attributeMap, other._attributeMap);
-  }
-
-  ///
-  /// Inheritable hashCode implementation using the object's attributeMap.
-  ///
-  @override
-  int get hashCode => hashObjects(_attributeMap.values);
 }
 
 ///
@@ -137,7 +120,7 @@ class LevelFormatter extends DescriptionFormatter {
   ///
   /// Create a constant [LevelFormatter]. By default, the description is <name> <level>.
   ///
-  const LevelFormatter({String template = TEMPLATE})
+  LevelFormatter({String template = TEMPLATE})
       : super(template: template ?? TEMPLATE);
 
   factory LevelFormatter.fromJSON(Map<String, dynamic> json) =>
@@ -210,8 +193,8 @@ class ArrayFormatter extends LevelFormatter {
   String _f_value(int level) => array[level - 1];
 
   @override
-  Map<String, dynamic> get _attributeMap =>
-      {...super._attributeMap, "array": array};
+  Map<String, dynamic> get attributeMap =>
+      {...super.attributeMap, "array": array};
 }
 
 ///
@@ -240,8 +223,7 @@ class ExponentFormatter extends LevelFormatter {
   ///
   /// Create a [ExponentFormatter] with the given parameters.
   ///
-  const ExponentFormatter(
-      {this.a, this.b, String template = LevelFormatter.TEMPLATE})
+  ExponentFormatter({this.a, this.b, String template = LevelFormatter.TEMPLATE})
       : assert(a != null),
         assert(b != null),
         super(template: template);
@@ -258,8 +240,8 @@ class ExponentFormatter extends LevelFormatter {
   String _f_value(int level) => (a * pow(b, level)).toString();
 
   @override
-  Map<String, dynamic> get _attributeMap =>
-      {...super._attributeMap, "a": a, "b": b};
+  Map<String, dynamic> get attributeMap =>
+      {...super.attributeMap, "a": a, "b": b};
 }
 
 class PatternFormatter extends LevelFormatter {
@@ -292,8 +274,8 @@ class PatternFormatter extends LevelFormatter {
   String _f_value(int level) => (_equation(level)).toString();
 
   @override
-  Map<String, dynamic> get _attributeMap => {
-        ...super._attributeMap,
+  Map<String, dynamic> get attributeMap => {
+        ...super.attributeMap,
         'pattern': pattern,
       };
 }

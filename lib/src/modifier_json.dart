@@ -758,9 +758,7 @@ String modifierDataString = '''
           "value": 15
         }
       ],
-      "formatter": {
-        "type": "Alias",
-        "template": "%name, %fd %detail",
+      "detailAlias": {
         "aliases": {
           "Cutting": "cut",
           "Hot": "burn",

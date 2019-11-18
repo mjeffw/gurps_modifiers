@@ -63,11 +63,12 @@ void main() {
             'name 9');
       });
 
-      test('const constructor', () {
-        expect(
-            const DescriptionFormatter(), same(const DescriptionFormatter()));
-        expect(const DescriptionFormatter(template: '%name, %detail'),
-            same(const DescriptionFormatter()));
+      test('fromJSON with null', () {
+        var f = DescriptionFormatter.fromJSON(null);
+        expect(f, isA<DescriptionFormatter>());
+        expect(f.template, '%name, %detail');
+        expect(f.describe(name: 'name', data: Data(detail: '9', level: 1)),
+            'name, 9');
       });
 
       test('object methods', () {
@@ -89,12 +90,12 @@ void main() {
       });
 
       test('toJSON', () {
-        var formatter = const DescriptionFormatter(template: 'Andf asdf er2');
+        var formatter = DescriptionFormatter(template: 'Andf asdf er2');
         expect(formatter.toJSON(), '{"template":"Andf asdf er2"}');
       });
 
       test('toJSON, null template', () {
-        var formatter = const DescriptionFormatter(template: null);
+        var formatter = DescriptionFormatter(template: null);
         expect(formatter.toJSON(), '{}');
       });
     }, skip: false);
@@ -136,12 +137,6 @@ void main() {
             'name 9');
       });
 
-      test('const constructor', () {
-        expect(const LevelFormatter(), same(const LevelFormatter()));
-        expect(const LevelFormatter(template: '%name %f'),
-            same(const LevelFormatter()));
-      });
-
       test('object methods', () {
         var f1 = LevelFormatter();
         var f2 = LevelFormatter(template: '%name %f');
@@ -161,13 +156,13 @@ void main() {
       });
 
       test('toJSON', () {
-        var formatter = const LevelFormatter(template: 'Andf asdf er2');
+        var formatter = LevelFormatter(template: 'Andf asdf er2');
         expect(formatter.toJSON(),
             '''{"type":"Level","template":"Andf asdf er2"}''');
       });
 
       test('toJSON, default template', () {
-        var formatter = const LevelFormatter();
+        var formatter = LevelFormatter();
         expect(formatter.toJSON(), '''{"type":"Level"}''');
       });
     }, skip: false);
@@ -348,13 +343,13 @@ void main() {
       });
 
       test('toJSON default template ', () {
-        var formatter = const ExponentFormatter(a: 2, b: 3);
+        var formatter = ExponentFormatter(a: 2, b: 3);
         expect(formatter.toJSON(), '{"type":"Exponent","a":2,"b":3}');
       });
 
       test('toJSON', () {
         var formatter =
-            const ExponentFormatter(a: 2, b: 3, template: '%name, %f yards');
+            ExponentFormatter(a: 2, b: 3, template: '%name, %f yards');
         expect(formatter.toJSON(),
             '{"type":"Exponent","template":"%name, %f yards","a":2,"b":3}');
       });
@@ -375,13 +370,6 @@ void main() {
 
         expect(f1.hashCode, equals(f2.hashCode));
         expect(f1.hashCode, isNot(equals(f3.hashCode)));
-      });
-
-      test('const constructor', () {
-        expect(const ExponentFormatter(a: 2, b: 3),
-            same(const ExponentFormatter(a: 2, b: 3)));
-        expect(const ExponentFormatter(a: 2, b: 3, template: '%name %f'),
-            same(const ExponentFormatter(a: 2, b: 3)));
       });
     });
 
