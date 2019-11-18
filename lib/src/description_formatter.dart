@@ -266,11 +266,6 @@ class ExponentFormatter extends LevelFormatter {
   @override
   String _f_value(int level) => (a * pow(b, level)).toString();
 
-  // @override
-  // String toJSON() {
-  //   return '''{"type":"$TYPE","a":$a,"b":$b,"template":"$template"}''';
-  // }
-
   @override
   bool operator ==(dynamic other) {
     return other is ExponentFormatter &&
@@ -287,6 +282,7 @@ class ExponentFormatter extends LevelFormatter {
       {...super.toAttributeMap(), "a": a, "b": b};
 }
 
+// TODO change to accept the pattern (like [2,3,5,10]) instead of doing the exponential calculation
 class PatternFormatter extends LevelFormatter {
   static const TYPE = 'Pattern';
 
@@ -297,12 +293,15 @@ class PatternFormatter extends LevelFormatter {
   final int exponent; // 2
   final int constant; // 1
 
-  PatternFormatter(
+  const PatternFormatter(
       {this.numberOfSteps,
       this.exponent,
       this.constant,
       String template = LevelFormatter.TEMPLATE})
-      : super(template: template);
+      : assert(numberOfSteps != null),
+        assert(exponent != null),
+        assert(constant != null),
+        super(template: template);
 
   factory PatternFormatter.fromJSON(Map<String, dynamic> json) {
     return PatternFormatter(
@@ -342,6 +341,7 @@ class PatternFormatter extends LevelFormatter {
       };
 }
 
+// TODO change to a Detail Alias class with no template
 class AliasFormatter extends DescriptionFormatter {
   static const String TYPE = 'Alias';
 
@@ -350,9 +350,12 @@ class AliasFormatter extends DescriptionFormatter {
 
   final Map<String, String> aliases;
 
-  AliasFormatter(
-      {String template = DescriptionFormatter.TEMPLATE, this.aliases})
-      : super(template: template);
+  const AliasFormatter(
+      {String template = DescriptionFormatter.TEMPLATE,
+      Map<String, String> aliases})
+      : assert(aliases != null),
+        aliases = aliases,
+        super(template: template);
 
   factory AliasFormatter.fromJSON(Map<String, dynamic> json) {
     return AliasFormatter(
