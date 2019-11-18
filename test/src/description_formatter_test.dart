@@ -394,55 +394,39 @@ void main() {
         expect(() => PatternFormatter(), throwsA(isA<AssertionError>()));
       });
 
-      test('no-exponent constructor', () {
-        expect(() => PatternFormatter(numberOfSteps: 2, constant: 1),
-            throwsA(isA<AssertionError>()));
-      });
-
-      test('no-numberOfSteps constructor', () {
-        expect(() => PatternFormatter(exponent: 2, constant: 1),
-            throwsA(isA<AssertionError>()));
-      });
-
-      test('no-constant constructor', () {
-        expect(() => PatternFormatter(exponent: 2, numberOfSteps: 1),
-            throwsA(isA<AssertionError>()));
-      });
-
       test('null template constructor', () {
         expect(
-            PatternFormatter(
-                    exponent: 5, constant: 3, numberOfSteps: 5, template: null)
-                .template,
+            PatternFormatter(pattern: [2, 3, 5, 10], template: null).template,
             LevelFormatter.TEMPLATE);
       });
 
       test('template constructor', () {
         expect(
             PatternFormatter(
-                    numberOfSteps: 5,
-                    exponent: 2,
-                    constant: 0,
-                    template: 'One %name is %f')
+                    pattern: [2, 3, 5, 10], template: 'One %name is %f')
                 .template,
             'One %name is %f');
       });
 
       test('describe', () {
-        var f = PatternFormatter(numberOfSteps: 2, exponent: 3, constant: 1);
-        expect(f.describe(data: Data(level: 2), name: 'foo'), 'foo 10');
+        var f = PatternFormatter(pattern: [2, 3, 5, 10]);
         expect(f.describe(data: Data(level: 1), name: 'foo'), 'foo 2');
+        expect(f.describe(data: Data(level: 2), name: 'foo'), 'foo 3');
+        expect(f.describe(data: Data(level: 3), name: 'foo'), 'foo 5');
+        expect(f.describe(data: Data(level: 4), name: 'foo'), 'foo 10');
+        expect(f.describe(data: Data(level: 5), name: 'foo'), 'foo 20');
 
-        var f2 = PatternFormatter(
-            numberOfSteps: 3,
-            exponent: 1,
-            constant: 0,
-            template: '%f :: %name');
-        expect(f2.describe(data: Data(level: 4), name: 'bar'), '10 :: bar');
+        var f2 = PatternFormatter(pattern: [2, 4, 9], template: '%f :: %name');
+        expect(f2.describe(data: Data(level: 1), name: 'bar'), '2 :: bar');
+        expect(f2.describe(data: Data(level: 2), name: 'bar'), '4 :: bar');
+        expect(f2.describe(data: Data(level: 3), name: 'bar'), '9 :: bar');
+        expect(f2.describe(data: Data(level: 4), name: 'bar'), '20 :: bar');
+        expect(f2.describe(data: Data(level: 5), name: 'bar'), '40 :: bar');
+        expect(f2.describe(data: Data(level: 6), name: 'bar'), '90 :: bar');
       });
 
       test('null args describe', () {
-        var f = PatternFormatter(numberOfSteps: 2, exponent: 2, constant: 1);
+        var f = PatternFormatter(pattern: [2, 4, 9]);
         expect(() => f.describe(), throwsA(isA<Error>()));
         expect(() => f.describe(data: null), throwsA(isA<Error>()));
         expect(
@@ -452,33 +436,15 @@ void main() {
             () => f.describe(data: Data(), name: 'baz'), throwsA(isA<Error>()));
       });
 
-      test('fromJSON -- missing numberOfSteps', () {
-        var text =
-            '''{ "type": "Pattern", "template": "%name %f", "exponent": 2, "constant": 1 }''';
-
-        expect(() => PatternFormatter.fromJSON(json.decode(text)),
-            throwsA(isA<AssertionError>()));
-      });
-
-      test('fromJSON -- missing exponent', () {
-        var text =
-            '''{ "type": "Pattern", "template": "%name %f", "numberOfSteps": 2, "constant": 1 }''';
-
-        expect(() => PatternFormatter.fromJSON(json.decode(text)),
-            throwsA(isA<AssertionError>()));
-      });
-
-      test('fromJSON -- missing constant', () {
-        var text =
-            '''{ "type": "Pattern", "template": "%name %f", "numberOfSteps": 5, "exponent": 2}''';
+      test('fromJSON -- missing pattern', () {
+        var text = '''{ "type": "Pattern", "template": "%name %f"}''';
 
         expect(() => PatternFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- missing template', () {
-        var text =
-            '''{ "type": "Pattern", "numberOfSteps": 5, "exponent": 2, "constant": 1 }''';
+        var text = '''{ "type": "Pattern", "pattern": [1,3,5,7,9]}''';
 
         expect(PatternFormatter.fromJSON(json.decode(text)).template,
             LevelFormatter.TEMPLATE);
@@ -486,39 +452,30 @@ void main() {
 
       test('fromJSON', () {
         var text =
-            '''{ "type": "Pattern", "template": "%name: %f", "numberOfSteps": 5, "exponent": 1, "constant":3 }''';
+            '''{ "type": "Pattern", "template": "%name: %f", "pattern": [5, 10]}''';
 
         var f = PatternFormatter.fromJSON(json.decode(text));
-        expect(f.describe(name: 'name', data: Data(level: 2)), 'name: 5');
-        expect(f.describe(name: 'foo', data: Data(level: 3)), 'foo: 6');
+        expect(f.describe(name: 'name', data: Data(level: 2)), 'name: 10');
+        expect(f.describe(name: 'foo', data: Data(level: 3)), 'foo: 50');
       });
 
       test('toJSON', () {
-        var formatter = PatternFormatter(
-            numberOfSteps: 5,
-            exponent: 2,
-            constant: 1,
-            template: '%name, %f steps');
+        var formatter =
+            PatternFormatter(pattern: [2, 4, 9], template: '%name, %f steps');
         expect(formatter.toJSON(),
-            '{"type":"Pattern","template":"%name, %f steps","numberOfSteps":5,"exponent":2,"constant":1}');
+            '{"type":"Pattern","template":"%name, %f steps","pattern":[2,4,9]}');
       });
 
       test('toJSON, default template', () {
-        var formatter =
-            PatternFormatter(numberOfSteps: 3, exponent: 3, constant: 5);
-        expect(formatter.toJSON(),
-            '{"type":"Pattern","numberOfSteps":3,"exponent":3,"constant":5}');
+        var formatter = PatternFormatter(pattern: [2, 4, 9]);
+        expect(formatter.toJSON(), '{"type":"Pattern","pattern":[2,4,9]}');
       });
 
       test('object methods', () {
-        var f1 = PatternFormatter(numberOfSteps: 2, exponent: 3, constant: 1);
-        var f2 = PatternFormatter(
-            numberOfSteps: 2, exponent: 3, constant: 1, template: '%name %f');
+        var f1 = PatternFormatter(pattern: [2, 4, 9]);
+        var f2 = PatternFormatter(pattern: [2, 4, 9], template: '%name %f');
         var f3 = PatternFormatter(
-            numberOfSteps: 2,
-            exponent: 3,
-            constant: 1,
-            template: '%name %f, %detail');
+            pattern: [2, 3, 5, 10], template: '%name %f, %detail');
         var f4 = LevelFormatter();
 
         expect(f1, equals(f1));
@@ -531,21 +488,6 @@ void main() {
 
         expect(f1.hashCode, equals(f2.hashCode));
         expect(f1.hashCode, isNot(equals(f3.hashCode)));
-      });
-
-      test('const constructor', () {
-        expect(
-            const PatternFormatter(numberOfSteps: 2, exponent: 3, constant: 1),
-            same(const PatternFormatter(
-                numberOfSteps: 2, exponent: 3, constant: 1)));
-        expect(
-            const PatternFormatter(
-                numberOfSteps: 2,
-                exponent: 3,
-                constant: 1,
-                template: '%name %f'),
-            same(const PatternFormatter(
-                numberOfSteps: 2, exponent: 3, constant: 1)));
       });
     });
     group('AliasFormatter', () {

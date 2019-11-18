@@ -863,9 +863,11 @@ String modifierDataString = '''
       "formatter": {
         "type": "Pattern",
         "template": "%name, %fx",
-        "numberOfSteps": 3,
-        "exponent": 2,
-        "constant": 1
+        "pattern": [
+          2,
+          5,
+          10
+        ]
       }
     },
     {
@@ -881,9 +883,11 @@ String modifierDataString = '''
       "formatter": {
         "type": "Pattern",
         "template": "%name, %fx",
-        "numberOfSteps": 3,
-        "exponent": 2,
-        "constant": 1
+        "pattern": [
+          2,
+          5,
+          10
+        ]
       }
     },
     {
@@ -893,9 +897,11 @@ String modifierDataString = '''
       "formatter": {
         "type": "Pattern",
         "template": "%name, %fx",
-        "numberOfSteps": 3,
-        "exponent": 2,
-        "constant": 1
+        "pattern": [
+          2,
+          5,
+          10
+        ]
       }
     },
     {

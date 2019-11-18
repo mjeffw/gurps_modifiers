@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
 import '../modifier_data.dart';
@@ -88,23 +87,35 @@ class DescriptionFormatter {
           ? const DescriptionFormatter()
           : FormatterFactory.get(json).call(json);
 
-  String toJSON() => json.encode(_toAttributeMap);
+  ///
+  /// Encode JSON from the object's attributes
+  ///
+  String toJSON() => json.encode(_attributeMap);
 
-  Map<String, dynamic> get _toAttributeMap => {
+  ///
+  /// The object's attributes returned as a map
+  ///
+  Map<String, dynamic> get _attributeMap => {
         if (_type != null) 'type': _type,
         if (template != _defaultTemplate) 'template': template,
       };
 
+  ///
+  /// Inheritable equals operator using the object's attributeMap.
+  ///
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
     return other is DescriptionFormatter &&
         identical(this.runtimeType, other.runtimeType) &&
-        attributeMapsEqual(this._toAttributeMap, other._toAttributeMap);
+        attributeMapsEqual(this._attributeMap, other._attributeMap);
   }
 
+  ///
+  /// Inheritable hashCode implementation using the object's attributeMap.
+  ///
   @override
-  int get hashCode => hashObjects(_toAttributeMap.values);
+  int get hashCode => hashObjects(_attributeMap.values);
 }
 
 ///
@@ -200,8 +211,8 @@ class ArrayFormatter extends LevelFormatter {
   String _f_value(int level) => array[level - 1];
 
   @override
-  Map<String, dynamic> get _toAttributeMap =>
-      {...super._toAttributeMap, "array": array};
+  Map<String, dynamic> get _attributeMap =>
+      {...super._attributeMap, "array": array};
 }
 
 ///
@@ -248,8 +259,8 @@ class ExponentFormatter extends LevelFormatter {
   String _f_value(int level) => (a * pow(b, level)).toString();
 
   @override
-  Map<String, dynamic> get _toAttributeMap =>
-      {...super._toAttributeMap, "a": a, "b": b};
+  Map<String, dynamic> get _attributeMap =>
+      {...super._attributeMap, "a": a, "b": b};
 }
 
 // TODO change to accept the pattern (like [2,3,5,10]) instead of doing the exponential calculation
@@ -259,31 +270,23 @@ class PatternFormatter extends LevelFormatter {
   @override
   String get _type => TYPE;
 
-  final int numberOfSteps; // 3
-  final int exponent; // 2
-  final int constant; // 1
+  final MyList<int> pattern; // e.g., 2, 3, 5, 10
 
-  const PatternFormatter(
-      {this.numberOfSteps,
-      this.exponent,
-      this.constant,
-      String template = LevelFormatter.TEMPLATE})
-      : assert(numberOfSteps != null),
-        assert(exponent != null),
-        assert(constant != null),
+  PatternFormatter(
+      {List<int> pattern, String template = LevelFormatter.TEMPLATE})
+      : assert(pattern != null),
+        pattern = MyList<int>(delegate: pattern),
         super(template: template);
 
   factory PatternFormatter.fromJSON(Map<String, dynamic> json) {
-    return PatternFormatter(
-        numberOfSteps: json['numberOfSteps'],
-        exponent: json['exponent'],
-        constant: json['constant'],
-        template: json['template']);
+    var json2 = json['pattern'];
+    var pattern = json2 == null ? null : List<int>.from(json2);
+    return PatternFormatter(pattern: pattern, template: json['template']);
   }
 
-  int _mult(int level) => pow((level % numberOfSteps), exponent) + constant;
+  int _mult(int level) => pattern[(level - 1) % pattern.length];
 
-  int _powerOfTen(int level) => pow(10, level ~/ numberOfSteps);
+  int _powerOfTen(int level) => pow(10, (level - 1) ~/ pattern.length);
 
   int _equation(int level) => _mult(level) * _powerOfTen(level);
 
@@ -291,11 +294,9 @@ class PatternFormatter extends LevelFormatter {
   String _f_value(int level) => (_equation(level)).toString();
 
   @override
-  Map<String, dynamic> get _toAttributeMap => {
-        ...super._toAttributeMap,
-        'numberOfSteps': numberOfSteps,
-        'exponent': exponent,
-        'constant': constant
+  Map<String, dynamic> get _attributeMap => {
+        ...super._attributeMap,
+        'pattern': pattern,
       };
 }
 
@@ -327,8 +328,8 @@ class AliasFormatter extends DescriptionFormatter {
   String _detail(ModifierData data) =>
       aliases[data.detail] ?? data.detail ?? '';
 
-  Map<String, dynamic> get _toAttributeMap => {
-        ...super._toAttributeMap,
+  Map<String, dynamic> get _attributeMap => {
+        ...super._attributeMap,
         'aliases': aliases,
       };
 }

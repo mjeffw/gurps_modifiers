@@ -1493,7 +1493,7 @@ main() {
       expect(
           () => Modifier.copyWith(mod, level: 11), throwsA(isA<RangeError>()));
     });
-  }, skip: true);
+  }, skip: false);
 
   group('Variable', () {
     group('Cyclic', () {
