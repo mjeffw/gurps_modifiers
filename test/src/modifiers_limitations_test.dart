@@ -493,7 +493,7 @@ main() {
       expect(mod.percentage(Data()), -10);
       expect(mod.isAttackModifier, false);
     });
-  }, skip: true);
+  }, skip: false);
 
   //TODO: This is the catch-all limitation. Must provide someway to enter
   // limitation information (and potentially save it).
@@ -623,7 +623,7 @@ main() {
           .templateByName('Accessibility, Useless under stress');
       expect(mod.percentage(Data()), -60);
     });
-  }, skip: true);
+  }, skip: false);
 
   group('Leveled limitations', () {
     test('Cardiac Stress', () {
@@ -903,7 +903,7 @@ main() {
       expect(mod.percentage(Data(level: 1)), -10);
       expect(mod.percentage(Data(level: 3)), -30);
     });
-  }, skip: true);
+  }, skip: false);
 
   //TODO: Pact - The limitation value is numerically equivalent to the point
   // cost of the required disadvantages; e.g., a -10-point Vow gives a -10%

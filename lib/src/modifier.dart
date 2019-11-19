@@ -75,15 +75,3 @@ class CyclicModifier extends Modifier with CyclicData {
         contagion: contagion ?? source.contagion);
   }
 }
-
-// class NamedVariantModifier extends Modifier {
-//   NamedVariantModifier({NamedVariantTemplate template, String detail})
-//       : assert(template.containsVariation(detail)),
-//         super(template: template, detail: detail);
-
-//   factory NamedVariantModifier.copyWith(NamedVariantModifier source,
-//       {String detail}) {
-//     return NamedVariantModifier(
-//         template: source.template, detail: detail ?? source.detail);
-//   }
-// }

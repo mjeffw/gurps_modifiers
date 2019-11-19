@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
@@ -100,4 +102,11 @@ mixin HasAttributes {
   ///
   @override
   int get hashCode => hashObjects(attributeMap.values);
+
+  ///
+  /// Encode JSON from the object's attributes
+  ///
+  String toJSON() => json.encode(attributeMap);
+
+  Map<String, dynamic> toJson() => attributeMap;
 }

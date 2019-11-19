@@ -56,5 +56,5 @@ void main() {
       expect(f1.hashCode, equals(f2.hashCode));
       expect(f1.hashCode, isNot(equals(f3.hashCode)));
     });
-  });
+  }, skip: false);
 }

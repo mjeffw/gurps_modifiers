@@ -312,7 +312,7 @@ main() {
       expect(mod.percentage, 5);
       expect(mod.isAttackModifier, true);
     });
-  }, skip: true);
+  }, skip: false);
 
   group('Named Variants', () {
     group('Affects', () {
@@ -864,7 +864,7 @@ main() {
         expect(mod.percentage, 100);
       });
     });
-  }, skip: true);
+  }, skip: false);
 
   group('Categorized', () {
     group('Cosmic', () {
@@ -940,7 +940,7 @@ main() {
         expect(m2.description, 'Cosmic, Unrestricted powers');
       });
     });
-  }, skip: true);
+  }, skip: false);
 
   group('Leveled', () {
     test('Accurate', () {
@@ -1129,7 +1129,7 @@ main() {
         expect(m.level, 3);
         expect(m.description, 'Fragmentation, 3d pi+');
       });
-    }, skip: true);
+    }, skip: false);
 
     test('Incendiary', () {
       Modifier inc = Modifiers.instance().byName('Incendiary');
@@ -1704,7 +1704,7 @@ main() {
       mod = Modifier.copyWith(mod, level: 6);
       expect(mod.percentage, 310);
     });
-  }, skip: true);
+  }, skip: false);
 
   //TODO: Blood Agent: -40% limitation UNLESS combined with Area Effect or Cone, in which case it is a 100% enhancement.
   // This is a “penetration modifier”; you cannot combine it with other

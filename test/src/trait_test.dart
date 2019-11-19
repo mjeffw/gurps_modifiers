@@ -12,7 +12,7 @@ void main() {
       expect(trait.baseCost, trait.cost);
       expect(trait.modifiers, isEmpty);
     });
-  }, skip: true);
+  });
 
   group('trait with modifier', () {
     test('enhancement', () {
@@ -68,5 +68,5 @@ void main() {
       expect(trait.netModifier, -80);
       expect(trait.cost, 2);
     });
-  }, skip: true);
+  }, skip: false);
 }

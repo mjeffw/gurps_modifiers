@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'util/generic.dart';
 
 class DetailAlias with HasAttributes {
@@ -23,11 +21,4 @@ class DetailAlias with HasAttributes {
 
   @override
   Map<String, dynamic> get attributeMap => {'aliases': aliases};
-
-  ///
-  /// Encode JSON from the object's attributes
-  ///
-  String toJSON() => json.encode(attributeMap);
-
-  dynamic toJson() => attributeMap;
 }

@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:dart_utils/dart_utils.dart';
 import 'package:gurps_modifiers/src/template_subtypes.dart';
-import 'package:quiver/core.dart';
 
 import '../modifier_data.dart';
 import 'description_formatter.dart';
@@ -44,11 +40,6 @@ abstract class ModifierTemplate with HasAttributes {
         this.formatter = formatter ?? DescriptionFormatter();
 
   ///
-  /// Export as JSON.
-  ///
-  // String toJSON();
-
-  ///
   /// Create and return a [Modifier] based on this template.
   ///
   Modifier createModifier({ModifierData data}) {
@@ -68,30 +59,13 @@ abstract class ModifierTemplate with HasAttributes {
   int percentage(ModifierData data);
 
   @override
-  String toString() => toJSON();
-
-  @override
-  int get hashCode => hash3(name, isAttackModifier, formatter);
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    return other is ModifierTemplate &&
-        this.name == other.name &&
-        this.formatter == other.formatter &&
-        this.isAttackModifier == other.isAttackModifier;
-  }
+  String toString() => '$attributeMap';
 
   @override
   Map<String, dynamic> get attributeMap => {
         "name": name,
         if (isAttackModifier) "isAttackModifier": true,
       };
-
-  ///
-  /// Encode JSON from the object's attributes
-  ///
-  String toJSON() => json.encode(attributeMap);
 }
 
 ///
@@ -147,18 +121,6 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
     }
     return Modifier(
         template: this, level: data?.level ?? 1, detail: data?.detail);
-  }
-
-  @override
-  int get hashCode => Hashes.finish(Hashes.combine(
-      super.hashCode, Hashes.combine(hash2(maxLevel, levelPrompt), 0)));
-
-  @override
-  bool operator ==(dynamic other) {
-    return other is BaseLeveledTemplate &&
-        super == other &&
-        this.maxLevel == other.maxLevel &&
-        this.levelPrompt == other.levelPrompt;
   }
 
   @override
@@ -224,14 +186,6 @@ class CyclicModifierTemplate extends ModifierTemplate {
   factory CyclicModifierTemplate.fromJSON(Map<String, dynamic> json) =>
       CyclicModifierTemplate();
 
-  // @override
-  // String toJSON() {
-  //   return '''{
-  //     "name": "Cyclic",
-  //     "type": "Cyclic"
-  //   }''';
-  // }
-
   @override
   Modifier createModifier({ModifierData data}) {
     CyclicData d2 = data as CyclicData;
@@ -241,16 +195,6 @@ class CyclicModifierTemplate extends ModifierTemplate {
         cycles: d2?.cycles ?? 2,
         interval: d2?.interval ?? CyclicInterval.PerDay,
         resistible: d2?.resistible ?? false);
-  }
-
-  @override
-  int get hashCode => Hashes.finish(
-      Hashes.combine(super.hashCode, Hashes.combine("Cyclic".hashCode, 0)));
-
-  @override
-  bool operator ==(dynamic other) {
-    return (identical(this, other)) ||
-        (other is CyclicModifierTemplate && super == other);
   }
 
   @override

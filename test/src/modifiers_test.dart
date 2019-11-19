@@ -16,5 +16,5 @@ main() {
     test('fetchKeys', () {
       expect(ModifierTemplates.instance().fetchKeys(), contains('Accurate'));
     });
-  }, skip: true);
+  }, skip: false);
 }

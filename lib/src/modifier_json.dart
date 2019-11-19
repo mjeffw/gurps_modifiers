@@ -230,6 +230,9 @@ String modifierDataString = '''
         "(0.5)": -30,
         "(0.2)": -50,
         "(0.1)": -70
+      },
+      "formatter": {
+        "template": "%name %detail"
       }
     },
     {
@@ -647,6 +650,7 @@ String modifierDataString = '''
       },
       "formatter": {
         "type": "Level",
+        "template": "%name, %fd %detail",
         "detailAlias": {
           "aliases": {
             "Cutting": "cut",

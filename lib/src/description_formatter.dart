@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:quiver/core.dart';
@@ -95,13 +94,6 @@ class DescriptionFormatter with HasAttributes {
   /// something other than the default detail, if needed.
   ///
   String _detail(ModifierData data) => alias.replace(data.detail) ?? '';
-
-  ///
-  /// Encode JSON from the object's attributes
-  ///
-  String toJSON() => json.encode(attributeMap);
-
-  dynamic toJson() => attributeMap;
 
   ///
   /// The object's attributes returned as a map

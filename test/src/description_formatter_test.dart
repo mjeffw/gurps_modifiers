@@ -82,8 +82,7 @@ void main() {
             json.decode('{ "detailAlias": {"aliases": {"1":"ONE"}}}'));
         expect(f, isA<DescriptionFormatter>());
         expect(f.template, DescriptionFormatter.TEMPLATE);
-        expect(
-            f.describe(name: 'name', data: Data(detail: '1')), 'name, ONE');
+        expect(f.describe(name: 'name', data: Data(detail: '1')), 'name, ONE');
       });
 
       test('fromJSON with template', () {
@@ -130,7 +129,7 @@ void main() {
         var formatter = DescriptionFormatter(template: null);
         expect(formatter.toJSON(), '{}');
       });
-    }, skip: false);
+    });
 
     group('LevelFormatter', () {
       test('no-args constructor', () {
@@ -197,7 +196,7 @@ void main() {
         var formatter = LevelFormatter();
         expect(formatter.toJSON(), '''{"type":"Level"}''');
       });
-    }, skip: false);
+    });
 
     group('ArrayFormatter', () {
       const text =
@@ -294,7 +293,7 @@ void main() {
         expect(f1.hashCode, equals(f2.hashCode));
         expect(f1.hashCode, isNot(equals(f3.hashCode)));
       });
-    }, skip: false);
+    });
 
     group('ExponentFormatter', () {
       test('no-args constructor', () {

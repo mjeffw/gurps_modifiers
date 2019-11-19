@@ -20,7 +20,7 @@ void main() {
         var mod = SimpleModifierTemplate(percentage: 20, name: 'foo');
         expect(mod.percentage(Data()), 20);
         expect(mod.name, 'foo');
-        expect(mod.toString(), equals(mod.toJSON()));
+        expect(mod.toString(), equals(mod.toJson().toString()));
       });
 
       test('Negative percentage', () {
@@ -131,7 +131,7 @@ void main() {
         expect(mod.baseValue, 0);
         expect(mod.valuePerLevel, 5);
         expect(mod.percentage(Data(level: 1)), 5);
-        expect(mod.toString(), equals(mod.toJSON()));
+        expect(mod.toString(), equals(mod.toJson().toString()));
       });
 
       test('negative valuePerLevel in constructor', () {
@@ -278,7 +278,7 @@ void main() {
         var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.formatter, LevelFormatter(template: "Boo-Ya"));
       });
-    }, skip: false);
+    });
 
     group('variable modifier', () {
       test('constructor: minimal', () {
@@ -287,7 +287,7 @@ void main() {
         expect(mod, isA<ModifierTemplate>());
         expect(mod.percentage(Data(level: 1)), 10);
         expect(mod.isAttackModifier, false);
-        expect(mod.toString(), equals(mod.toJSON()));
+        expect(mod.toString(), equals(mod.toJson().toString()));
       });
 
       test('constructor + isAttackModifier', () {
@@ -381,7 +381,7 @@ void main() {
             VariableLeveledTemplate.fromJSON(json.decode(source));
         expect(m.describe(Data(level: 1)), '1 Bar');
       });
-    }, skip: false);
+    });
 
     group('cyclic', () {
       test('fromJSON - empty', () {

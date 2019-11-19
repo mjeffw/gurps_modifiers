@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:dart_utils/dart_utils.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
-import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
 import '../modifier_data.dart';
@@ -10,11 +7,6 @@ import 'description_formatter.dart';
 import 'detail_alias.dart';
 import 'modifier_template.dart';
 import 'util/generic.dart';
-
-String _combineJsonFragments(List<String> strings) => strings
-    .where((it) => it != null && it.isNotEmpty)
-    .map((s) => '  $s')
-    .reduce((a, b) => '$a,\n$b');
 
 ///
 /// Simple modifiers have just a flat percentage.
@@ -28,12 +20,16 @@ class SimpleModifierTemplate extends ModifierTemplate {
   ///
   final int _percentage;
 
+  ///
+  /// Provide a default value for the detail if one is not provided.
+  ///
   final String defaultDetail;
 
   @override
   String describe(ModifierData data) =>
       formatter.describe(name: name, data: data);
 
+  @override
   int percentage(ModifierData data) => _percentage;
 
   ///
@@ -66,35 +62,6 @@ class SimpleModifierTemplate extends ModifierTemplate {
         detailAlias: json['detailAlias'],
         defaultDetail: json['default'],
         isAttackModifier: (json['isAttackModifier'] ?? false) as bool);
-  }
-
-  ///
-  /// Return the JSON String representation.
-  ///
-  // @override
-  // String toJSON() {
-  //   List<String> strings = [
-  //     '"name": "$name"',
-  //     '"type": "Simple"',
-  //     if (percentage != null) '"percentage": $_percentage',
-  //     if (isAttackModifier) '"isAttackModifier": true',
-  //     if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
-  //     if (formatter != null && formatter != DescriptionFormatter())
-  //       '"formatter":${formatter.toJSON()}'
-  //   ];
-  //   return "{\n${_combineJsonFragments(strings)}\n}";
-  // }
-
-  @override
-  int get hashCode => Hashes.finish(
-      Hashes.combine(super.hashCode, Hashes.combine(_percentage.hashCode, 0)));
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    return other is SimpleModifierTemplate &&
-        super == other &&
-        this._percentage == other._percentage;
   }
 
   @override
@@ -155,23 +122,6 @@ class NamedVariantTemplate extends ModifierTemplate {
         detail:
             data == null ? defaultVariation : data.detail ?? defaultVariation);
   }
-
-  // @override
-  // String toJSON() {
-  //   List<String> attributes = [
-  //     '"name": "$name"',
-  //     '"type": "NamedVariant"',
-  //     if (_percentage.isPresent) '"percentage": ${_percentage.value}',
-  //     if (defaultVariation != null) '"default": "$defaultVariation"',
-  //     if (isAttackModifier) '"isAttackModifier": true',
-  //     if (formatter != null &&
-  //         formatter != DescriptionFormatter() &&
-  //         formatter.toJSON().isNotEmpty)
-  //       '"formatter":${formatter.toJSON()}',
-  //     '"variations": [\n${mapToJson(variations, prefix: "\t\t")}\n\t]'
-  //   ];
-  //   return '{\n${_combineJsonFragments(attributes)}\n}';
-  // }
 
   factory NamedVariantTemplate.fromJSON(Map<String, dynamic> json) {
     Map<String, dynamic> variations = json['variations'];
@@ -247,40 +197,6 @@ class LeveledTemplate extends BaseLeveledTemplate {
             : DescriptionFormatter.fromJSON(json['formatter']));
   }
 
-  ///
-  /// Return the JSON String representation.
-  ///
-  // @override
-  // String toJSON() {
-  //   List<String> strings = [
-  //     '"name": "$name"',
-  //     '"type": "Leveled"',
-  //     if (baseValue != null && baseValue != 0) '"baseValue": $baseValue',
-  //     if (isAttackModifier) '"isAttackModifier": ${isAttackModifier}',
-  //     if (maxLevel != null) '"maxLevel": $maxLevel',
-  //     '"valuePerLevel": $valuePerLevel',
-  //     if (levelPrompt != null && levelPrompt != 'Level')
-  //       '"levelPrompt": "$levelPrompt"',
-  //     if (formatter != null && formatter != LevelFormatter())
-  //       '"formatter":${formatter.toJSON()}'
-  //   ];
-  //   return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  // }
-
-  @override
-  int get hashCode => Hashes.finish(Hashes.combine(super.hashCode,
-      Hashes.combine(hash3(valuePerLevel, baseValue, levelPrompt), 0)));
-
-  @override
-  bool operator ==(dynamic other) {
-    return (identical(this, other)) ||
-        (other is LeveledTemplate &&
-            super == other &&
-            this.levelPrompt == other.levelPrompt &&
-            this.valuePerLevel == other.valuePerLevel &&
-            this.baseValue == other.baseValue);
-  }
-
   @override
   Map<String, dynamic> get attributeMap => {
         ...super.attributeMap,
@@ -300,7 +216,7 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
   ///
   /// The cost of each level.
   ///
-  final List<int> _levelValues;
+  final MyList<int> _levelValues;
 
   @override
   int percentage(ModifierData data) => _levelValues[data.level - 1];
@@ -310,7 +226,7 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
       String name,
       bool isAttackModifier = false,
       LevelFormatter formatter})
-      : _levelValues = levelValues,
+      : _levelValues = MyList(delegate: levelValues),
         super(
             formatter: formatter,
             maxLevel: levelValues.length,
@@ -328,31 +244,6 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
             ? null
             : DescriptionFormatter.fromJSON(json['formatter'])
                 as LevelFormatter);
-  }
-
-  // @override
-  // String toJSON() {
-  //   List<String> strings = [
-  //     '"name": "$name"',
-  //     '"type": "Variable"',
-  //     '"levelValues": $_levelValues',
-  //     if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
-  //     if (formatter != null && formatter != LevelFormatter())
-  //       '"formatter":${formatter.toJSON()}'
-  //   ];
-  //   return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  // }
-
-  @override
-  int get hashCode => Hashes.finish(Hashes.combine(
-      super.hashCode, Hashes.combine(hashObjects(_levelValues), 0)));
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other is VariableLeveledTemplate &&
-            super == other &&
-            listsEqual(this._levelValues, other._levelValues));
   }
 
   @override
@@ -417,23 +308,6 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
 
   int _valuePerLevel(String variation) => variations[variation];
 
-  // @override
-  // String toJSON() {
-  //   var elements = <String>[
-  //     '"name": "$name"',
-  //     '"type": "$KEY"',
-  //     if (baseValue != 0 && baseValue != null) '"baseValue": $baseValue',
-  //     if (maxLevel != null) '"maxLevel": $maxLevel',
-  //     if (levelPrompt != null && levelPrompt != 'Level')
-  //       '"levelPrompt": "$levelPrompt"',
-  //     if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
-  //     if (defaultVariation != null) '"default": "$defaultVariation"',
-  //     '"variations": [\n${mapToJson(variations)}\n]',
-  //     if (formatter != LevelFormatter()) '"formatter": ${formatter.toJSON()}'
-  //   ];
-  //   return "{\n${elements.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  // }
-
   @override
   Modifier createModifier({ModifierData data}) {
     if (data?.detail != null) {
@@ -468,7 +342,7 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
 /// [Category] represents a named group of options or specialties. Each also
 /// determines the cost of the Modifier.
 ///
-class Category {
+class Category with HasAttributes {
   ///
   /// Name of the [Category].
   ///
@@ -487,7 +361,7 @@ class Category {
 
   List<String> get items => _items..add(name);
 
-  const Category({this.name, this.cost, List<String> items}) : _items = items;
+  Category({this.name, this.cost, List<String> items}) : _items = items;
 
   ///
   /// Create a [Category] from JSON data
@@ -500,49 +374,11 @@ class Category {
     return cat;
   }
 
-  Map<String, dynamic> toJson() =>
+  Map<String, dynamic> get attributeMap =>
       {"name": name, "cost": cost, "items": _items};
-
-  String toJSON() {
-    return json.encode(toJson());
-    //     return '''
-    //     {
-    //       "name": "$name",
-    //       "cost": ${cost},
-    //       "items": [
-    // ${items.where((it) => it != name).map((it) => '      "$it"').join(',\n')}
-    //       ]
-    //     }''';
-  }
-
-  ///
-  /// Create a list of [Category] from a JSON list.
-  ///
-  static List<Category> listFromJSON(List<dynamic> list) =>
-      list.map((it) => Category.fromJSON(it)).toList();
-
-  @override
-  bool operator ==(dynamic other) {
-    if (identical(this, other)) return true;
-    return other is Category &&
-        this.name == other.name &&
-        this.cost == other.cost &&
-        listsEqual(this.items, other.items);
-  }
-
-  @override
-  int get hashCode => hash3(name, cost, items);
-
-  static listToJSON(List<Category> categories) {
-    return '''
-[
-${categories.map((it) => it.toJSON()).join(',\n')}
-  ]''';
-  }
 }
 
-const Category NullCategory =
-    const Category(name: 'NULL', cost: null, items: []);
+Category NullCategory = Category(name: 'NULL', cost: null, items: []);
 
 class CategorizedTemplate extends ModifierTemplate {
   static final String KEY = 'Categorized';
@@ -550,7 +386,7 @@ class CategorizedTemplate extends ModifierTemplate {
   ///
   /// The list of [Category].
   ///
-  final List<Category> categories;
+  final MyList<Category> categories;
 
   final String defaultDetail;
 
@@ -559,8 +395,9 @@ class CategorizedTemplate extends ModifierTemplate {
       bool isAttackModifier = false,
       this.defaultDetail,
       DescriptionFormatter formatter,
-      this.categories})
-      : super(
+      List<Category> categories})
+      : categories = MyList(delegate: categories),
+        super(
             name: name,
             isAttackModifier: isAttackModifier,
             formatter: formatter ?? DescriptionFormatter());
@@ -569,11 +406,13 @@ class CategorizedTemplate extends ModifierTemplate {
     var fmtjson =
         json['formatter'] ?? <String, dynamic>{'template': '%name, %detail'};
 
+    List<dynamic> cats = json['categories'];
+
     return CategorizedTemplate(
         isAttackModifier: json['isAttackModifier'] ?? false,
         name: json['name'],
         defaultDetail: json['default'],
-        categories: Category.listFromJSON(json['categories']),
+        categories: cats.map((f) => Category.fromJSON(f)).toList(),
         formatter: DescriptionFormatter.fromJSON(fmtjson));
   }
 
@@ -593,20 +432,6 @@ class CategorizedTemplate extends ModifierTemplate {
   Category _findCategory(String detail) =>
       categories.firstWhere((it) => it.items.contains(detail),
           orElse: () => NullCategory);
-
-  // @override
-  // String toJSON() {
-  //   List<String> strings = [
-  //     '"name": "$name"',
-  //     '"type": "Categorized"',
-  //     if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
-  //     if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
-  //     if (formatter != null && formatter != DescriptionFormatter())
-  //       '"formatter":${formatter.toJSON()}',
-  //     '"categories": ${Category.listToJSON(categories)}'
-  //   ];
-  //   return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  // }
 
   @override
   Map<String, dynamic> get attributeMap => {
