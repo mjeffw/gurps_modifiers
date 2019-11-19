@@ -2,7 +2,7 @@ import 'package:dart_utils/dart_utils.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:quiver/core.dart';
 
-import '../modifier_data.dart';
+import 'modifier_data.dart';
 import 'description_formatter.dart';
 import 'detail_alias.dart';
 import 'modifier_template.dart';

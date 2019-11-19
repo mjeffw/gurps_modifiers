@@ -1,6 +1,6 @@
 import 'package:gurps_modifiers/gurps_modifiers.dart';
 
-import '../modifier_data.dart';
+import 'modifier_data.dart';
 import 'modifier_template.dart';
 
 class ModifierDTO with ModifierData {

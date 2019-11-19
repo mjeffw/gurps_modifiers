@@ -1,4 +1,4 @@
-import 'package:gurps_modifiers/modifier_data.dart';
+import 'package:gurps_modifiers/src/modifier_data.dart';
 
 ///
 /// [ModifierData] describes any instance-specific values for a Modifier.

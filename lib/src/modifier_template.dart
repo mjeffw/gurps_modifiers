@@ -1,6 +1,6 @@
 import 'package:gurps_modifiers/src/template_subtypes.dart';
 
-import '../modifier_data.dart';
+import 'modifier_data.dart';
 import 'description_formatter.dart';
 import 'modifier.dart';
 import 'util/generic.dart';

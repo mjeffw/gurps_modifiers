@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
 
@@ -9,8 +11,17 @@ main() {
       expect(m1, isNot(same(m2)));
     });
 
-    test('printSourceData', () {
-      print(ModifierTemplates.instance().printSourceData());
+    test('printSourceData', () async {
+      String derived = ModifierTemplates.instance().printSourceData();
+
+      var file = File('lib/src/modifier_data.json');
+      var contents;
+
+      if (await file.exists()) {
+        // Read file
+        contents = await file.readAsString();
+      }
+      expect(derived, contents);
     });
 
     test('fetchKeys', () {

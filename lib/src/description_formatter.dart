@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:quiver/core.dart';
 
-import '../modifier_data.dart';
+import 'modifier_data.dart';
 import 'detail_alias.dart';
 import 'util/generic.dart';
 

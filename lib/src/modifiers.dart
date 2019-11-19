@@ -78,15 +78,10 @@ class _Modifiers implements ModifierTemplates, Modifiers {
   String printSourceData() {
     var keys = _map.keys.toList();
     keys.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
-    var data = keys
-        .map((f) => templateByName(f).toJSON())
-        .map((it) => it.toString())
-        .toList();
-    var line = data.reduce((x, y) => '$x,\n$y');
+    var data = keys.map((f) => templateByName(f)).toList();
 
-    return '{\n  "modifiers": [\n'
-        '$line\n'
-        ']\n'
-        '}';
+    var line = JsonEncoder.withIndent('  ').convert({"modifiers": data});
+
+    return line;
   }
 }

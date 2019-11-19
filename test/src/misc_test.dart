@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
 
