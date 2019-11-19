@@ -15,5 +15,4 @@ coverage/lcov.info
 coverage_badge.svg
 coverage.json
 coverage/badge.svg
-lib/src/modifier_data.dart
 lib/src/modifier_temp.json
