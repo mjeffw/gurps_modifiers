@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:quiver/core.dart';
 
 import '../modifier_data.dart';
+import 'detail_alias.dart';
 import 'util/generic.dart';
 
 class FormatterFactory {
@@ -16,7 +17,7 @@ class FormatterFactory {
 
   static Function get(Map<String, dynamic> json) {
     return Optional.fromNullable(_factoryDictionary[json['type']])
-        .or((json) => DescriptionFormatter(template: json['template']));
+        .or((json) => DescriptionFormatter._fromJSON(json));
   }
 }
 
@@ -49,11 +50,28 @@ class DescriptionFormatter with HasAttributes {
   /// method and the [ModifierData] object.
   final String template;
 
+  final DetailAlias alias;
+
   ///
   /// Create a [DescriptionFormatter] with the given template.
   ///
-  DescriptionFormatter({String template = TEMPLATE})
-      : template = template ?? TEMPLATE;
+  DescriptionFormatter({String template = TEMPLATE, DetailAlias alias})
+      : template = template ?? TEMPLATE,
+        alias = alias ?? DetailAlias.NULL;
+
+  ///
+  /// Build a DescriptionFormatter from a JSON structure
+  ///
+  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) =>
+      (json == null)
+          ? DescriptionFormatter()
+          : FormatterFactory.get(json).call(json);
+
+  factory DescriptionFormatter._fromJSON(Map<String, dynamic> json) {
+    return DescriptionFormatter(
+        template: json['template'],
+        alias: DetailAlias.fromJSON(json['detailAlias']));
+  }
 
   ///
   /// Given a Modifier template name and instance data, return the description.
@@ -76,20 +94,14 @@ class DescriptionFormatter with HasAttributes {
   /// The Modifier detail. This method exists to allow subtypes to respond with
   /// something other than the default detail, if needed.
   ///
-  String _detail(ModifierData data) => data.detail ?? '';
-
-  ///
-  /// Build a DescriptionFormatter from a JSON structure
-  ///
-  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) =>
-      (json == null)
-          ? DescriptionFormatter()
-          : FormatterFactory.get(json).call(json);
+  String _detail(ModifierData data) => alias.replace(data.detail) ?? '';
 
   ///
   /// Encode JSON from the object's attributes
   ///
   String toJSON() => json.encode(attributeMap);
+
+  dynamic toJson() => attributeMap;
 
   ///
   /// The object's attributes returned as a map
@@ -97,6 +109,7 @@ class DescriptionFormatter with HasAttributes {
   Map<String, dynamic> get attributeMap => {
         if (_type != null) 'type': _type,
         if (template != _defaultTemplate) 'template': template,
+        if (alias != null && alias != DetailAlias.NULL) "detailAlias": alias,
       };
 }
 
@@ -120,11 +133,12 @@ class LevelFormatter extends DescriptionFormatter {
   ///
   /// Create a constant [LevelFormatter]. By default, the description is <name> <level>.
   ///
-  LevelFormatter({String template = TEMPLATE})
-      : super(template: template ?? TEMPLATE);
+  LevelFormatter({String template = TEMPLATE, DetailAlias alias})
+      : super(template: template ?? TEMPLATE, alias: alias);
 
-  factory LevelFormatter.fromJSON(Map<String, dynamic> json) =>
-      LevelFormatter(template: json['template']);
+  factory LevelFormatter.fromJSON(Map<String, dynamic> json) => LevelFormatter(
+      template: json['template'],
+      alias: DetailAlias.fromJSON(json['detailAlias']));
 
   String describe({String name, ModifierData data}) => super
       .describe(name: name, data: data)

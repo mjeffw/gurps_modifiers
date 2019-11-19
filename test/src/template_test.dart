@@ -59,6 +59,7 @@ void main() {
 
         expect(one, equals(one));
         expect(one == two, true);
+        expect(two == one, true);
         expect(one.hashCode, equals(two.hashCode));
         expect(one, isNot(same(two)));
         expect(one != three, true);
@@ -102,12 +103,8 @@ void main() {
       });
 
       test('toJSON', () {
-        var expected = '''{
-  "name": "test",
-  "type": "Simple",
-  "percentage": 10,
-  "isAttackModifier": true
-}''';
+        var expected =
+            '{"name":"test","isAttackModifier":true,"type":"Simple","percentage":10}';
 
         expect(
             SimpleModifierTemplate(
@@ -117,11 +114,7 @@ void main() {
       });
 
       test('toJSON - template is true', () {
-        var expected = '''{
-  "name": "Foo",
-  "type": "Simple",
-  "percentage": -20
-}''';
+        var expected = '{"name":"Foo","type":"Simple","percentage":-20}';
 
         expect(
             SimpleModifierTemplate(
@@ -285,7 +278,7 @@ void main() {
         var m = LeveledTemplate.fromJSON(json.decode(source));
         expect(m.formatter, LevelFormatter(template: "Boo-Ya"));
       });
-    }, skip: true);
+    }, skip: false);
 
     group('variable modifier', () {
       test('constructor: minimal', () {
@@ -388,7 +381,7 @@ void main() {
             VariableLeveledTemplate.fromJSON(json.decode(source));
         expect(m.describe(Data(level: 1)), '1 Bar');
       });
-    }, skip: true);
+    }, skip: false);
 
     group('cyclic', () {
       test('fromJSON - empty', () {
@@ -400,5 +393,5 @@ void main() {
     });
 
     group('accessibility modifier', () {});
-  }, skip: true);
+  }, skip: false);
 }

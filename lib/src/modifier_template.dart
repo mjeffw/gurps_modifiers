@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:dart_utils/dart_utils.dart';
+import 'package:gurps_modifiers/src/template_subtypes.dart';
 import 'package:quiver/core.dart';
 
 import '../modifier_data.dart';
 import 'description_formatter.dart';
 import 'modifier.dart';
+import 'util/generic.dart';
 
 ///
 /// A modifier is a feature that you can add to a trait – usually an advantage
@@ -12,7 +16,7 @@ import 'modifier.dart';
 ///
 /// A [ModifierTemplate] defines how a given modifier works.
 ///
-abstract class ModifierTemplate {
+abstract class ModifierTemplate with HasAttributes {
   ///
   /// Name of the modifier.
   ///
@@ -42,7 +46,7 @@ abstract class ModifierTemplate {
   ///
   /// Export as JSON.
   ///
-  String toJSON();
+  // String toJSON();
 
   ///
   /// Create and return a [Modifier] based on this template.
@@ -77,6 +81,17 @@ abstract class ModifierTemplate {
         this.formatter == other.formatter &&
         this.isAttackModifier == other.isAttackModifier;
   }
+
+  @override
+  Map<String, dynamic> get attributeMap => {
+        "name": name,
+        if (isAttackModifier) "isAttackModifier": true,
+      };
+
+  ///
+  /// Encode JSON from the object's attributes
+  ///
+  String toJSON() => json.encode(attributeMap);
 }
 
 ///
@@ -88,6 +103,7 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
   ///
   final int maxLevel;
 
+  @override
   bool get hasLevels => true;
 
   ///
@@ -144,6 +160,17 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
         this.maxLevel == other.maxLevel &&
         this.levelPrompt == other.levelPrompt;
   }
+
+  @override
+  Map<String, dynamic> get attributeMap => {
+        ...super.attributeMap,
+        if (maxLevel != null && !(this is VariableLeveledTemplate))
+          "maxLevel": maxLevel,
+        if (baseValue != null && baseValue != 0) "baseValue": baseValue,
+        if (!(this is VariableLeveledTemplate)) "valuePerLevel": valuePerLevel,
+        if (levelPrompt != null && levelPrompt != 'Level')
+          "levelPrompt": levelPrompt,
+      };
 }
 
 ///
@@ -197,13 +224,13 @@ class CyclicModifierTemplate extends ModifierTemplate {
   factory CyclicModifierTemplate.fromJSON(Map<String, dynamic> json) =>
       CyclicModifierTemplate();
 
-  @override
-  String toJSON() {
-    return '''{
-      "name": "Cyclic",
-      "type": "Cyclic"
-    }''';
-  }
+  // @override
+  // String toJSON() {
+  //   return '''{
+  //     "name": "Cyclic",
+  //     "type": "Cyclic"
+  //   }''';
+  // }
 
   @override
   Modifier createModifier({ModifierData data}) {
@@ -225,4 +252,10 @@ class CyclicModifierTemplate extends ModifierTemplate {
     return (identical(this, other)) ||
         (other is CyclicModifierTemplate && super == other);
   }
+
+  @override
+  Map<String, dynamic> get attributeMap => {
+        ...super.attributeMap,
+        "type": "Cyclic",
+      };
 }

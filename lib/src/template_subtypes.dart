@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dart_utils/dart_utils.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:quiver/collection.dart';
@@ -5,6 +7,7 @@ import 'package:quiver/core.dart';
 
 import '../modifier_data.dart';
 import 'description_formatter.dart';
+import 'detail_alias.dart';
 import 'modifier_template.dart';
 import 'util/generic.dart';
 
@@ -41,6 +44,7 @@ class SimpleModifierTemplate extends ModifierTemplate {
       String name,
       bool isAttackModifier = false,
       DescriptionFormatter formatter,
+      DetailAlias detailAlias,
       this.defaultDetail})
       : assert(percentage != null),
         this._percentage = percentage,
@@ -59,26 +63,27 @@ class SimpleModifierTemplate extends ModifierTemplate {
         percentage: (json['percentage'] ?? 0) as int,
         name: json['name'],
         formatter: DescriptionFormatter.fromJSON(json['formatter']),
-        defaultDetail: json['defaultDetail'],
+        detailAlias: json['detailAlias'],
+        defaultDetail: json['default'],
         isAttackModifier: (json['isAttackModifier'] ?? false) as bool);
   }
 
   ///
   /// Return the JSON String representation.
   ///
-  @override
-  String toJSON() {
-    List<String> strings = [
-      '"name": "$name"',
-      '"type": "Simple"',
-      if (percentage != null) '"percentage": $_percentage',
-      if (isAttackModifier) '"isAttackModifier": true',
-      if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
-      if (formatter != null && formatter != DescriptionFormatter())
-        '"formatter":${formatter.toJSON()}'
-    ];
-    return "{\n${_combineJsonFragments(strings)}\n}";
-  }
+  // @override
+  // String toJSON() {
+  //   List<String> strings = [
+  //     '"name": "$name"',
+  //     '"type": "Simple"',
+  //     if (percentage != null) '"percentage": $_percentage',
+  //     if (isAttackModifier) '"isAttackModifier": true',
+  //     if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
+  //     if (formatter != null && formatter != DescriptionFormatter())
+  //       '"formatter":${formatter.toJSON()}'
+  //   ];
+  //   return "{\n${_combineJsonFragments(strings)}\n}";
+  // }
 
   @override
   int get hashCode => Hashes.finish(
@@ -95,6 +100,16 @@ class SimpleModifierTemplate extends ModifierTemplate {
   @override
   Modifier createModifier({ModifierData data}) =>
       Modifier(template: this, detail: data?.detail ?? defaultDetail);
+
+  @override
+  Map<String, dynamic> get attributeMap => {
+        ...super.attributeMap,
+        "type": KEY,
+        "percentage": _percentage,
+        if (defaultDetail != null) "default": defaultDetail,
+        if (formatter != null && formatter != DescriptionFormatter())
+          "formatter": formatter,
+      };
 }
 
 class NamedVariantTemplate extends ModifierTemplate {
@@ -141,35 +156,46 @@ class NamedVariantTemplate extends ModifierTemplate {
             data == null ? defaultVariation : data.detail ?? defaultVariation);
   }
 
-  @override
-  String toJSON() {
-    List<String> attributes = [
-      '"name": "$name"',
-      '"type": "NamedVariant"',
-      if (_percentage.isPresent) '"percentage": ${_percentage.value}',
-      if (defaultVariation != null) '"default": "$defaultVariation"',
-      if (isAttackModifier) '"isAttackModifier": true',
-      if (formatter != null &&
-          formatter != DescriptionFormatter() &&
-          formatter.toJSON().isNotEmpty)
-        '"formatter":${formatter.toJSON()}',
-      '"variations": [\n${mapToJson(variations, prefix: "\t\t")}\n\t]'
-    ];
-    return '{\n${_combineJsonFragments(attributes)}\n}';
-  }
+  // @override
+  // String toJSON() {
+  //   List<String> attributes = [
+  //     '"name": "$name"',
+  //     '"type": "NamedVariant"',
+  //     if (_percentage.isPresent) '"percentage": ${_percentage.value}',
+  //     if (defaultVariation != null) '"default": "$defaultVariation"',
+  //     if (isAttackModifier) '"isAttackModifier": true',
+  //     if (formatter != null &&
+  //         formatter != DescriptionFormatter() &&
+  //         formatter.toJSON().isNotEmpty)
+  //       '"formatter":${formatter.toJSON()}',
+  //     '"variations": [\n${mapToJson(variations, prefix: "\t\t")}\n\t]'
+  //   ];
+  //   return '{\n${_combineJsonFragments(attributes)}\n}';
+  // }
 
   factory NamedVariantTemplate.fromJSON(Map<String, dynamic> json) {
-    Map<String, int> variations = jsonToMap(json, 'variations');
+    Map<String, dynamic> variations = json['variations'];
     return NamedVariantTemplate(
         name: json['name'],
         percentage: json['percentage'],
-        variations: variations,
+        variations: variations.map((k, v) => MapEntry(k, v as int)),
         defaultVariation: json['default'],
         formatter: json['formatter'] == null
             ? DescriptionFormatter()
             : DescriptionFormatter.fromJSON(json['formatter']),
         isAttackModifier: json['isAttackModifier']);
   }
+
+  @override
+  Map<String, dynamic> get attributeMap => {
+        ...super.attributeMap,
+        "type": KEY,
+        if (_percentage.isPresent) "percentage": _percentage.value,
+        if (defaultVariation != null) "default": defaultVariation,
+        "variations": variations,
+        if (formatter != null && formatter != DescriptionFormatter())
+          "formatter": formatter,
+      };
 }
 
 ///
@@ -224,22 +250,22 @@ class LeveledTemplate extends BaseLeveledTemplate {
   ///
   /// Return the JSON String representation.
   ///
-  @override
-  String toJSON() {
-    List<String> strings = [
-      '"name": "$name"',
-      '"type": "Leveled"',
-      if (baseValue != null && baseValue != 0) '"baseValue": $baseValue',
-      if (isAttackModifier) '"isAttackModifier": ${isAttackModifier}',
-      if (maxLevel != null) '"maxLevel": $maxLevel',
-      '"valuePerLevel": $valuePerLevel',
-      if (levelPrompt != null && levelPrompt != 'Level')
-        '"levelPrompt": "$levelPrompt"',
-      if (formatter != null && formatter != LevelFormatter())
-        '"formatter":${formatter.toJSON()}'
-    ];
-    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  }
+  // @override
+  // String toJSON() {
+  //   List<String> strings = [
+  //     '"name": "$name"',
+  //     '"type": "Leveled"',
+  //     if (baseValue != null && baseValue != 0) '"baseValue": $baseValue',
+  //     if (isAttackModifier) '"isAttackModifier": ${isAttackModifier}',
+  //     if (maxLevel != null) '"maxLevel": $maxLevel',
+  //     '"valuePerLevel": $valuePerLevel',
+  //     if (levelPrompt != null && levelPrompt != 'Level')
+  //       '"levelPrompt": "$levelPrompt"',
+  //     if (formatter != null && formatter != LevelFormatter())
+  //       '"formatter":${formatter.toJSON()}'
+  //   ];
+  //   return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
+  // }
 
   @override
   int get hashCode => Hashes.finish(Hashes.combine(super.hashCode,
@@ -254,6 +280,14 @@ class LeveledTemplate extends BaseLeveledTemplate {
             this.valuePerLevel == other.valuePerLevel &&
             this.baseValue == other.baseValue);
   }
+
+  @override
+  Map<String, dynamic> get attributeMap => {
+        ...super.attributeMap,
+        "type": KEY,
+        if (formatter != null && formatter != LevelFormatter())
+          "formatter": formatter,
+      };
 }
 
 ///
@@ -296,18 +330,18 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
                 as LevelFormatter);
   }
 
-  @override
-  String toJSON() {
-    List<String> strings = [
-      '"name": "$name"',
-      '"type": "Variable"',
-      '"levelValues": $_levelValues',
-      if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
-      if (formatter != null && formatter != LevelFormatter())
-        '"formatter":${formatter.toJSON()}'
-    ];
-    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  }
+  // @override
+  // String toJSON() {
+  //   List<String> strings = [
+  //     '"name": "$name"',
+  //     '"type": "Variable"',
+  //     '"levelValues": $_levelValues',
+  //     if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
+  //     if (formatter != null && formatter != LevelFormatter())
+  //       '"formatter":${formatter.toJSON()}'
+  //   ];
+  //   return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
+  // }
 
   @override
   int get hashCode => Hashes.finish(Hashes.combine(
@@ -320,6 +354,20 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
             super == other &&
             listsEqual(this._levelValues, other._levelValues));
   }
+
+  @override
+  Map<String, dynamic> get attributeMap {
+    var map = {
+      ...super.attributeMap,
+      "type": KEY,
+      "levelValues": _levelValues,
+      if (formatter != null && formatter != LevelFormatter())
+        "formatter": formatter,
+    };
+    map.remove('maxLevel');
+    map.remove('valuePerLevel');
+    return map;
+  }
 }
 
 class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
@@ -328,9 +376,6 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
   final Map<String, int> variations;
 
   final String defaultVariation;
-
-  @override
-  bool get hasLevels => true;
 
   LeveledNamedVariantTemplate(
       {String name,
@@ -352,7 +397,7 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
   factory LeveledNamedVariantTemplate.fromJSON(Map<String, dynamic> json) {
     var type = json['type'];
     assert(type == KEY);
-
+    Map<String, dynamic> vars = json['variations'];
     return LeveledNamedVariantTemplate(
         name: json['name'],
         baseValue: (json['baseValue'] as int) ?? 0,
@@ -360,7 +405,7 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
         levelPrompt: json['levelPrompt'],
         isAttackModifier: json['isAttackModifier'] as bool,
         defaultVariation: json['default'],
-        variations: jsonToMap(json, 'variations'),
+        variations: vars.map<String, int>((k, v) => MapEntry(k, v as int)),
         formatter: json['formatter'] == null
             ? LevelFormatter()
             : DescriptionFormatter.fromJSON(json['formatter']));
@@ -372,22 +417,22 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
 
   int _valuePerLevel(String variation) => variations[variation];
 
-  @override
-  String toJSON() {
-    var elements = <String>[
-      '"name": "$name"',
-      '"type": "$KEY"',
-      if (baseValue != 0 && baseValue != null) '"baseValue": $baseValue',
-      if (maxLevel != null) '"maxLevel": $maxLevel',
-      if (levelPrompt != null && levelPrompt != 'Level')
-        '"levelPrompt": "$levelPrompt"',
-      if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
-      if (defaultVariation != null) '"default": "$defaultVariation"',
-      '"variations": [\n${mapToJson(variations)}\n]',
-      if (formatter != LevelFormatter()) '"formatter": ${formatter.toJSON()}'
-    ];
-    return "{\n${elements.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  }
+  // @override
+  // String toJSON() {
+  //   var elements = <String>[
+  //     '"name": "$name"',
+  //     '"type": "$KEY"',
+  //     if (baseValue != 0 && baseValue != null) '"baseValue": $baseValue',
+  //     if (maxLevel != null) '"maxLevel": $maxLevel',
+  //     if (levelPrompt != null && levelPrompt != 'Level')
+  //       '"levelPrompt": "$levelPrompt"',
+  //     if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
+  //     if (defaultVariation != null) '"default": "$defaultVariation"',
+  //     '"variations": [\n${mapToJson(variations)}\n]',
+  //     if (formatter != LevelFormatter()) '"formatter": ${formatter.toJSON()}'
+  //   ];
+  //   return "{\n${elements.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
+  // }
 
   @override
   Modifier createModifier({ModifierData data}) {
@@ -404,6 +449,19 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
 
   bool containsVariation(String detail) =>
       detail == null || variations.containsKey(detail);
+
+  @override
+  Map<String, dynamic> get attributeMap {
+    var map = {
+      ...super.attributeMap,
+      "type": KEY,
+      if (defaultVariation != null) "default": defaultVariation,
+      "variations": variations,
+      if (formatter != null && formatter != LevelFormatter())
+        "formatter": formatter,
+    };
+    return map..remove('valuePerLevel');
+  }
 }
 
 ///
@@ -425,9 +483,11 @@ class Category {
   ///
   /// The list of items that match this category.
   ///
-  final List<String> items;
+  final List<String> _items;
 
-  const Category({this.name, this.cost, this.items});
+  List<String> get items => _items..add(name);
+
+  const Category({this.name, this.cost, List<String> items}) : _items = items;
 
   ///
   /// Create a [Category] from JSON data
@@ -437,19 +497,22 @@ class Category {
         name: json['name'],
         cost: json['cost'],
         items: JsonEx.toListOfStrings(json['items']));
-    cat.items.add(cat.name);
     return cat;
   }
 
+  Map<String, dynamic> toJson() =>
+      {"name": name, "cost": cost, "items": _items};
+
   String toJSON() {
-    return '''
-    {
-      "name": "$name",
-      "cost": ${cost},
-      "items": [
-${items.where((it) => it != name).map((it) => '      "$it"').join(',\n')}
-      ]
-    }''';
+    return json.encode(toJson());
+    //     return '''
+    //     {
+    //       "name": "$name",
+    //       "cost": ${cost},
+    //       "items": [
+    // ${items.where((it) => it != name).map((it) => '      "$it"').join(',\n')}
+    //       ]
+    //     }''';
   }
 
   ///
@@ -509,7 +572,7 @@ class CategorizedTemplate extends ModifierTemplate {
     return CategorizedTemplate(
         isAttackModifier: json['isAttackModifier'] ?? false,
         name: json['name'],
-        defaultDetail: json['defaultDetail'],
+        defaultDetail: json['default'],
         categories: Category.listFromJSON(json['categories']),
         formatter: DescriptionFormatter.fromJSON(fmtjson));
   }
@@ -531,17 +594,27 @@ class CategorizedTemplate extends ModifierTemplate {
       categories.firstWhere((it) => it.items.contains(detail),
           orElse: () => NullCategory);
 
+  // @override
+  // String toJSON() {
+  //   List<String> strings = [
+  //     '"name": "$name"',
+  //     '"type": "Categorized"',
+  //     if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
+  //     if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
+  //     if (formatter != null && formatter != DescriptionFormatter())
+  //       '"formatter":${formatter.toJSON()}',
+  //     '"categories": ${Category.listToJSON(categories)}'
+  //   ];
+  //   return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
+  // }
+
   @override
-  String toJSON() {
-    List<String> strings = [
-      '"name": "$name"',
-      '"type": "Categorized"',
-      if (isAttackModifier) '"isAttackModifier": $isAttackModifier',
-      if (defaultDetail != null) '"defaultDetail": "$defaultDetail"',
-      if (formatter != null && formatter != DescriptionFormatter())
-        '"formatter":${formatter.toJSON()}',
-      '"categories": ${Category.listToJSON(categories)}'
-    ];
-    return "{\n${strings.map((s) => '  $s').reduce((a, b) => '$a,\n$b')}\n}";
-  }
+  Map<String, dynamic> get attributeMap => {
+        ...super.attributeMap,
+        "type": KEY,
+        if (defaultDetail != null) "default": defaultDetail,
+        "categories": categories,
+        if (formatter != null && formatter != DescriptionFormatter())
+          "formatter": formatter,
+      };
 }

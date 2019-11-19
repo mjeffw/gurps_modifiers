@@ -2,23 +2,24 @@ import 'dart:convert';
 
 import 'util/generic.dart';
 
-class AliasFormatter with HasAttributes {
+class DetailAlias with HasAttributes {
+  static final DetailAlias NULL = DetailAlias(aliases: {});
+
   final MyMap<String, String> aliases;
 
-  AliasFormatter({Map<String, String> aliases})
+  DetailAlias({Map<String, String> aliases})
       : assert(aliases != null),
         aliases = MyMap(delegate: aliases);
 
-  factory AliasFormatter.fromJSON(Map<String, dynamic> json) {
-    return AliasFormatter(
-      aliases: json['aliases'] == null
-          ? null
-          : json['aliases'].map<String, String>(
-              (key, value) => MapEntry(key.toString(), value.toString())),
+  factory DetailAlias.fromJSON(Map<String, dynamic> json) {
+    if (json == null || json['aliases'] == null) return DetailAlias.NULL;
+    return DetailAlias(
+      aliases: json['aliases'].map<String, String>(
+          (key, value) => MapEntry(key.toString(), value.toString())),
     );
   }
 
-  String alias(String detail) => aliases[detail] ?? detail;
+  String replace(String detail) => aliases[detail] ?? detail;
 
   @override
   Map<String, dynamic> get attributeMap => {'aliases': aliases};
@@ -27,4 +28,6 @@ class AliasFormatter with HasAttributes {
   /// Encode JSON from the object's attributes
   ///
   String toJSON() => json.encode(attributeMap);
+
+  dynamic toJson() => attributeMap;
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:gurps_modifiers/src/description_formatter.dart';
+import 'package:gurps_modifiers/src/detail_alias.dart';
 import 'package:test/test.dart';
 
 import 'data.dart';
@@ -12,23 +13,45 @@ void main() {
     group('DescriptionFormatter', () {
       test('no-args constructor', () {
         expect(DescriptionFormatter().template, DescriptionFormatter.TEMPLATE);
+        expect(DescriptionFormatter().alias, DetailAlias.NULL);
       });
 
       test('null template constructor', () {
-        expect(DescriptionFormatter(template: null).template,
-            DescriptionFormatter.TEMPLATE);
+        var formatter = DescriptionFormatter(template: null);
+        expect(formatter.template, DescriptionFormatter.TEMPLATE);
+        expect(formatter.alias, DetailAlias.NULL);
       });
 
       test('template constructor', () {
-        expect(DescriptionFormatter(template: 'One %name is %f').template,
-            'One %name is %f');
+        var formatter = DescriptionFormatter(template: 'One %name is %f');
+        expect(formatter.template, 'One %name is %f');
+        expect(formatter.alias, DetailAlias.NULL);
+      });
+
+      test('alias constructor', () {
+        var f = DescriptionFormatter(alias: DetailAlias(aliases: {'1': 'one'}));
+        expect(f.template, '%name, %detail');
+        expect(f.alias, isNot(DetailAlias.NULL));
+      });
+
+      test('constructor', () {
+        var f = DescriptionFormatter(
+            alias: DetailAlias(aliases: {'1': 'one'}),
+            template: 'One %name is %detail');
+        expect(f.template, 'One %name is %detail');
+        expect(f.alias, isNot(DetailAlias.NULL));
       });
 
       test('describe', () {
-        var f = DescriptionFormatter();
+        var f = DescriptionFormatter(
+            alias: DetailAlias(aliases: {'1': 'one'}),
+            template: 'One %name is %detail');
+
+        expect(f.describe(data: Data(detail: 'test'), name: 'foo'),
+            'One foo is test');
         expect(
-            f.describe(data: Data(detail: 'test'), name: 'foo'), 'foo, test');
-        expect(f.describe(data: Data(), name: 'foo'), 'foo');
+            f.describe(data: Data(detail: '1'), name: 'foo'), 'One foo is one');
+        expect(f.describe(data: Data(), name: 'foo'), 'One foo is');
 
         var f2 = DescriptionFormatter(template: '%detail :: %name');
         expect(f2.describe(data: Data(detail: 'test'), name: 'foo'),
@@ -46,12 +69,21 @@ void main() {
             throwsA(isA<Error>()));
       });
 
-      test('fromJSON without template', () {
+      test('fromJSON with nothing', () {
         var f = DescriptionFormatter.fromJSON(json.decode('{}'));
         expect(f, isA<DescriptionFormatter>());
         expect(f.template, DescriptionFormatter.TEMPLATE);
         expect(
             f.describe(name: 'name', data: Data(detail: 'boo')), 'name, boo');
+      });
+
+      test('fromJSON without template', () {
+        var f = DescriptionFormatter.fromJSON(
+            json.decode('{ "detailAlias": {"aliases": {"1":"ONE"}}}'));
+        expect(f, isA<DescriptionFormatter>());
+        expect(f.template, DescriptionFormatter.TEMPLATE);
+        expect(
+            f.describe(name: 'name', data: Data(detail: '1')), 'name, ONE');
       });
 
       test('fromJSON with template', () {
