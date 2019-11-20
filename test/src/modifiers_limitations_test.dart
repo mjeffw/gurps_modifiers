@@ -1,3 +1,4 @@
+import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
@@ -8,137 +9,184 @@ import 'data.dart';
 // AND Bombardment, Effective skill 12, etc, could be turned into a single entry ("Bombardment"),
 // with a number of radio buttons (one for each option).
 main() {
+  group('NamedVariants', () {
+    group('Active Defense', () {
+      Modifier a;
+      setUp(() {
+        a = Modifiers.instance().byName('Active Defense');
+      });
+      test('default', () {
+        expect(a.percentage, -40);
+        expect(a.isAttackModifier, false);
+        expect(a.description, 'Active Defense');
+      });
+
+      test('Independent', () {
+        var mod = Modifier.copyWith(a, detail: 'Independent');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Active Defense, Independent');
+      });
+    });
+
+    group('All-Out', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('All-Out');
+      });
+
+      test('default', () {
+        expect(m.percentage, -25);
+        expect(m.isAttackModifier, false);
+        expect(m.description, 'All-Out');
+      });
+
+      test('Concentrate', () {
+        var mod = Modifier.copyWith(m, detail: 'Concentrate');
+        expect(mod.percentage, -25);
+        expect(mod.description, 'All-Out, Concentrate');
+      });
+    });
+    group('Attracts Threats', () {
+      Modifier m;
+      setUp(() {
+        m = Modifiers.instance().byName('Attracts Threats');
+      });
+
+      test('default', () {
+        expect(m.description, 'Attracts Threats, 6 or less');
+        expect(m.percentage, -5);
+        expect(m.isAttackModifier, false);
+      });
+
+      test('6 or less', () {
+        var mod = Modifier.copyWith(m, detail: '6 or less');
+        expect(mod.description, 'Attracts Threats, 6 or less');
+        expect(mod.percentage, -5);
+      });
+
+      test('9 or less', () {
+        var mod = Modifier.copyWith(m, detail: '9 or less');
+        expect(mod.description, 'Attracts Threats, 9 or less');
+        expect(mod.percentage, -10);
+      });
+    });
+
+    group('Bombardment', () {
+      //TODO: You may only take this limitation in conjunction with Area Effect or Cone.
+      Modifier b;
+
+      setUp(() {
+        b = Modifiers.instance().byName('Bombardment');
+      });
+      test('default', () {
+        expect(b.detail, 'Skill 12');
+        expect(b.percentage, -10);
+        expect(b.description, 'Bombardment, Skill 12');
+      });
+
+      test('Skill 12', () {
+        var m = Modifier.copyWith(b, detail: 'Skill 12');
+        expect(m.percentage, -10);
+        expect(m.description, 'Bombardment, Skill 12');
+      });
+
+      test('Skill 14', () {
+        var m = Modifier.copyWith(b, detail: 'Skill 14');
+        expect(m.percentage, -5);
+        expect(m.description, 'Bombardment, Skill 14');
+      });
+
+      test('Skill 10', () {
+        var m = Modifier.copyWith(b, detail: 'Skill 10');
+        expect(m.percentage, -15);
+        expect(m.description, 'Bombardment, Skill 10');
+      });
+
+      test('Skill 8', () {
+        var m = Modifier.copyWith(b, detail: 'Skill 8');
+        expect(m.percentage, -20);
+        expect(m.description, 'Bombardment, Skill 8');
+      });
+
+      test('bad variation', () {
+        expect(() => Modifier.copyWith(b, detail: 'Skill 6'),
+            throwsA(isA<AssertionError>()));
+      });
+    });
+
+    group('Can Be Stolen', () {
+      Modifier c;
+
+      setUp(() {
+        c = Modifiers.instance().byName('Can Be Stolen');
+      });
+
+      test('default', () {
+        expect(c.percentage, -40);
+        expect(c.description, 'Can Be Stolen, Easily');
+      });
+
+      test('Easily', () {
+        var m = Modifier.copyWith(c, detail: 'Easily');
+        expect(m.percentage, -40);
+        expect(m.description, 'Can Be Stolen, Easily');
+      });
+
+      test('Quick Contest', () {
+        var m = Modifier.copyWith(c, detail: 'Quick Contest');
+        expect(m.percentage, -30);
+        expect(m.description, 'Can Be Stolen, Quick Contest');
+      });
+
+      test('Stealth/Trickery', () {
+        var m = Modifier.copyWith(c, detail: 'Stealth/Trickery');
+        expect(m.percentage, -20);
+        expect(m.description, 'Can Be Stolen, Stealth/Trickery');
+      });
+
+      test('Forcefully', () {
+        var m = Modifier.copyWith(c, detail: 'Forcefully');
+        expect(m.percentage, -10);
+        expect(m.description, 'Can Be Stolen, Forcefully');
+      });
+    });
+  });
   group('Simple limitations', () {
-    //TODO: You may only take this limitation in conjunction with Area Effect or Cone.
-    test('Bombardment, Effective skill 14', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Bombardment, Effective skill 14');
-      expect(mod.percentage(Data()), -5);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Bombardment, Effective skill 12', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Bombardment, Effective skill 12');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Bombardment, Effective skill 10', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Bombardment, Effective skill 10');
-      expect(mod.percentage(Data()), -15);
-      expect(mod.isAttackModifier, true);
-    });
-
-    test('Bombardment, Effective skill 8', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Bombardment, Effective skill 8');
-      expect(mod.percentage(Data()), -20);
-      expect(mod.isAttackModifier, true);
-    });
-
-    //TODO: Gadget limitation.
-    test('Can Be Stolen, Forcefully removed', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Can Be Stolen, Forcefully removed');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Gadget limitation.
-    test('Can Be Stolen, Easily snatched', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Can Be Stolen, Easily snatched');
-      expect(mod.percentage(Data()), -40);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Gadget limitation.
-    test('Can Be Stolen, Quick Contest', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Can Be Stolen, Quick Contest');
-      expect(mod.percentage(Data()), -30);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Gadget limitation.
-    test('Can Be Stolen, Stealth or trickery', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Can Be Stolen, Stealth or trickery');
-      expect(mod.percentage(Data()), -20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Active Defense', () {
-      var mod = ModifierTemplates.instance().templateByName('Active Defense');
-      expect(mod.percentage(Data()), -40);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Active Defense, Indpependent', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Active Defense, Independent');
-      expect(mod.percentage(Data()), -20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('All-Out', () {
-      var mod = ModifierTemplates.instance().templateByName('All-Out');
-      expect(mod.percentage(Data()), -25);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('All-Out Concentrate', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('All-Out Concentrate');
-      expect(mod.percentage(Data()), -25);
-      expect(mod.isAttackModifier, false);
-    });
-
     test('Aspected', () {
-      var mod = ModifierTemplates.instance().templateByName('Aspected');
-      expect(mod.percentage(Data()), -20);
+      var mod = Modifiers.instance().byName('Aspected');
+      expect(mod.percentage, -20);
+      expect(mod.description, 'Aspected');
       expect(mod.isAttackModifier, false);
-    });
 
-    test('Attracts Threats, 6 or less', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Attracts Threats, 6 or less');
-      expect(mod.percentage(Data()), -5);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Attracts Threats, 9 or less', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Attracts Threats, 9 or less');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
+      var m = Modifier.copyWith(mod, detail: 'Faith');
+      expect(m.description, 'Aspected, Faith');
     });
 
     test('Blockable', () {
-      var mod = ModifierTemplates.instance().templateByName('Blockable');
-      expect(mod.percentage(Data()), -5);
+      var mod = Modifiers.instance().byName('Blockable');
+      expect(mod.percentage, -5);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Blockable');
     });
 
     test('Blood Agent, Reversed', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Blood Agent, Reversed');
-      expect(mod.percentage(Data()), -40);
+      var mod = Modifiers.instance().byName('Blood Agent, Reversed');
+      expect(mod.percentage, -40);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Blood Agent, Reversed');
     });
 
     test('Can Be Blocked or Parried', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Can Be Blocked or Parried');
-      expect(mod.percentage(Data()), -10);
+      var mod = Modifiers.instance().byName('Can Be Blocked or Parried');
+      expect(mod.percentage, -10);
+      expect(mod.description, 'Can Be Blocked or Parried');
       expect(mod.isAttackModifier, false);
     });
 
     test('Can Be Parried', () {
-      var mod = ModifierTemplates.instance().templateByName('Can Be Parried');
-      expect(mod.percentage(Data()), -5);
+      var mod = Modifiers.instance().byName('Can Be Parried');
+      expect(mod.percentage, -5);
+      expect(mod.description, 'Can Be Parried');
       expect(mod.isAttackModifier, false);
     });
 

@@ -284,28 +284,16 @@
       "percentage": -40
     },
     {
-      "name": "Bombardment, Effective skill 10",
+      "name": "Bombardment",
       "isAttackModifier": true,
-      "type": "Simple",
-      "percentage": -15
-    },
-    {
-      "name": "Bombardment, Effective skill 12",
-      "isAttackModifier": true,
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Bombardment, Effective skill 14",
-      "isAttackModifier": true,
-      "type": "Simple",
-      "percentage": -5
-    },
-    {
-      "name": "Bombardment, Effective skill 8",
-      "isAttackModifier": true,
-      "type": "Simple",
-      "percentage": -20
+      "type": "NamedVariant",
+      "default": "Skill 12",
+      "variations": {
+        "Skill 8": -20,
+        "Skill 10": -15,
+        "Skill 12": -10,
+        "Skill 14": -5
+      }
     },
     {
       "name": "Can Be Blocked or Parried",

@@ -134,8 +134,11 @@ String modifierDataString = '''
     },
     {
       "name": "Active Defense",
-      "type": "Simple",
-      "percentage": -40
+      "type": "NamedVariant",
+      "percentage": -40,
+      "variations": {
+        "Independent": -20
+      }
     },
     {
       "name": "Active Defense, Independent",
@@ -170,13 +173,11 @@ String modifierDataString = '''
     },
     {
       "name": "All-Out",
-      "type": "Simple",
-      "percentage": -25
-    },
-    {
-      "name": "All-Out Concentrate",
-      "type": "Simple",
-      "percentage": -25
+      "type": "NamedVariant",
+      "percentage": -25,
+      "variations": {
+        "Concentrate": -25
+      }
     },
     {
       "name": "Always On, Dangerous",
@@ -241,14 +242,13 @@ String modifierDataString = '''
       "percentage": -20
     },
     {
-      "name": "Attracts Threats, 6 or less",
-      "type": "Simple",
-      "percentage": -5
-    },
-    {
-      "name": "Attracts Threats, 9 or less",
-      "type": "Simple",
-      "percentage": -10
+      "name": "Attracts Threats",
+      "type": "NamedVariant",
+      "default": "6 or less",
+      "variations": {
+        "6 or less": -5,
+        "9 or less": -10
+      }
     },
     {
       "name": "Aura",
@@ -285,28 +285,16 @@ String modifierDataString = '''
       "percentage": -40
     },
     {
-      "name": "Bombardment, Effective skill 10",
+      "name": "Bombardment",
       "isAttackModifier": true,
-      "type": "Simple",
-      "percentage": -15
-    },
-    {
-      "name": "Bombardment, Effective skill 12",
-      "isAttackModifier": true,
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Bombardment, Effective skill 14",
-      "isAttackModifier": true,
-      "type": "Simple",
-      "percentage": -5
-    },
-    {
-      "name": "Bombardment, Effective skill 8",
-      "isAttackModifier": true,
-      "type": "Simple",
-      "percentage": -20
+      "type": "NamedVariant",
+      "default": "Skill 12",
+      "variations": {
+        "Skill 8": -20,
+        "Skill 10": -15,
+        "Skill 12": -10,
+        "Skill 14": -5
+      }
     },
     {
       "name": "Can Be Blocked or Parried",
@@ -319,24 +307,15 @@ String modifierDataString = '''
       "percentage": -5
     },
     {
-      "name": "Can Be Stolen, Easily snatched",
-      "type": "Simple",
-      "percentage": -40
-    },
-    {
-      "name": "Can Be Stolen, Forcefully removed",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Can Be Stolen, Quick Contest",
-      "type": "Simple",
-      "percentage": -30
-    },
-    {
-      "name": "Can Be Stolen, Stealth or trickery",
-      "type": "Simple",
-      "percentage": -20
+      "name": "Can Be Stolen",
+      "type": "NamedVariant",
+      "default": "Easily",
+      "variations": {
+        "Easily": -40,
+        "Quick Contest": -30,
+        "Stealth/Trickery": -20,
+        "Forcefully": -10
+      }
     },
     {
       "name": "Can Carry Objects",
@@ -1414,4 +1393,5 @@ String modifierDataString = '''
       }
     }
   ]
-}''';
+}
+''';
