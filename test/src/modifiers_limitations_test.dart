@@ -46,6 +46,7 @@ main() {
         expect(mod.description, 'All-Out, Concentrate');
       });
     });
+
     group('Attracts Threats', () {
       Modifier m;
       setUp(() {
@@ -150,7 +151,185 @@ main() {
         expect(m.description, 'Can Be Stolen, Forcefully');
       });
     });
+
+    group('Minimum Range', () {
+      var r;
+      setUp(() {
+        r = Modifiers.instance().byName('Minimum Range');
+      });
+
+      test('default', () {
+        expect(r.percentage, -10);
+        expect(r.isAttackModifier, false);
+        expect(r.description, 'Minimum Range, 5% Max Range');
+      });
+
+      test('1% Max', () {
+        var mod = Modifier.copyWith(r, detail: '1% Max Range');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Minimum Range, 1% Max Range');
+      });
+
+      test('5% Max', () {
+        var mod = Modifier.copyWith(r, detail: '5% Max Range');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Minimum Range, 5% Max Range');
+      });
+    });
+
+    group('Requires (Attribute) Roll', () {
+      var r;
+      setUp(() {
+        r = Modifiers.instance().byName('Requires (Attribute) Roll');
+      });
+
+      test('default', () {
+        expect(r.percentage, -10);
+        expect(r.isAttackModifier, false);
+        expect(r.description, 'Requires DX Roll');
+      });
+
+      test('DX', () {
+        var mod = Modifier.copyWith(r, detail: 'DX');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires DX Roll');
+      });
+
+      test('HT', () {
+        var mod = Modifier.copyWith(r, detail: 'HT');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires HT Roll');
+      });
+
+      test('IQ', () {
+        var mod = Modifier.copyWith(r, detail: 'IQ');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires IQ Roll');
+      });
+
+      test('Will', () {
+        var mod = Modifier.copyWith(r, detail: 'Will');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Will Roll');
+      });
+
+      test('Per', () {
+        var mod = Modifier.copyWith(r, detail: 'Per');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Per Roll');
+      });
+    });
+
+    group('Requires (Skill) Roll', () {
+      var r;
+      setUp(() {
+        r = Modifiers.instance().byName('Requires (Skill) Roll');
+      });
+
+      test('default', () {
+        expect(r.percentage, -10);
+        expect(r.isAttackModifier, false);
+        expect(r.description, 'Requires DX/Average Skill Roll');
+      });
+
+      test('Easy DX, IQ, or HT', () {
+        var mod = Modifier.copyWith(r, detail: 'DX/Easy Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires DX/Easy Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'IQ/Easy Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires IQ/Easy Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'HT/Easy Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires HT/Easy Skill Roll');
+      });
+
+      test('Average DX, IQ, or HT', () {
+        var mod = Modifier.copyWith(r, detail: 'DX/Average Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires DX/Average Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'IQ/Average Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires IQ/Average Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'HT/Average Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires HT/Average Skill Roll');
+      });
+
+      test('Hard DX, IQ, or HT', () {
+        var mod = Modifier.copyWith(r, detail: 'DX/Hard Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires DX/Hard Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'IQ/Hard Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires IQ/Hard Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'HT/Hard Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires HT/Hard Skill Roll');
+      });
+
+      test('Very Hard DX, IQ, or HT', () {
+        var mod = Modifier.copyWith(r, detail: 'DX/Very Hard Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires DX/Very Hard Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'IQ/Very Hard Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires IQ/Very Hard Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'HT/Very Hard Skill');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires HT/Very Hard Skill Roll');
+      });
+
+      test('Easy Per or Will', () {
+        var mod = Modifier.copyWith(r, detail: 'Per/Easy Skill');
+        expect(mod.percentage, 0);
+        expect(mod.description, 'Requires Per/Easy Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'Will/Easy Skill');
+        expect(mod.percentage, 0);
+        expect(mod.description, 'Requires Will/Easy Skill Roll');
+      });
+
+      test('Average Per or Will', () {
+        var mod = Modifier.copyWith(r, detail: 'Per/Average Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Per/Average Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'Will/Average Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Will/Average Skill Roll');
+      });
+
+      test('Hard Per or Will', () {
+        var mod = Modifier.copyWith(r, detail: 'Per/Hard Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Per/Hard Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'Will/Hard Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Will/Hard Skill Roll');
+      });
+
+      test('Very Hard Per or Will', () {
+        var mod = Modifier.copyWith(r, detail: 'Per/Very Hard Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Per/Very Hard Skill Roll');
+
+        mod = Modifier.copyWith(r, detail: 'Will/Very Hard Skill');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Will/Very Hard Skill Roll');
+      });
+    });
   });
+
   group('Simple limitations', () {
     test('Aspected', () {
       var mod = Modifiers.instance().byName('Aspected');
@@ -192,127 +371,127 @@ main() {
 
     //TODO: You may only take this limitation in conjunction with Area Effect or Cone.
     test('Dissipation', () {
-      var mod = ModifierTemplates.instance().templateByName('Dissipation');
-      expect(mod.percentage(Data()), -50);
+      var mod = Modifiers.instance().byName('Dissipation');
+      expect(mod.percentage, -50);
       expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Dissipation');
     });
 
     //TODO: You may only take this limitation in conjunction with Area Effect.
     test('Emanation', () {
-      var mod = ModifierTemplates.instance().templateByName('Emanation');
-      expect(mod.percentage(Data()), -20);
+      var mod = Modifiers.instance().byName('Emanation');
+      expect(mod.percentage, -20);
       expect(mod.isAttackModifier, true);
+      expect(mod.description, 'Emanation');
     });
 
     test('Emergencies Only', () {
-      var mod = ModifierTemplates.instance().templateByName('Emergencies Only');
-      expect(mod.percentage(Data()), -30);
+      var mod = Modifiers.instance().byName('Emergencies Only');
+      expect(mod.percentage, -30);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Emergencies Only');
     });
 
     test('Fickle', () {
-      var mod = ModifierTemplates.instance().templateByName('Fickle');
-      expect(mod.percentage(Data()), -20);
+      var mod = Modifiers.instance().byName('Fickle');
+      expect(mod.percentage, -20);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Fickle');
     });
 
     test('Full Power in Emergencies Only', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Full Power in Emergencies Only');
-      expect(mod.percentage(Data()), -20);
+      var mod = Modifiers.instance().byName('Full Power in Emergencies Only');
+      expect(mod.percentage, -20);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Full Power in Emergencies Only');
     });
 
     test('Granted by (Other)', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Granted by (Other)');
-      expect(mod.percentage(Data()), -40);
+      var mod = Modifiers.instance().byName('Granted by (Other)');
+      expect(mod.percentage, -40);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Granted by (Other)');
+
+      var m = Modifier.copyWith(mod, detail: 'Ancestor');
+      expect(m.description, 'Granted by Ancestor');
     });
 
     test('Informal', () {
-      var mod = ModifierTemplates.instance().templateByName('Informal');
-      expect(mod.percentage(Data()), -50);
+      var mod = Modifiers.instance().byName('Informal');
+      expect(mod.percentage, -50);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Informal');
     });
 
     test('Insubstantial Only', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Insubstantial Only');
-      expect(mod.percentage(Data()), -30);
+      var mod = Modifiers.instance().byName('Insubstantial Only');
+      expect(mod.percentage, -30);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Insubstantial Only');
     });
 
     test('Magnetic', () {
-      var mod = ModifierTemplates.instance().templateByName('Magnetic');
-      expect(mod.percentage(Data()), -50);
+      var mod = Modifiers.instance().byName('Magnetic');
+      expect(mod.percentage, -50);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Magnetic');
     });
 
     test('Mana-Sensitive', () {
-      var mod = ModifierTemplates.instance().templateByName('Mana-Sensitive');
-      expect(mod.percentage(Data()), -10);
+      var mod = Modifiers.instance().byName('Mana-Sensitive');
+      expect(mod.percentage, -10);
       expect(mod.isAttackModifier, false);
-    });
-
-    test('Minimum Range, 1% Max', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Minimum Range, 1% Max');
-      expect(mod.percentage(Data()), -5);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Minimum Range, 5% Max', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Minimum Range, 5% Max');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Mana-Sensitive');
     });
 
     test('No Blunt Trauma', () {
-      var mod = ModifierTemplates.instance().templateByName('No Blunt Trauma');
-      expect(mod.percentage(Data()), -20);
+      var mod = Modifiers.instance().byName('No Blunt Trauma');
+      expect(mod.percentage, -20);
       expect(mod.isAttackModifier, true);
+      expect(mod.description, 'No Blunt Trauma');
     });
 
     test('No DR Reduction', () {
-      var mod = ModifierTemplates.instance().templateByName('No DR Reduction');
-      expect(mod.percentage(Data()), -20);
+      var mod = Modifiers.instance().byName('No DR Reduction');
+      expect(mod.percentage, -20);
       expect(mod.isAttackModifier, true);
+      expect(mod.description, 'No DR Reduction');
     });
 
     test('No Incendiary Effect', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('No Incendiary Effect');
-      expect(mod.percentage(Data()), -10);
+      var mod = Modifiers.instance().byName('No Incendiary Effect');
+      expect(mod.percentage, -10);
       expect(mod.isAttackModifier, true);
+      expect(mod.description, 'No Incendiary Effect');
     });
 
     test('No Knockback', () {
-      var mod = ModifierTemplates.instance().templateByName('No Knockback');
-      expect(mod.percentage(Data()), -10);
+      var mod = Modifiers.instance().byName('No Knockback');
+      expect(mod.percentage, -10);
       expect(mod.isAttackModifier, true);
+      expect(mod.description, 'No Knockback');
     });
 
     test('No Wounding', () {
-      var mod = ModifierTemplates.instance().templateByName('No Wounding');
-      expect(mod.percentage(Data()), -10);
+      var mod = Modifiers.instance().byName('No Wounding');
+      expect(mod.percentage, -10);
       expect(mod.isAttackModifier, true);
+      expect(mod.description, 'No Wounding');
     });
 
     test('Only When Berserk', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Only When Berserk');
-      expect(mod.percentage(Data()), -20);
+      var mod = Modifiers.instance().byName('Only When Berserk');
+      expect(mod.percentage, -20);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Only When Berserk');
     });
 
     // TODO: You can’t combine this with All-Out, All-Out Concentrate, or Requires Ready.
     test('Requires Concentrate', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Requires Concentrate');
-      expect(mod.percentage(Data()), -15);
+      var mod = Modifiers.instance().byName('Requires Concentrate');
+      expect(mod.percentage, -15);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Requires Concentrate');
     });
 
     test('Requires Ready', () {
@@ -480,43 +659,6 @@ main() {
       var mod =
           ModifierTemplates.instance().templateByName('Mitigator, Monthly');
       expect(mod.percentage(Data()), -70);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Requires (Attribute) Roll - perhaps a better implementation is to select the Attribute and use that to derive the value.
-    test('Requires (Attribute) Roll, DX or IQ or HT', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Requires (Attribute) Roll, DX or IQ or HT');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Requires (Attribute) Roll, Per or Will', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Requires (Attribute) Roll, Per or Will');
-      expect(mod.percentage(Data()), -5);
-      expect(mod.isAttackModifier, false);
-    });
-
-    //TODO: Requires (Skill) Roll - perhaps a better implementation is to select the Skill and use that to derive the value.
-    test('Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder', () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Requires (Skill) Roll, DX- or IQ- or HT-Based Easy', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Requires (Skill) Roll, DX- or IQ- or HT-Based Easy');
-      expect(mod.percentage(Data()), -5);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Requires (Skill) Roll, Per- or Will-Based Average or harder', () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Requires (Skill) Roll, Per- or Will-Based Average or harder');
-      expect(mod.percentage(Data()), -5);
       expect(mod.isAttackModifier, false);
     });
 

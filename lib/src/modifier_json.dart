@@ -664,7 +664,11 @@ String modifierDataString = '''
     {
       "name": "Granted by (Other)",
       "type": "Simple",
-      "percentage": -40
+      "percentage": -40,
+      "default": "(Other)",
+      "formatter": {
+        "template": "Granted by %detail"
+      }
     },
     {
       "name": "Guided",
@@ -900,6 +904,15 @@ String modifierDataString = '''
       "type": "Leveled"
     },
     {
+      "name": "Minimum Range",
+      "type": "NamedVariant",
+      "default": "5% Max Range",
+      "variations": {
+        "5% Max Range": -10,
+        "1% Max Range": -5
+      }
+    },
+    {
       "name": "Minimum Range, 1% Max",
       "type": "Simple",
       "percentage": -5
@@ -1131,14 +1144,97 @@ String modifierDataString = '''
       "type": "Leveled"
     },
     {
-      "name": "Requires (Attribute) Roll, DX or IQ or HT",
-      "type": "Simple",
-      "percentage": -10
+      "name": "Requires (Attribute) Roll",
+      "type": "NamedVariant",
+      "default": "DX", 
+      "formatter": {
+        "template": "Requires %detail Roll"
+      },
+      "variations": {
+        "DX": -10,
+        "HT": -10,
+        "IQ": -10,
+        "Will": -5,
+        "Per": -5
+      }
     },
     {
-      "name": "Requires (Attribute) Roll, Per or Will",
-      "type": "Simple",
-      "percentage": -5
+      "name": "Requires (Skill) Roll",
+      "type": "Categorized",
+      "default": "DX/Average Skill", 
+      "formatter": {
+        "template": "Requires %detail Roll"
+      },
+      "categories": [
+        {
+          "name": "DX, IQ, or HT/Easy Skill",
+          "cost": -5,
+          "items": [
+            "DX/Easy Skill",
+            "IQ/Easy Skill",
+            "HT/Easy Skill"
+          ]
+        },
+        {
+          "name": "DX, IQ, or HT/Average Skill",
+          "cost": -10,
+          "items": [
+            "DX/Average Skill",
+            "IQ/Average Skill",
+            "HT/Average Skill"
+          ]
+        },
+        {
+          "name": "DX, IQ, or HT/Hard Skill",
+          "cost": -10,
+          "items": [
+            "DX/Hard Skill",
+            "IQ/Hard Skill",
+            "HT/Hard Skill"
+          ]
+        },
+        {
+          "name": "DX, IQ, or HT/Very Hard Skill",
+          "cost": -10,
+          "items": [
+            "DX/Very Hard Skill",
+            "IQ/Very Hard Skill",
+            "HT/Very Hard Skill"
+          ]
+        },
+        {
+          "name": "Per or Will/Easy Skill",
+          "cost": 0,
+          "items": [
+            "Per/Easy Skill",
+            "Will/Easy Skill"
+          ]
+        },
+        {
+          "name": "Per or Will/Average Skill",
+          "cost": -5,
+          "items": [
+            "Per/Average Skill",
+            "Will/Average Skill"
+          ]
+        },
+        {
+          "name": "Per or Will/Hard Skill",
+          "cost": -5,
+          "items": [
+            "Per/Hard Skill",
+            "Will/Hard Skill"
+          ]
+        },
+        {
+          "name": "Per or Will/Very Hard Skill",
+          "cost": -5,
+          "items": [
+            "Per/Very Hard Skill",
+            "Will/Very Hard Skill"
+          ]
+        }
+      ]
     },
     {
       "name": "Requires (Attribute) Roll, Quick Contest of DX or IQ or HT",
@@ -1154,21 +1250,6 @@ String modifierDataString = '''
       "name": "Requires (Attribute) Roll, Quick Contest replaces Attribute roll",
       "type": "Simple",
       "percentage": -10
-    },
-    {
-      "name": "Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Requires (Skill) Roll, DX- or IQ- or HT-Based Easy",
-      "type": "Simple",
-      "percentage": -5
-    },
-    {
-      "name": "Requires (Skill) Roll, Per- or Will-Based Average or harder",
-      "type": "Simple",
-      "percentage": -5
     },
     {
       "name": "Requires Concentrate",
@@ -1393,5 +1474,4 @@ String modifierDataString = '''
       }
     }
   ]
-}
-''';
+}''';

@@ -133,8 +133,11 @@
     },
     {
       "name": "Active Defense",
-      "type": "Simple",
-      "percentage": -40
+      "type": "NamedVariant",
+      "percentage": -40,
+      "variations": {
+        "Independent": -20
+      }
     },
     {
       "name": "Active Defense, Independent",
@@ -169,13 +172,11 @@
     },
     {
       "name": "All-Out",
-      "type": "Simple",
-      "percentage": -25
-    },
-    {
-      "name": "All-Out Concentrate",
-      "type": "Simple",
-      "percentage": -25
+      "type": "NamedVariant",
+      "percentage": -25,
+      "variations": {
+        "Concentrate": -25
+      }
     },
     {
       "name": "Always On, Dangerous",
@@ -240,14 +241,13 @@
       "percentage": -20
     },
     {
-      "name": "Attracts Threats, 6 or less",
-      "type": "Simple",
-      "percentage": -5
-    },
-    {
-      "name": "Attracts Threats, 9 or less",
-      "type": "Simple",
-      "percentage": -10
+      "name": "Attracts Threats",
+      "type": "NamedVariant",
+      "default": "6 or less",
+      "variations": {
+        "6 or less": -5,
+        "9 or less": -10
+      }
     },
     {
       "name": "Aura",
@@ -306,24 +306,15 @@
       "percentage": -5
     },
     {
-      "name": "Can Be Stolen, Easily snatched",
-      "type": "Simple",
-      "percentage": -40
-    },
-    {
-      "name": "Can Be Stolen, Forcefully removed",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Can Be Stolen, Quick Contest",
-      "type": "Simple",
-      "percentage": -30
-    },
-    {
-      "name": "Can Be Stolen, Stealth or trickery",
-      "type": "Simple",
-      "percentage": -20
+      "name": "Can Be Stolen",
+      "type": "NamedVariant",
+      "default": "Easily",
+      "variations": {
+        "Easily": -40,
+        "Quick Contest": -30,
+        "Stealth/Trickery": -20,
+        "Forcefully": -10
+      }
     },
     {
       "name": "Can Carry Objects",
@@ -672,7 +663,11 @@
     {
       "name": "Granted by (Other)",
       "type": "Simple",
-      "percentage": -40
+      "percentage": -40,
+      "default": "(Other)",
+      "formatter": {
+        "template": "Granted by %detail"
+      }
     },
     {
       "name": "Guided",
@@ -908,6 +903,15 @@
       "type": "Leveled"
     },
     {
+      "name": "Minimum Range",
+      "type": "NamedVariant",
+      "default": "5% Max Range",
+      "variations": {
+        "5% Max Range": -10,
+        "1% Max Range": -5
+      }
+    },
+    {
       "name": "Minimum Range, 1% Max",
       "type": "Simple",
       "percentage": -5
@@ -1139,14 +1143,19 @@
       "type": "Leveled"
     },
     {
-      "name": "Requires (Attribute) Roll, DX or IQ or HT",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Requires (Attribute) Roll, Per or Will",
-      "type": "Simple",
-      "percentage": -5
+      "name": "Requires (Attribute) Roll",
+      "type": "NamedVariant",
+      "default": "DX",
+      "variations": {
+        "DX": -10,
+        "HT": -10,
+        "IQ": -10,
+        "Will": -5,
+        "Per": -5
+      },
+      "formatter": {
+        "template": "Requires %detail Roll"
+      }
     },
     {
       "name": "Requires (Attribute) Roll, Quick Contest of DX or IQ or HT",
@@ -1164,19 +1173,82 @@
       "percentage": -10
     },
     {
-      "name": "Requires (Skill) Roll, DX- or IQ- or HT-Based Average or harder",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Requires (Skill) Roll, DX- or IQ- or HT-Based Easy",
-      "type": "Simple",
-      "percentage": -5
-    },
-    {
-      "name": "Requires (Skill) Roll, Per- or Will-Based Average or harder",
-      "type": "Simple",
-      "percentage": -5
+      "name": "Requires (Skill) Roll",
+      "type": "Categorized",
+      "default": "DX/Average Skill",
+      "categories": [
+        {
+          "name": "DX, IQ, or HT/Easy Skill",
+          "cost": -5,
+          "items": [
+            "DX/Easy Skill",
+            "IQ/Easy Skill",
+            "HT/Easy Skill"
+          ]
+        },
+        {
+          "name": "DX, IQ, or HT/Average Skill",
+          "cost": -10,
+          "items": [
+            "DX/Average Skill",
+            "IQ/Average Skill",
+            "HT/Average Skill"
+          ]
+        },
+        {
+          "name": "DX, IQ, or HT/Hard Skill",
+          "cost": -10,
+          "items": [
+            "DX/Hard Skill",
+            "IQ/Hard Skill",
+            "HT/Hard Skill"
+          ]
+        },
+        {
+          "name": "DX, IQ, or HT/Very Hard Skill",
+          "cost": -10,
+          "items": [
+            "DX/Very Hard Skill",
+            "IQ/Very Hard Skill",
+            "HT/Very Hard Skill"
+          ]
+        },
+        {
+          "name": "Per or Will/Easy Skill",
+          "cost": 0,
+          "items": [
+            "Per/Easy Skill",
+            "Will/Easy Skill"
+          ]
+        },
+        {
+          "name": "Per or Will/Average Skill",
+          "cost": -5,
+          "items": [
+            "Per/Average Skill",
+            "Will/Average Skill"
+          ]
+        },
+        {
+          "name": "Per or Will/Hard Skill",
+          "cost": -5,
+          "items": [
+            "Per/Hard Skill",
+            "Will/Hard Skill"
+          ]
+        },
+        {
+          "name": "Per or Will/Very Hard Skill",
+          "cost": -5,
+          "items": [
+            "Per/Very Hard Skill",
+            "Will/Very Hard Skill"
+          ]
+        }
+      ],
+      "formatter": {
+        "template": "Requires %detail Roll"
+      }
     },
     {
       "name": "Requires Concentrate",
