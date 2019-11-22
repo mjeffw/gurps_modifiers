@@ -180,19 +180,14 @@ String modifierDataString = '''
       }
     },
     {
-      "name": "Always On, Dangerous",
-      "type": "Simple",
-      "percentage": -40
-    },
-    {
-      "name": "Always On, Physically Inconvenient",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Always On, Social or Cosmetic",
-      "type": "Simple",
-      "percentage": -10
+      "name": "Always On",
+      "type": "NamedVariant",
+      "default": "Social or Cosmetic",
+      "variations": {
+        "Social or Cosmetic": -10,
+        "Inconvenient": -20,
+        "Dangerous": -40
+      }
     },
     {
       "name": "AP Ammo",
@@ -518,29 +513,57 @@ String modifierDataString = '''
       "percentage": -30
     },
     {
-      "name": "Environmental, Common",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Environmental, Occasional",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Environmental, Rare",
-      "type": "Simple",
-      "percentage": -40
-    },
-    {
-      "name": "Environmental, Very common",
-      "type": "Simple",
-      "percentage": -5
-    },
-    {
-      "name": "Environmental, Very rare",
-      "type": "Simple",
-      "percentage": -80
+      "name": "Environmental",
+      "type": "Categorized",
+      "default": "Very Common",
+      "categories": [
+        {
+          "name": "Very Common",
+          "cost": -5,
+          "items": [
+            "In a gravity field",
+            "In air",
+            "On a planet"
+          ]
+        },
+        {
+          "name": "Common",
+          "cost": -10,
+          "items": [
+            "In contact with dust",
+            "In the presence of microbes"
+          ]
+        },
+        {
+          "name": "Occasional",
+          "cost": -20,
+          "items": [
+            "In a city",
+            "In the wilderness",
+            "Outdoors",
+            "Touching the ground"
+          ]
+        },
+        {
+          "name": "Rare",
+          "cost": -40,
+          "items": [
+            "In a storm",
+            "In dense vegetation",
+            "In the desert",
+            "Underground"
+          ]
+        },
+        {
+          "name": "Very Rare",
+          "cost": -80,
+          "items": [
+            "In lava",
+            "In quicksand",
+            "In vacuum"
+          ]
+        }
+      ]
     },
     {
       "name": "Erosive",
@@ -929,29 +952,29 @@ String modifierDataString = '''
       "percentage": 50
     },
     {
-      "name": "Mitigator, Daily",
-      "type": "Simple",
-      "percentage": -60
-    },
-    {
-      "name": "Mitigator, Horde Intelligence",
-      "type": "Simple",
-      "percentage": -60
-    },
-    {
-      "name": "Mitigator, Monthly",
-      "type": "Simple",
-      "percentage": -70
-    },
-    {
-      "name": "Mitigator, Vulnerable",
-      "type": "Simple",
-      "percentage": -60
-    },
-    {
-      "name": "Mitigator, Weekly",
-      "type": "Simple",
-      "percentage": -65
+      "name": "Mitigator",
+      "type": "Categorized",
+      "default": "Vulnerable",
+      "categories": [
+        {
+          "name": "Vulnerable",
+          "cost": -60,
+          "items": [
+            "Daily Treatment",
+            "Horde Intelligence"
+          ]
+        },
+        {
+          "name": "Weekly Treatment",
+          "cost": -65,
+          "items": []
+        },
+        {
+          "name": "Monthly Treatment",
+          "cost": -70,
+          "items": []
+        }
+      ]
     },
     {
       "name": "Mobile",
@@ -1146,33 +1169,45 @@ String modifierDataString = '''
     {
       "name": "Requires (Attribute) Roll",
       "type": "NamedVariant",
-      "default": "DX", 
-      "formatter": {
-        "template": "Requires %detail Roll"
-      },
+      "default": "DX",
       "variations": {
         "DX": -10,
         "HT": -10,
         "IQ": -10,
         "Will": -5,
         "Per": -5
+      },
+      "formatter": {
+        "template": "Requires %detail Roll"
       }
+    },
+    {
+      "name": "Requires (Attribute) Roll, Quick Contest of DX or IQ or HT",
+      "type": "Simple",
+      "percentage": -20
+    },
+    {
+      "name": "Requires (Attribute) Roll, Quick Contest of Per or Will",
+      "type": "Simple",
+      "percentage": -15
+    },
+    {
+      "name": "Requires (Attribute) Roll, Quick Contest replaces Attribute roll",
+      "type": "Simple",
+      "percentage": -10
     },
     {
       "name": "Requires (Skill) Roll",
       "type": "Categorized",
-      "default": "DX/Average Skill", 
-      "formatter": {
-        "template": "Requires %detail Roll"
-      },
+      "default": "DX/Average Skill",
       "categories": [
         {
           "name": "DX, IQ, or HT/Easy Skill",
           "cost": -5,
           "items": [
             "DX/Easy Skill",
-            "IQ/Easy Skill",
-            "HT/Easy Skill"
+            "HT/Easy Skill",
+            "IQ/Easy Skill"
           ]
         },
         {
@@ -1180,8 +1215,8 @@ String modifierDataString = '''
           "cost": -10,
           "items": [
             "DX/Average Skill",
-            "IQ/Average Skill",
-            "HT/Average Skill"
+            "HT/Average Skill",
+            "IQ/Average Skill"
           ]
         },
         {
@@ -1189,8 +1224,8 @@ String modifierDataString = '''
           "cost": -10,
           "items": [
             "DX/Hard Skill",
-            "IQ/Hard Skill",
-            "HT/Hard Skill"
+            "HT/Hard Skill",
+            "IQ/Hard Skill"
           ]
         },
         {
@@ -1198,8 +1233,8 @@ String modifierDataString = '''
           "cost": -10,
           "items": [
             "DX/Very Hard Skill",
-            "IQ/Very Hard Skill",
-            "HT/Very Hard Skill"
+            "HT/Very Hard Skill",
+            "IQ/Very Hard Skill"
           ]
         },
         {
@@ -1234,22 +1269,10 @@ String modifierDataString = '''
             "Will/Very Hard Skill"
           ]
         }
-      ]
-    },
-    {
-      "name": "Requires (Attribute) Roll, Quick Contest of DX or IQ or HT",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Requires (Attribute) Roll, Quick Contest of Per or Will",
-      "type": "Simple",
-      "percentage": -15
-    },
-    {
-      "name": "Requires (Attribute) Roll, Quick Contest replaces Attribute roll",
-      "type": "Simple",
-      "percentage": -10
+      ],
+      "formatter": {
+        "template": "Requires %detail Roll"
+      }
     },
     {
       "name": "Requires Concentrate",
@@ -1394,14 +1417,13 @@ String modifierDataString = '''
       "percentage": -20
     },
     {
-      "name": "Uncontrollable, Dangerous",
-      "type": "Simple",
-      "percentage": -30
-    },
-    {
-      "name": "Uncontrollable, Inconvenient",
-      "type": "Simple",
-      "percentage": -10
+      "name": "Uncontrollable",
+      "type": "NamedVariant",
+      "default": "Inconvenient",
+      "variations": {
+        "Inconvenient": -10,
+        "Dangerous": -30
+      }
     },
     {
       "name": "Underwater",
@@ -1436,14 +1458,12 @@ String modifierDataString = '''
       "percentage": 5
     },
     {
-      "name": "Visible, Attack",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Visible, Non-Attack",
-      "type": "Simple",
-      "percentage": -10
+      "name": "Visible",
+      "type": "NamedVariant",
+      "percentage": -10,
+      "variations": {
+        "Allows Defense Roll": -20
+      }
     },
     {
       "name": "Wall",

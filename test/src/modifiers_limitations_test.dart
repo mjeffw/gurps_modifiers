@@ -47,6 +47,37 @@ main() {
       });
     });
 
+    group('Always On', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('Always On');
+      });
+
+      test('default', () {
+        expect(m.percentage, -10);
+        expect(m.isAttackModifier, false);
+        expect(m.description, 'Always On, Social or Cosmetic');
+      });
+
+      test('Social or Cosmetic', () {
+        var mod = Modifier.copyWith(m, detail: 'Social or Cosmetic');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Always On, Social or Cosmetic');
+      });
+
+      test('Inconvenient', () {
+        var mod = Modifier.copyWith(m, detail: 'Inconvenient');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Always On, Inconvenient');
+      });
+
+      test('Dangerous', () {
+        var mod = Modifier.copyWith(m, detail: 'Dangerous');
+        expect(mod.percentage, -40);
+        expect(mod.description, 'Always On, Dangerous');
+      });
+    });
+
     group('Attracts Threats', () {
       Modifier m;
       setUp(() {
@@ -152,6 +183,95 @@ main() {
       });
     });
 
+    group('Environmental', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('Environmental');
+      });
+
+      _verify({int percent, String detail}) {
+        var mod = Modifier.copyWith(m, detail: detail);
+        expect(mod.percentage, percent);
+        expect(mod.description, 'Environmental, $detail');
+      }
+
+      test('default', () {
+        expect(m.percentage, -5);
+        expect(m.isAttackModifier, false);
+        expect(m.description, 'Environmental, Very Common');
+      });
+
+      test('Very Common', () {
+        var mod = Modifier.copyWith(m, detail: 'Very Common');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Environmental, Very Common');
+      });
+
+      test('Very Common items', () {
+        var items = ['In air', 'On a planet', 'In a gravity field'];
+
+        items.forEach((f) => _verify(detail: f, percent: -5));
+      });
+
+      test('Common', () {
+        var mod = Modifier.copyWith(m, detail: 'Common');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Environmental, Common');
+      });
+
+      test('Common items', () {
+        var items = ['In contact with dust', 'In the presence of microbes'];
+
+        items.forEach((f) => _verify(detail: f, percent: -10));
+      });
+
+      test('Occasional', () {
+        var mod = Modifier.copyWith(m, detail: 'Occasional');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Environmental, Occasional');
+      });
+
+      test('Occasional items', () {
+        var items = [
+          'Touching the ground',
+          'Outdoors',
+          'In the wilderness',
+          'In a city'
+        ];
+
+        items.forEach((f) => _verify(detail: f, percent: -20));
+      });
+
+      test('Rare', () {
+        var mod = Modifier.copyWith(m, detail: 'Rare');
+        expect(mod.percentage, -40);
+        expect(mod.description, 'Environmental, Rare');
+      });
+
+      test('Rare items', () {
+        var items = [
+          'In a storm',
+          'In dense vegetation',
+          'In the desert',
+          'Underground'
+        ];
+
+        items.forEach((f) => _verify(detail: f, percent: -40));
+      });
+
+      test('Very Rare', () {
+        var mod = Modifier.copyWith(m, detail: 'Very Rare');
+        expect(mod.percentage, -80);
+        expect(mod.description, 'Environmental, Very Rare');
+      });
+
+      test('Very Rare items', () {
+        var items = ['In lava', 'In quicksand', 'In vacuum'];
+
+        items.forEach((f) => _verify(detail: f, percent: -80));
+      });
+    });
+
     group('Minimum Range', () {
       var r;
       setUp(() {
@@ -174,6 +294,49 @@ main() {
         var mod = Modifier.copyWith(r, detail: '5% Max Range');
         expect(mod.percentage, -10);
         expect(mod.description, 'Minimum Range, 5% Max Range');
+      });
+    });
+
+    group('Mitigator', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('Mitigator');
+      });
+
+      test('default', () {
+        expect(m.description, 'Mitigator, Vulnerable');
+        expect(m.isAttackModifier, false);
+        expect(m.percentage, -60);
+      });
+
+      test('Vulnerable', () {
+        var mod = Modifier.copyWith(m, detail: 'Vulnerable');
+        expect(mod.description, 'Mitigator, Vulnerable');
+        expect(mod.percentage, -60);
+      });
+
+      test('Daily Treatment', () {
+        var mod = Modifier.copyWith(m, detail: 'Daily Treatment');
+        expect(mod.description, 'Mitigator, Daily Treatment');
+        expect(mod.percentage, -60);
+      });
+
+      test('Weekly Treatment', () {
+        var mod = Modifier.copyWith(m, detail: 'Weekly Treatment');
+        expect(mod.description, 'Mitigator, Weekly Treatment');
+        expect(mod.percentage, -65);
+      });
+
+      test('Monthly Treatment', () {
+        var mod = Modifier.copyWith(m, detail: 'Monthly Treatment');
+        expect(mod.description, 'Mitigator, Monthly Treatment');
+        expect(mod.percentage, -70);
+      });
+
+      test('Horde Intelligence', () {
+        var mod = Modifier.copyWith(m, detail: 'Horde Intelligence');
+        expect(mod.description, 'Mitigator, Horde Intelligence');
+        expect(mod.percentage, -60);
       });
     });
 
@@ -326,6 +489,49 @@ main() {
         mod = Modifier.copyWith(r, detail: 'Will/Very Hard Skill');
         expect(mod.percentage, -5);
         expect(mod.description, 'Requires Will/Very Hard Skill Roll');
+      });
+    });
+
+    group('Uncontrollable', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('Uncontrollable');
+      });
+
+      test('default', () {
+        expect(m.percentage, -10);
+        expect(m.isAttackModifier, false);
+        expect(m.description, 'Uncontrollable, Inconvenient');
+      });
+
+      test('Inconvenient', () {
+        var mod = Modifier.copyWith(m, detail: 'Inconvenient');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Uncontrollable, Inconvenient');
+      });
+
+      test('Dangerous', () {
+        var mod = Modifier.copyWith(m, detail: 'Dangerous');
+        expect(mod.percentage, -30);
+        expect(mod.description, 'Uncontrollable, Dangerous');
+      });
+    });
+
+    group('Visible', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('Visible');
+      });
+
+      test('default', () {
+        expect(m.percentage, -10);
+        expect(m.isAttackModifier, false);
+        expect(m.description, 'Visible');
+      });
+
+      test('Allows Defense', () {
+        var mod = Modifier.copyWith(m, detail: 'Allows Defense Roll');
+        expect(mod.percentage, -20);
       });
     });
   });
@@ -495,171 +701,60 @@ main() {
     });
 
     test('Requires Ready', () {
-      var mod = ModifierTemplates.instance().templateByName('Requires Ready');
-      expect(mod.percentage(Data()), -10);
+      var mod = Modifiers.instance().byName('Requires Ready');
+      expect(mod.percentage, -10);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Requires Ready');
     });
 
     test('Requires Reaction Roll', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Requires Reaction Roll');
-      expect(mod.percentage(Data()), -5);
+      var mod = Modifiers.instance().byName('Requires Reaction Roll');
+      expect(mod.percentage, -5);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Requires Reaction Roll');
     });
 
     test('Skill Enhancement Only', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Skill Enhancement Only');
-      expect(mod.percentage(Data()), -60);
+      var mod = Modifiers.instance().byName('Skill Enhancement Only');
+      expect(mod.percentage, -60);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Skill Enhancement Only');
     });
 
     test('Substantial Only', () {
-      var mod = ModifierTemplates.instance().templateByName('Substantial Only');
-      expect(mod.percentage(Data()), -10);
+      var mod = Modifiers.instance().byName('Substantial Only');
+      expect(mod.percentage, -10);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Substantial Only');
     });
 
     // TODO: You can only take this limitation in conjunction with Uncontrollable.
     test('Unconscious Only', () {
-      var mod = ModifierTemplates.instance().templateByName('Unconscious Only');
-      expect(mod.percentage(Data()), -20);
+      var mod = Modifiers.instance().byName('Unconscious Only');
+      expect(mod.percentage, -20);
       expect(mod.isAttackModifier, false);
-    });
-
-    test('Uncontrollable, Inconvenient', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Uncontrollable, Inconvenient');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Uncontrollable, Dangerous', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Uncontrollable, Dangerous');
-      expect(mod.percentage(Data()), -30);
-      expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Unconscious Only');
     });
 
     test('Unique', () {
-      var mod = ModifierTemplates.instance().templateByName('Unique');
-      expect(mod.percentage(Data()), -25);
+      var mod = Modifiers.instance().byName('Unique');
+      expect(mod.percentage, -25);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Unique');
     });
 
     test('Unsupported', () {
-      var mod = ModifierTemplates.instance().templateByName('Unsupported');
-      expect(mod.percentage(Data()), -25);
+      var mod = Modifiers.instance().byName('Unsupported');
+      expect(mod.percentage, -25);
       expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Unsupported');
     });
 
     test('Untrainable', () {
-      var mod = ModifierTemplates.instance().templateByName('Untrainable');
-      expect(mod.percentage(Data()), -40);
+      var mod = Modifiers.instance().byName('Untrainable');
+      expect(mod.percentage, -40);
       expect(mod.isAttackModifier, false);
-    });
-
-    test('Visible, Attack', () {
-      var mod = ModifierTemplates.instance().templateByName('Visible, Attack');
-      expect(mod.percentage(Data()), -20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Visible, Non-Attack', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Visible, Non-Attack');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Always On, Social or Cosmetic', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Always On, Social or Cosmetic');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Always On, Dangerous', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Always On, Dangerous');
-      expect(mod.percentage(Data()), -40);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Always On, Physically Inconvenient', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Always On, Physically Inconvenient');
-      expect(mod.percentage(Data()), -20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Environmental, Very common', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Environmental, Very common');
-      expect(mod.percentage(Data()), -5);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Environmental, Common', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Environmental, Common');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Environmental, Occasional', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Environmental, Occasional');
-      expect(mod.percentage(Data()), -20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Environmental, Rare', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Environmental, Rare');
-      expect(mod.percentage(Data()), -40);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Environmental, Very rare', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Environmental, Very rare');
-      expect(mod.percentage(Data()), -80);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Mitigator, Vulnerable', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Mitigator, Vulnerable');
-      expect(mod.percentage(Data()), -60);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Mitigator, Daily', () {
-      var mod = ModifierTemplates.instance().templateByName('Mitigator, Daily');
-      expect(mod.percentage(Data()), -60);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Mitigator, Weekly', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Mitigator, Weekly');
-      expect(mod.percentage(Data()), -65);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Mitigator, Horde Intelligence', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Mitigator, Horde Intelligence');
-      expect(mod.percentage(Data()), -60);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Mitigator, Monthly', () {
-      var mod =
-          ModifierTemplates.instance().templateByName('Mitigator, Monthly');
-      expect(mod.percentage(Data()), -70);
-      expect(mod.isAttackModifier, false);
+      expect(mod.description, 'Untrainable');
     });
 
     test('Requires (Attribute) Roll, Quick Contest of DX or IQ or HT', () {

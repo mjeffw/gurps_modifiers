@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:dart_utils/dart_utils.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:quiver/core.dart';
@@ -361,7 +363,7 @@ class Category with HasAttributes {
 
   List<String> get items => _items..add(name);
 
-  Category({this.name, this.cost, List<String> items}) : _items = items;
+  Category({this.name, this.cost, List<String> items}) : _items = items..sort();
 
   ///
   /// Create a [Category] from JSON data
