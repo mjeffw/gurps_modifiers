@@ -79,6 +79,7 @@ main() {
       setUp(() {
         b = Modifiers.instance().byName('Bombardment');
       });
+
       test('default', () {
         expect(b.detail, 'Skill 12');
         expect(b.percentage, -10);
@@ -149,6 +150,92 @@ main() {
         var m = Modifier.copyWith(c, detail: 'Forcefully');
         expect(m.percentage, -10);
         expect(m.description, 'Can Be Stolen, Forcefully');
+      });
+    });
+
+    group('Cardiac Stress', () {
+      var c;
+      setUp(() {
+        c = Modifiers.instance().byName('Cardiac Stress');
+      });
+
+      test('default', () {
+        expect(c.isAttackModifier, false);
+        expect(c.percentage, -30);
+        expect(c.description, 'Cardiac Stress, Every minute');
+      });
+
+      test('Every minute', () {
+        var mod = Modifier.copyWith(c, detail: 'Every minute');
+        expect(mod.percentage, -30);
+        expect(mod.description, 'Cardiac Stress, Every minute');
+      });
+
+      test('Every 10 seconds', () {
+        var mod = Modifier.copyWith(c, detail: 'Every 10 seconds');
+        expect(mod.percentage, -40);
+        expect(mod.description, 'Cardiac Stress, Every 10 seconds');
+      });
+
+      test('Every second', () {
+        var mod = Modifier.copyWith(c, detail: 'Every second');
+        expect(mod.percentage, -50);
+        expect(mod.description, 'Cardiac Stress, Every second');
+      });
+
+      test('Every 10 minutes', () {
+        var mod = Modifier.copyWith(c, detail: 'Every 10 minutes');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Cardiac Stress, Every 10 minutes');
+      });
+
+      test('Every hour', () {
+        var mod = Modifier.copyWith(c, detail: 'Every hour');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Cardiac Stress, Every hour');
+      });
+    });
+
+    group('Cerebral Stress', () {
+      var c;
+      setUp(() {
+        c = Modifiers.instance().byName('Cerebral Stress');
+      });
+
+      test('default', () {
+        expect(c.isAttackModifier, false);
+        expect(c.percentage, -30);
+        expect(c.description, 'Cerebral Stress, Every minute');
+      });
+
+      test('Every minute', () {
+        var mod = Modifier.copyWith(c, detail: 'Every minute');
+        expect(mod.percentage, -30);
+        expect(mod.description, 'Cerebral Stress, Every minute');
+      });
+
+      test('Every 10 seconds', () {
+        var mod = Modifier.copyWith(c, detail: 'Every 10 seconds');
+        expect(mod.percentage, -40);
+        expect(mod.description, 'Cerebral Stress, Every 10 seconds');
+      });
+
+      test('Every second', () {
+        var mod = Modifier.copyWith(c, detail: 'Every second');
+        expect(mod.percentage, -50);
+        expect(mod.description, 'Cerebral Stress, Every second');
+      });
+
+      test('Every 10 minutes', () {
+        var mod = Modifier.copyWith(c, detail: 'Every 10 minutes');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Cerebral Stress, Every 10 minutes');
+      });
+
+      test('Every hour', () {
+        var mod = Modifier.copyWith(c, detail: 'Every hour');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Cerebral Stress, Every hour');
       });
     });
 
@@ -895,36 +982,27 @@ main() {
   }, skip: false);
 
   group('Leveled limitations', () {
-    test('Cardiac Stress', () {
-      var mod = ModifierTemplates.instance().templateByName('Cardiac Stress')
-          as BaseLeveledTemplate;
-      expect(mod.percentage(Data(level: 1)), -50);
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 5)), -10);
-    });
-
-    test('Cerebral Stress', () {
-      var mod = ModifierTemplates.instance().templateByName('Cerebral Stress')
-          as BaseLeveledTemplate;
-      expect(mod.percentage(Data(level: 1)), -50);
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 5)), -10);
-    });
-
     test('Costs Fatigue', () {
-      var mod = ModifierTemplates.instance().templateByName('Costs Fatigue')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Costs Fatigue');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
+      expect(mod.percentage, -5);
+      expect(mod.description, 'Costs Fatigue, 1 FP');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -20);
+      expect(mod.description, 'Costs Fatigue, 4 FP');
     });
 
     test('Costs Fatigue, Per second', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Costs Fatigue, Per second') as BaseLeveledTemplate;
+      var mod = Modifiers.instance()
+          .byName('Costs Fatigue, Per second');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 4)), -40);
+      expect(mod.percentage, -10);
+      expect(mod.description, 'Costs Fatigue, 1 FP per second');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -40);
+      expect(mod.description, 'Costs Fatigue, 4 FP per second');
     });
 
     test('Costs Hit Points', () {
@@ -1070,9 +1148,9 @@ main() {
     });
 
     //TODO: Nuisance Effect: variable, depends on the effect. Guidelines:
-    //// • Your ability earns a reaction penalty from those around you. Perhaps
-    ////   it makes you look disgusting, or requires you to perform some sort of
-    ////   distressing ritual. -5% per -1 to reactions (max -4). (Implemented.)
+    // • Your ability earns a reaction penalty from those around you. Perhaps
+    //   it makes you look disgusting, or requires you to perform some sort of
+    //   distressing ritual. -5% per -1 to reactions (max -4). (Implemented.)
     // • Your ability makes you obvious, limiting stealth and attracting
     //   enemies. -5%.
     // • Your ability physically inconveniences you – it attracts stinging

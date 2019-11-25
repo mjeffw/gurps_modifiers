@@ -232,25 +232,27 @@ String modifierDataString = '''
     },
     {
       "name": "Cardiac Stress",
-      "type": "Variable",
-      "levelValues": [
-        -50,
-        -40,
-        -30,
-        -20,
-        -10
-      ]
+      "type": "NamedVariant",
+      "default": "Every minute",
+      "variations": {
+        "Every second": -50,
+        "Every 10 seconds": -40,
+        "Every minute": -30,
+        "Every 10 minutes": -20,
+        "Every hour": -10
+      }
     },
     {
       "name": "Cerebral Stress",
-      "type": "Variable",
-      "levelValues": [
-        -50,
-        -40,
-        -30,
-        -20,
-        -10
-      ]
+      "type": "NamedVariant",
+      "default": "Every minute",
+      "variations": {
+        "Every second": -50,
+        "Every 10 seconds": -40,
+        "Every minute": -30,
+        "Every 10 minutes": -20,
+        "Every hour": -10
+      }
     },
     {
       "name": "Cone",
@@ -297,7 +299,11 @@ String modifierDataString = '''
     {
       "name": "Costs Fatigue",
       "valuePerLevel": -5,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Level",
+        "template": "%name, %f FP"
+      }
     },
     {
       "name": "Costs Fatigue, Per second",

@@ -5,7 +5,7 @@ void main() {
   group('toJSON', () {
     test('simple', () {
       var template = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only at day');
+          .templateByName('Accessibility');
       var text = template.toJson().toString();
       expect(text, isNot(contains('null')));
     });
