@@ -1,129 +1,35 @@
 {
   "modifiers": [
     {
-      "name": "Accessibility, Only at day",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Accessibility, Only at night",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Accessibility, Only by one side of split personality",
-      "type": "Simple",
-      "percentage": -40
-    },
-    {
-      "name": "Accessibility, Only during full moon",
-      "type": "Simple",
-      "percentage": -40
-    },
-    {
-      "name": "Accessibility, Only during new moon",
-      "type": "Simple",
-      "percentage": -40
-    },
-    {
-      "name": "Accessibility, Only in altered body form",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Accessibility, Only in direct sunlight",
-      "type": "Simple",
-      "percentage": -30
-    },
-    {
-      "name": "Accessibility, Only on those who share a language with me",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Accessibility, Only while flying",
-      "type": "Simple",
-      "percentage": -30
-    },
-    {
-      "name": "Accessibility, Only while in hypnotic trance",
-      "type": "Simple",
-      "percentage": -30
-    },
-    {
-      "name": "Accessibility, Only while moving 1 step/turn",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Accessibility, Only while moving full Move",
-      "type": "Simple",
-      "percentage": -30
-    },
-    {
-      "name": "Accessibility, Only while moving half Move",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Accessibility, Only while playing musical instrument",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Accessibility, Only while swimming",
-      "type": "Simple",
-      "percentage": -30
-    },
-    {
-      "name": "Accessibility, Requires (item)",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Accessibility, Requires complex ritual",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Accessibility, Requires gestures",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Accessibility, Requires magic words",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Accessibility, Requires material component",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Accessibility, Requires material component, extremely rare",
-      "type": "Simple",
-      "percentage": -15
-    },
-    {
-      "name": "Accessibility, Requires simple ritual",
-      "type": "Simple",
-      "percentage": -5
-    },
-    {
-      "name": "Accessibility, Requires typical ritual",
-      "type": "Simple",
-      "percentage": -10
-    },
-    {
-      "name": "Accessibility, Useless under stress",
-      "type": "Simple",
-      "percentage": -60
-    },
-    {
-      "name": "Accessibility, While conscious",
-      "type": "Simple",
-      "percentage": -5
+      "name": "Accessibility",
+      "type": "NamedVariant",
+      "variations": {
+        "Only at day": -20,
+        "Only at night": -20,
+        "Only by one side of split personality": -40,
+        "Only during full moon": -40,
+        "Only during new moon": -40,
+        "Only in altered body form": -10,
+        "Only in direct sunlight": -30,
+        "Only on those who share a language with me": -10,
+        "Only while flying": -30,
+        "Only while in hypnotic trance": -30,
+        "Only while playing musical instrument": -20,
+        "Only while swimming": -30,
+        "Only while moving 1 step/turn": -10,
+        "Only while moving (half Move)": -20,
+        "Only while moving (full Move)": -30,
+        "Requires gestures": -10,
+        "Requires magic words": -10,
+        "Requires material component": -10,
+        "Requires extremely rare material component": -15,
+        "Requires simple ritual": -5,
+        "Requires typical ritual": -10,
+        "Requires complex ritual": -20,
+        "Requires (item)": -10,
+        "Useless under stress": -60,
+        "While conscious": -5
+      }
     },
     {
       "name": "Accurate",
@@ -951,29 +857,29 @@
       "percentage": 50
     },
     {
-      "name": "Mitigator, Daily",
-      "type": "Simple",
-      "percentage": -60
-    },
-    {
-      "name": "Mitigator, Horde Intelligence",
-      "type": "Simple",
-      "percentage": -60
-    },
-    {
-      "name": "Mitigator, Monthly",
-      "type": "Simple",
-      "percentage": -70
-    },
-    {
-      "name": "Mitigator, Vulnerable",
-      "type": "Simple",
-      "percentage": -60
-    },
-    {
-      "name": "Mitigator, Weekly",
-      "type": "Simple",
-      "percentage": -65
+      "name": "Mitigator",
+      "type": "Categorized",
+      "default": "Vulnerable",
+      "categories": [
+        {
+          "name": "Vulnerable",
+          "cost": -60,
+          "items": [
+            "Daily Treatment",
+            "Horde Intelligence"
+          ]
+        },
+        {
+          "name": "Weekly Treatment",
+          "cost": -65,
+          "items": []
+        },
+        {
+          "name": "Monthly Treatment",
+          "cost": -70,
+          "items": []
+        }
+      ]
     },
     {
       "name": "Mobile",
@@ -1171,29 +1077,35 @@
       "default": "DX",
       "variations": {
         "DX": -10,
+        "DX vs. <Other>": -20,
         "HT": -10,
+        "HT vs. <Other>": -20,
         "IQ": -10,
+        "IQ vs. <Other>": -20,
         "Will": -5,
-        "Per": -5
+        "Will vs. <Other>": -15,
+        "Per": -5,
+        "Per vs. <Other>": -15
       },
       "formatter": {
         "template": "Requires %detail Roll"
       }
     },
     {
-      "name": "Requires (Attribute) Roll, Quick Contest of DX or IQ or HT",
-      "type": "Simple",
-      "percentage": -20
-    },
-    {
-      "name": "Requires (Attribute) Roll, Quick Contest of Per or Will",
-      "type": "Simple",
-      "percentage": -15
-    },
-    {
-      "name": "Requires (Attribute) Roll, Quick Contest replaces Attribute roll",
-      "type": "Simple",
-      "percentage": -10
+      "name": "Requires (Quick Contest replaces Attribute) Roll",
+      "type": "NamedVariant",
+      "percentage": -10,
+      "default": "DX",
+      "variations": {
+        "DX": -10,
+        "HT": -10,
+        "IQ": -10,
+        "Will": -10,
+        "Per": -10
+      },
+      "formatter": {
+        "template": "Requires %detail vs. <Other> Roll, replaces Attribute roll"
+      }
     },
     {
       "name": "Requires (Skill) Roll",

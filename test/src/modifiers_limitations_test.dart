@@ -47,37 +47,6 @@ main() {
       });
     });
 
-    group('Always On', () {
-      var m;
-      setUp(() {
-        m = Modifiers.instance().byName('Always On');
-      });
-
-      test('default', () {
-        expect(m.percentage, -10);
-        expect(m.isAttackModifier, false);
-        expect(m.description, 'Always On, Social or Cosmetic');
-      });
-
-      test('Social or Cosmetic', () {
-        var mod = Modifier.copyWith(m, detail: 'Social or Cosmetic');
-        expect(mod.percentage, -10);
-        expect(mod.description, 'Always On, Social or Cosmetic');
-      });
-
-      test('Inconvenient', () {
-        var mod = Modifier.copyWith(m, detail: 'Inconvenient');
-        expect(mod.percentage, -20);
-        expect(mod.description, 'Always On, Inconvenient');
-      });
-
-      test('Dangerous', () {
-        var mod = Modifier.copyWith(m, detail: 'Dangerous');
-        expect(mod.percentage, -40);
-        expect(mod.description, 'Always On, Dangerous');
-      });
-    });
-
     group('Attracts Threats', () {
       Modifier m;
       setUp(() {
@@ -183,6 +152,230 @@ main() {
       });
     });
 
+    group('Minimum Range', () {
+      var r;
+      setUp(() {
+        r = Modifiers.instance().byName('Minimum Range');
+      });
+
+      test('default', () {
+        expect(r.percentage, -10);
+        expect(r.isAttackModifier, false);
+        expect(r.description, 'Minimum Range, 5% Max Range');
+      });
+
+      test('1% Max', () {
+        var mod = Modifier.copyWith(r, detail: '1% Max Range');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Minimum Range, 1% Max Range');
+      });
+
+      test('5% Max', () {
+        var mod = Modifier.copyWith(r, detail: '5% Max Range');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Minimum Range, 5% Max Range');
+      });
+    });
+
+    group('Requires (Attribute) Roll', () {
+      var r;
+      setUp(() {
+        r = Modifiers.instance().byName('Requires (Attribute) Roll');
+      });
+
+      test('default', () {
+        expect(r.percentage, -10);
+        expect(r.isAttackModifier, false);
+        expect(r.description, 'Requires DX Roll');
+      });
+
+      test('DX', () {
+        var mod = Modifier.copyWith(r, detail: 'DX');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires DX Roll');
+      });
+
+      test('HT', () {
+        var mod = Modifier.copyWith(r, detail: 'HT');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires HT Roll');
+      });
+
+      test('IQ', () {
+        var mod = Modifier.copyWith(r, detail: 'IQ');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Requires IQ Roll');
+      });
+
+      test('Will', () {
+        var mod = Modifier.copyWith(r, detail: 'Will');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Will Roll');
+      });
+
+      test('Per', () {
+        var mod = Modifier.copyWith(r, detail: 'Per');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Requires Per Roll');
+      });
+
+      test('Quick Contest, DX', () {
+        var mod = Modifier.copyWith(r, detail: 'DX vs. <Other>');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Requires DX vs. <Other> Roll');
+      });
+
+      test('Quick Contest, HT', () {
+        var mod = Modifier.copyWith(r, detail: 'HT vs. <Other>');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Requires HT vs. <Other> Roll');
+      });
+
+      test('Quick Contest, IQ', () {
+        var mod = Modifier.copyWith(r, detail: 'IQ vs. <Other>');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Requires IQ vs. <Other> Roll');
+      });
+
+      test('Quick Contest, Per', () {
+        var mod = Modifier.copyWith(r, detail: 'Per vs. <Other>');
+        expect(mod.percentage, -15);
+        expect(mod.description, 'Requires Per vs. <Other> Roll');
+      });
+
+      test('Quick Contest, Will', () {
+        var mod = Modifier.copyWith(r, detail: 'Will vs. <Other>');
+        expect(mod.percentage, -15);
+        expect(mod.description, 'Requires Will vs. <Other> Roll');
+      });
+    });
+
+    group('Requires (Quick Contest replaces Attribute) Roll', () {
+      var r;
+      setUp(() {
+        r = Modifiers.instance()
+            .byName('Requires (Quick Contest replaces Attribute) Roll');
+      });
+
+      test('default', () {
+        expect(r.percentage, -10);
+        expect(r.isAttackModifier, false);
+        expect(r.description,
+            'Requires DX vs. <Other> Roll, replaces Attribute roll');
+      });
+
+      test('DX', () {
+        var mod = Modifier.copyWith(r, detail: 'DX');
+        expect(mod.percentage, -10);
+        expect(mod.description,
+            'Requires DX vs. <Other> Roll, replaces Attribute roll');
+      });
+
+      test('HT', () {
+        var mod = Modifier.copyWith(r, detail: 'HT');
+        expect(mod.percentage, -10);
+        expect(mod.description,
+            'Requires HT vs. <Other> Roll, replaces Attribute roll');
+      });
+
+      test('IQ', () {
+        var mod = Modifier.copyWith(r, detail: 'IQ');
+        expect(mod.percentage, -10);
+        expect(mod.description,
+            'Requires IQ vs. <Other> Roll, replaces Attribute roll');
+      });
+
+      test('Per', () {
+        var mod = Modifier.copyWith(r, detail: 'Per');
+        expect(mod.percentage, -10);
+        expect(mod.description,
+            'Requires Per vs. <Other> Roll, replaces Attribute roll');
+      });
+
+      test('Will', () {
+        var mod = Modifier.copyWith(r, detail: 'Will');
+        expect(mod.percentage, -10);
+        expect(mod.description,
+            'Requires Will vs. <Other> Roll, replaces Attribute roll');
+      });
+    });
+
+    group('Uncontrollable', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('Uncontrollable');
+      });
+
+      test('default', () {
+        expect(m.percentage, -10);
+        expect(m.isAttackModifier, false);
+        expect(m.description, 'Uncontrollable, Inconvenient');
+      });
+
+      test('Inconvenient', () {
+        var mod = Modifier.copyWith(m, detail: 'Inconvenient');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Uncontrollable, Inconvenient');
+      });
+
+      test('Dangerous', () {
+        var mod = Modifier.copyWith(m, detail: 'Dangerous');
+        expect(mod.percentage, -30);
+        expect(mod.description, 'Uncontrollable, Dangerous');
+      });
+    });
+
+    group('Visible', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('Visible');
+      });
+
+      test('default', () {
+        expect(m.percentage, -10);
+        expect(m.isAttackModifier, false);
+        expect(m.description, 'Visible');
+      });
+
+      test('Allows Defense', () {
+        var mod = Modifier.copyWith(m, detail: 'Allows Defense Roll');
+        expect(mod.percentage, -20);
+      });
+    });
+  });
+
+  group('Categorized', () {
+    group('Always On', () {
+      var m;
+      setUp(() {
+        m = Modifiers.instance().byName('Always On');
+      });
+
+      test('default', () {
+        expect(m.percentage, -10);
+        expect(m.isAttackModifier, false);
+        expect(m.description, 'Always On, Social or Cosmetic');
+      });
+
+      test('Social or Cosmetic', () {
+        var mod = Modifier.copyWith(m, detail: 'Social or Cosmetic');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Always On, Social or Cosmetic');
+      });
+
+      test('Inconvenient', () {
+        var mod = Modifier.copyWith(m, detail: 'Inconvenient');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Always On, Inconvenient');
+      });
+
+      test('Dangerous', () {
+        var mod = Modifier.copyWith(m, detail: 'Dangerous');
+        expect(mod.percentage, -40);
+        expect(mod.description, 'Always On, Dangerous');
+      });
+    });
+
     group('Environmental', () {
       var m;
       setUp(() {
@@ -272,31 +465,6 @@ main() {
       });
     });
 
-    group('Minimum Range', () {
-      var r;
-      setUp(() {
-        r = Modifiers.instance().byName('Minimum Range');
-      });
-
-      test('default', () {
-        expect(r.percentage, -10);
-        expect(r.isAttackModifier, false);
-        expect(r.description, 'Minimum Range, 5% Max Range');
-      });
-
-      test('1% Max', () {
-        var mod = Modifier.copyWith(r, detail: '1% Max Range');
-        expect(mod.percentage, -5);
-        expect(mod.description, 'Minimum Range, 1% Max Range');
-      });
-
-      test('5% Max', () {
-        var mod = Modifier.copyWith(r, detail: '5% Max Range');
-        expect(mod.percentage, -10);
-        expect(mod.description, 'Minimum Range, 5% Max Range');
-      });
-    });
-
     group('Mitigator', () {
       var m;
       setUp(() {
@@ -337,49 +505,6 @@ main() {
         var mod = Modifier.copyWith(m, detail: 'Horde Intelligence');
         expect(mod.description, 'Mitigator, Horde Intelligence');
         expect(mod.percentage, -60);
-      });
-    });
-
-    group('Requires (Attribute) Roll', () {
-      var r;
-      setUp(() {
-        r = Modifiers.instance().byName('Requires (Attribute) Roll');
-      });
-
-      test('default', () {
-        expect(r.percentage, -10);
-        expect(r.isAttackModifier, false);
-        expect(r.description, 'Requires DX Roll');
-      });
-
-      test('DX', () {
-        var mod = Modifier.copyWith(r, detail: 'DX');
-        expect(mod.percentage, -10);
-        expect(mod.description, 'Requires DX Roll');
-      });
-
-      test('HT', () {
-        var mod = Modifier.copyWith(r, detail: 'HT');
-        expect(mod.percentage, -10);
-        expect(mod.description, 'Requires HT Roll');
-      });
-
-      test('IQ', () {
-        var mod = Modifier.copyWith(r, detail: 'IQ');
-        expect(mod.percentage, -10);
-        expect(mod.description, 'Requires IQ Roll');
-      });
-
-      test('Will', () {
-        var mod = Modifier.copyWith(r, detail: 'Will');
-        expect(mod.percentage, -5);
-        expect(mod.description, 'Requires Will Roll');
-      });
-
-      test('Per', () {
-        var mod = Modifier.copyWith(r, detail: 'Per');
-        expect(mod.percentage, -5);
-        expect(mod.description, 'Requires Per Roll');
       });
     });
 
@@ -489,49 +614,6 @@ main() {
         mod = Modifier.copyWith(r, detail: 'Will/Very Hard Skill');
         expect(mod.percentage, -5);
         expect(mod.description, 'Requires Will/Very Hard Skill Roll');
-      });
-    });
-
-    group('Uncontrollable', () {
-      var m;
-      setUp(() {
-        m = Modifiers.instance().byName('Uncontrollable');
-      });
-
-      test('default', () {
-        expect(m.percentage, -10);
-        expect(m.isAttackModifier, false);
-        expect(m.description, 'Uncontrollable, Inconvenient');
-      });
-
-      test('Inconvenient', () {
-        var mod = Modifier.copyWith(m, detail: 'Inconvenient');
-        expect(mod.percentage, -10);
-        expect(mod.description, 'Uncontrollable, Inconvenient');
-      });
-
-      test('Dangerous', () {
-        var mod = Modifier.copyWith(m, detail: 'Dangerous');
-        expect(mod.percentage, -30);
-        expect(mod.description, 'Uncontrollable, Dangerous');
-      });
-    });
-
-    group('Visible', () {
-      var m;
-      setUp(() {
-        m = Modifiers.instance().byName('Visible');
-      });
-
-      test('default', () {
-        expect(m.percentage, -10);
-        expect(m.isAttackModifier, false);
-        expect(m.description, 'Visible');
-      });
-
-      test('Allows Defense', () {
-        var mod = Modifier.copyWith(m, detail: 'Allows Defense Roll');
-        expect(mod.percentage, -20);
       });
     });
   });
@@ -756,157 +838,59 @@ main() {
       expect(mod.isAttackModifier, false);
       expect(mod.description, 'Untrainable');
     });
-
-    test('Requires (Attribute) Roll, Quick Contest of DX or IQ or HT', () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Requires (Attribute) Roll, Quick Contest of DX or IQ or HT');
-      expect(mod.percentage(Data()), -20);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Requires (Attribute) Roll, Quick Contest of Per or Will', () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Requires (Attribute) Roll, Quick Contest of Per or Will');
-      expect(mod.percentage(Data()), -15);
-      expect(mod.isAttackModifier, false);
-    });
-
-    test('Requires (Attribute) Roll, Quick Contest replaces Attribute roll',
-        () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Requires (Attribute) Roll, Quick Contest replaces Attribute roll');
-      expect(mod.percentage(Data()), -10);
-      expect(mod.isAttackModifier, false);
-    });
   }, skip: false);
 
   //TODO: This is the catch-all limitation. Must provide someway to enter
   // limitation information (and potentially save it).
   group('Accessibility', () {
-    test('Requires gestures', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Requires gestures');
-      expect(mod.percentage(Data()), -10);
+    var acc;
+    setUp(() {
+      acc = Modifiers.instance().byName('Accessibility');
     });
-    test('Requires magic words', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Requires magic words');
-      expect(mod.percentage(Data()), -10);
+
+    test('default', () {
+      expect(() => acc.percentage, throwsA(isA<StateError>()));
     });
-    test('Requires material component', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Requires material component');
-      expect(mod.percentage(Data()), -10);
-    });
-    test('Requires material component, extremely rare', () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Accessibility, Requires material component, extremely rare');
-      expect(mod.percentage(Data()), -15);
-    });
-    test('Requires simple ritual', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Requires simple ritual');
-      expect(mod.percentage(Data()), -5);
-    });
-    test('Requires typical ritual', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Requires typical ritual');
-      expect(mod.percentage(Data()), -10);
-    });
-    test('Requires complex ritual', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Requires complex ritual');
-      expect(mod.percentage(Data()), -20);
-    });
-    test('Requires (item)', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Requires (item)');
-      expect(mod.percentage(Data()), -10);
-    });
-    test('Only on those who share a language with me', () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Accessibility, Only on those who share a language with me');
-      expect(mod.percentage(Data()), -10);
-    });
-    test('Only while moving (1 step/turn)', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only while moving 1 step/turn');
-      expect(mod.percentage(Data()), -10);
-    });
-    test('Only while moving (half Move)', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only while moving half Move');
-      expect(mod.percentage(Data()), -20);
-    });
-    test('While conscious', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, While conscious');
-      expect(mod.percentage(Data()), -5);
-    });
-    test('Only while moving (full Move)', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only while moving full Move');
-      expect(mod.percentage(Data()), -30);
-    });
-    test('Only at day', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only at day');
-      expect(mod.percentage(Data()), -20);
-    });
-    test('Only at night', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only at night');
-      expect(mod.percentage(Data()), -20);
-    });
-    test('Only by one side of split personality', () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Accessibility, Only by one side of split personality');
-      expect(mod.percentage(Data()), -40);
-    });
-    test('Only in altered body form', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only in altered body form');
-      expect(mod.percentage(Data()), -10);
-    });
-    test('Only in direct sunlight', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only in direct sunlight');
-      expect(mod.percentage(Data()), -30);
-    });
-    test('Only during full moon', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only during full moon');
-      expect(mod.percentage(Data()), -40);
-    });
-    test('Only during new moon', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only during new moon');
-      expect(mod.percentage(Data()), -40);
-    });
-    test('Only while flying', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only while flying');
-      expect(mod.percentage(Data()), -30);
-    });
-    test('Only while in hypnotic trance', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only while in hypnotic trance');
-      expect(mod.percentage(Data()), -30);
-    });
-    test('Only while swimming', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Only while swimming');
-      expect(mod.percentage(Data()), -30);
-    });
-    test('Only while playing musical instrument', () {
-      var mod = ModifierTemplates.instance().templateByName(
-          'Accessibility, Only while playing musical instrument');
-      expect(mod.percentage(Data()), -20);
-    });
-    test('Useless under stress', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Accessibility, Useless under stress');
-      expect(mod.percentage(Data()), -60);
+
+    _verify(String detail, int percent) {
+      var mod = Modifier.copyWith(acc, detail: detail);
+      expect(mod.percentage, percent,
+          reason:
+              'Accessibility, $detail: expected $percent; was ${mod.percentage}');
+      expect(mod.description, 'Accessibility, $detail',
+          reason:
+              "Accessibility, $detail: expected 'Accessibility, $detail'; was '${mod.description}'");
+    }
+
+    test('variations', () {
+      var data = {
+        'Requires gestures': -10,
+        'Requires magic words': -10,
+        'Requires material component': -10,
+        'Requires extremely rare material component': -15,
+        'Requires simple ritual': -5,
+        'Requires typical ritual': -10,
+        'Requires complex ritual': -20,
+        'Requires (item)': -10,
+        'Only on those who share a language with me': -10,
+        'Only while moving 1 step/turn': -10,
+        'Only while moving (half Move)': -20,
+        'While conscious': -5,
+        'Only while moving (full Move)': -30,
+        'Only at day': -20,
+        'Only at night': -20,
+        'Only by one side of split personality': -40,
+        'Only in altered body form': -10,
+        'Only in direct sunlight': -30,
+        'Only during full moon': -40,
+        'Only during new moon': -40,
+        'Only while flying': -30,
+        'Only while in hypnotic trance': -30,
+        'Only while playing musical instrument': -20,
+        'Only while swimming': -30,
+        'Useless under stress': -60,
+      };
+      data.forEach((key, value) => _verify(key, value));
     });
   }, skip: false);
 
