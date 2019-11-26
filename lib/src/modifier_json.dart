@@ -1,4 +1,17 @@
-String modifierDataString = '''
+import 'dart:io';
+
+class ModifierData {
+  String contents;
+  ModifierData() {
+    var file = File('lib/src/modifier_data.json');
+
+    if (file.existsSync()) {
+      this.contents = file.readAsStringSync();
+    }
+  }
+}
+
+String _modifierDataString = '''
 {
   "modifiers": [
     {
@@ -113,7 +126,7 @@ String modifierDataString = '''
       "levelPrompt": "Radius (yards)",
       "type": "Leveled",
       "formatter": {
-        "type": "Exponent",
+        "type": "Geometric",
         "template": "%name, %f yards",
         "a": 1,
         "b": 2
@@ -308,27 +321,47 @@ String modifierDataString = '''
     {
       "name": "Costs Fatigue, Per second",
       "valuePerLevel": -10,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Level",
+        "template": "Costs Fatigue, %f FP per second"
+      }
     },
     {
       "name": "Costs Hit Points",
       "valuePerLevel": -10,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Level",
+        "template": "%name, %f HP"
+      }
     },
     {
-      "name": "Costs Hit Points, Instead of Fatigue",
+      "name": "Costs Hit Points Instead of Fatigue",
       "valuePerLevel": -5,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Level",
+        "template": "Costs Hit Points\u00b9, %f HP"
+      }
     },
     {
       "name": "Costs Hit Points, Per second",
       "valuePerLevel": -20,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Level",
+        "template": "Costs Hit Points, %f HP per second"
+      }
     },
     {
-      "name": "Costs Hit Points, Per second instead of Fatigue",
+      "name": "Costs Hit Points Per Second Instead of Fatigue",
       "valuePerLevel": -10,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Level",
+        "template": "Costs Hit Points\u00b9, %f HP per second"
+      }
     },
     {
       "name": "Cyclic",
@@ -523,7 +556,13 @@ String modifierDataString = '''
       "isAttackModifier": true,
       "maxLevel": 4,
       "valuePerLevel": -10,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Arithmetic",
+        "a": 1,
+        "b": 1,
+        "template": "%name, Rcl %f"
+      }
     },
     {
       "name": "Fickle",
@@ -1111,7 +1150,7 @@ String modifierDataString = '''
         "Per": -10
       },
       "formatter": {
-        "template": "Requires %detail vs. <Other> Roll, replaces Attribute roll"
+        "template": "Requires %detail vs. <Other> Roll\u00b2"
       }
     },
     {

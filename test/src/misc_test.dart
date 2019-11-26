@@ -4,8 +4,8 @@ import 'package:test/test.dart';
 void main() {
   group('toJSON', () {
     test('simple', () {
-      var template = ModifierTemplates.instance()
-          .templateByName('Accessibility');
+      var template =
+          ModifierTemplates.instance().templateByName('Accessibility');
       var text = template.toJson().toString();
       expect(text, isNot(contains('null')));
     });
@@ -31,4 +31,8 @@ void main() {
       expect(text, isNot(null));
     });
   }, skip: false);
+
+  test('string', () {
+    print('a string with a unicode character: \u00b2');
+  });
 }

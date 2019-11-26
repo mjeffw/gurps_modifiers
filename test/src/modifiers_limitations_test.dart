@@ -347,43 +347,37 @@ main() {
       test('default', () {
         expect(r.percentage, -10);
         expect(r.isAttackModifier, false);
-        expect(r.description,
-            'Requires DX vs. <Other> Roll, replaces Attribute roll');
+        expect(r.description, 'Requires DX vs. <Other> Roll\u00b2');
       });
 
       test('DX', () {
         var mod = Modifier.copyWith(r, detail: 'DX');
         expect(mod.percentage, -10);
-        expect(mod.description,
-            'Requires DX vs. <Other> Roll, replaces Attribute roll');
+        expect(mod.description, 'Requires DX vs. <Other> Roll\u00b2');
       });
 
       test('HT', () {
         var mod = Modifier.copyWith(r, detail: 'HT');
         expect(mod.percentage, -10);
-        expect(mod.description,
-            'Requires HT vs. <Other> Roll, replaces Attribute roll');
+        expect(mod.description, 'Requires HT vs. <Other> Roll\u00b2');
       });
 
       test('IQ', () {
         var mod = Modifier.copyWith(r, detail: 'IQ');
         expect(mod.percentage, -10);
-        expect(mod.description,
-            'Requires IQ vs. <Other> Roll, replaces Attribute roll');
+        expect(mod.description, 'Requires IQ vs. <Other> Roll\u00b2');
       });
 
       test('Per', () {
         var mod = Modifier.copyWith(r, detail: 'Per');
         expect(mod.percentage, -10);
-        expect(mod.description,
-            'Requires Per vs. <Other> Roll, replaces Attribute roll');
+        expect(mod.description, 'Requires Per vs. <Other> Roll\u00b2');
       });
 
       test('Will', () {
         var mod = Modifier.copyWith(r, detail: 'Will');
         expect(mod.percentage, -10);
-        expect(mod.description,
-            'Requires Will vs. <Other> Roll, replaces Attribute roll');
+        expect(mod.description, 'Requires Will vs. <Other> Roll\u00b2');
       });
     });
 
@@ -994,8 +988,7 @@ main() {
     });
 
     test('Costs Fatigue, Per second', () {
-      var mod = Modifiers.instance()
-          .byName('Costs Fatigue, Per second');
+      var mod = Modifiers.instance().byName('Costs Fatigue, Per second');
       expect(mod.isAttackModifier, false);
       expect(mod.percentage, -10);
       expect(mod.description, 'Costs Fatigue, 1 FP per second');
@@ -1006,54 +999,71 @@ main() {
     });
 
     test('Costs Hit Points', () {
-      var mod = ModifierTemplates.instance().templateByName('Costs Hit Points')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Costs Hit Points');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 4)), -40);
+      expect(mod.percentage, -10);
+      expect(mod.description, 'Costs Hit Points, 1 HP');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -40);
+      expect(mod.description, 'Costs Hit Points, 4 HP');
     });
 
     test('Costs Hit Points, Per second', () {
-      var mod = ModifierTemplates.instance()
-              .templateByName('Costs Hit Points, Per second')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Costs Hit Points, Per second');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -20);
-      expect(mod.percentage(Data(level: 4)), -80);
+      expect(mod.percentage, -20);
+      expect(mod.description, 'Costs Hit Points, 1 HP per second');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -80);
+      expect(mod.description, 'Costs Hit Points, 4 HP per second');
     });
 
     test('Costs Hit Points, Instead of Fatigue', () {
-      var mod = ModifierTemplates.instance()
-              .templateByName('Costs Hit Points, Instead of Fatigue')
-          as BaseLeveledTemplate;
+      var mod =
+          Modifiers.instance().byName('Costs Hit Points Instead of Fatigue');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
+      expect(mod.percentage, -5);
+      expect(mod.description, 'Costs Hit Points\u00b9, 1 HP');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -20);
+      expect(mod.description, 'Costs Hit Points\u00b9, 4 HP');
     });
 
     test('Costs Hit Points, Per second instead of Fatigue', () {
-      var mod = ModifierTemplates.instance()
-              .templateByName('Costs Hit Points, Per second instead of Fatigue')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance()
+          .byName('Costs Hit Points Per Second Instead of Fatigue');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 4)), -40);
+      expect(mod.percentage, -10);
+      expect(mod.description, 'Costs Hit Points\u00b9, 1 HP per second');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -40);
+      expect(mod.description, 'Costs Hit Points\u00b9, 4 HP per second');
     });
 
     test('Easily Resisted', () {
-      var mod = ModifierTemplates.instance().templateByName('Easily Resisted')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Easily Resisted');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 6)), -30);
+      expect(mod.percentage, -5);
+      expect(mod.description, 'Easily Resisted 1');
+
+      mod = Modifier.copyWith(mod, level: 6);
+      expect(mod.percentage, -30);
+      expect(mod.description, 'Easily Resisted 6');
     });
 
     test('Extra Recoil', () {
-      var mod = ModifierTemplates.instance().templateByName('Extra Recoil')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Extra Recoil');
       expect(mod.isAttackModifier, true);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 4)), -40);
+      expect(mod.percentage, -10);
+      expect(mod.description, 'Extra Recoil, Rcl 2');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -40);
+      expect(mod.description, 'Extra Recoil, Rcl 5');
     });
 
     test('Glamour', () {

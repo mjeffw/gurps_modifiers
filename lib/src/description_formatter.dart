@@ -11,7 +11,8 @@ class FormatterFactory {
     PatternFormatter.TYPE: (json) => PatternFormatter.fromJSON(json),
     LevelFormatter.TYPE: (json) => LevelFormatter.fromJSON(json),
     ArrayFormatter.TYPE: (json) => ArrayFormatter.fromJSON(json),
-    ExponentFormatter.TYPE: (json) => ExponentFormatter.fromJSON(json)
+    GeometricFormatter.TYPE: (json) => GeometricFormatter.fromJSON(json),
+    ArithmeticFormatter.TYPE: (json) => ArithmeticFormatter.fromJSON(json),
   };
 
   static Function get(Map<String, dynamic> json) {
@@ -205,14 +206,65 @@ class ArrayFormatter extends LevelFormatter {
 
 ///
 /// A formatter that calculates the %f value from the [level] by applying an
-/// exponential function of the form [a * pow(b, level)].
+/// exponential function of the form [a * pow(b, level) + c].
 ///
 /// Examples would include those modifiers whose effects are doubled with
 /// each level, such as Area Effect (level 1 = 2 yards, level 2 = 4 yards,
 /// level 3 = 8 yards, etc.).
 ///
-class ExponentFormatter extends LevelFormatter {
-  static const String TYPE = 'Exponent';
+class GeometricFormatter extends LevelFormatter {
+  static const String TYPE = 'Geometric';
+
+  @override
+  String get _type => TYPE;
+
+  ///
+  /// The constant multiplier.
+  ///
+  final int a;
+
+  ///
+  /// The number to raise to the "levelth" power.
+  ///
+  final int b;
+
+  ///
+  /// The constant addend.
+  ///
+  final int c;
+
+  ///
+  /// Create a [GeometricFormatter] with the given parameters.
+  ///
+  GeometricFormatter(
+      {this.a, this.b, int c, String template = LevelFormatter.TEMPLATE})
+      : assert(a != null),
+        assert(b != null),
+        c = c ?? 0,
+        super(template: template);
+
+  factory GeometricFormatter.fromJSON(Map<String, dynamic> json) {
+    return GeometricFormatter(
+        a: json['a'], b: json['b'], c: json['c'], template: json['template']);
+  }
+
+  ///
+  /// Return the level value by calculating the exponential value.
+  ///
+  @override
+  String _f_value(int level) => (a * pow(b, level)).toString();
+
+  @override
+  Map<String, dynamic> get attributeMap =>
+      {...super.attributeMap, "a": a, "b": b, "c": c};
+}
+
+///
+/// A formatter that calculates the %f value from the [level] by applying an
+/// algebraic function of the form [a * level + b].
+///
+class ArithmeticFormatter extends LevelFormatter {
+  static const String TYPE = 'Arithmetic';
 
   @override
   String get _type => TYPE;
@@ -227,23 +279,24 @@ class ExponentFormatter extends LevelFormatter {
   final int b;
 
   ///
-  /// Create a [ExponentFormatter] with the given parameters.
+  /// Create an [ArithmeticFormatter] with the given parameters.
   ///
-  ExponentFormatter({this.a, this.b, String template = LevelFormatter.TEMPLATE})
+  ArithmeticFormatter(
+      {this.a, this.b, String template = LevelFormatter.TEMPLATE})
       : assert(a != null),
         assert(b != null),
         super(template: template);
 
-  factory ExponentFormatter.fromJSON(Map<String, dynamic> json) {
-    return ExponentFormatter(
+  factory ArithmeticFormatter.fromJSON(Map<String, dynamic> json) {
+    return ArithmeticFormatter(
         a: json['a'], b: json['b'], template: json['template']);
   }
 
   ///
-  /// Return the level value by calculating the exponential value.
+  /// Return the level value by calculating the artithmetic value.
   ///
   @override
-  String _f_value(int level) => (a * pow(b, level)).toString();
+  String _f_value(int level) => ((a * level) + b).toString();
 
   @override
   Map<String, dynamic> get attributeMap =>

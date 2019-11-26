@@ -65,7 +65,8 @@ class _Modifiers implements ModifierTemplates, Modifiers {
   _Modifiers() {
     print("create");
     if (_map.isEmpty) {
-      var temp = json.decode(modifierDataString);
+      var service = ModifierData();
+      var temp = json.decode(service.contents);
       var list = temp['modifiers'] as List;
 
       list.forEach((a) {

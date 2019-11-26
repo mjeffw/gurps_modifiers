@@ -295,45 +295,47 @@ void main() {
       });
     });
 
-    group('ExponentFormatter', () {
+    group('GeometricFormatter', () {
       test('no-args constructor', () {
-        expect(() => ExponentFormatter(), throwsA(isA<AssertionError>()));
+        expect(() => GeometricFormatter(), throwsA(isA<AssertionError>()));
       });
 
       test('no-b constructor', () {
-        expect(() => ExponentFormatter(a: 2), throwsA(isA<AssertionError>()));
+        expect(() => GeometricFormatter(a: 2), throwsA(isA<AssertionError>()));
       });
 
       test('no-a constructor', () {
-        expect(() => ExponentFormatter(b: 2), throwsA(isA<AssertionError>()));
+        expect(() => GeometricFormatter(b: 2), throwsA(isA<AssertionError>()));
       });
 
       test('no template constructor', () {
-        expect(ExponentFormatter(a: 5, b: 2).template, LevelFormatter.TEMPLATE);
+        expect(
+            GeometricFormatter(a: 5, b: 2).template, LevelFormatter.TEMPLATE);
       });
 
       test('null template constructor', () {
-        expect(ExponentFormatter(a: 5, b: 3, template: null).template,
+        expect(GeometricFormatter(a: 5, b: 3, template: null).template,
             LevelFormatter.TEMPLATE);
       });
 
       test('template constructor', () {
         expect(
-            ExponentFormatter(a: 1, b: 1, template: 'One %name is %f').template,
+            GeometricFormatter(a: 1, b: 1, template: 'One %name is %f')
+                .template,
             'One %name is %f');
       });
 
       test('describe', () {
-        var f = ExponentFormatter(a: 2, b: 3);
+        var f = GeometricFormatter(a: 2, b: 3);
         expect(f.describe(data: Data(level: 2), name: 'foo'), 'foo 18');
         expect(f.describe(data: Data(level: 1), name: 'foo'), 'foo 6');
 
-        var f2 = ExponentFormatter(a: 1, b: 2, template: '%f :: %name');
+        var f2 = GeometricFormatter(a: 1, b: 2, template: '%f :: %name');
         expect(f2.describe(data: Data(level: 4), name: 'bar'), '16 :: bar');
       });
 
       test('null args describe', () {
-        var f = ExponentFormatter(a: 2, b: 2);
+        var f = GeometricFormatter(a: 2, b: 2);
         expect(() => f.describe(), throwsA(isA<Error>()));
         expect(() => f.describe(data: null), throwsA(isA<Error>()));
         expect(
@@ -346,49 +348,49 @@ void main() {
       test('fromJSON -- missing a', () {
         var text = '''{ "type": "Exponent", "template": "%name %f", "b": 2 }''';
 
-        expect(() => ExponentFormatter.fromJSON(json.decode(text)),
+        expect(() => GeometricFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- missing b', () {
         var text = '''{ "type": "Exponent", "template": "%name %f", "a": 5 }''';
 
-        expect(() => ExponentFormatter.fromJSON(json.decode(text)),
+        expect(() => GeometricFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- missing template', () {
         var text = '''{ "type": "Exponent", "a": 5, "b": 2 }''';
 
-        expect(() => ExponentFormatter.fromJSON(json.decode(text)),
+        expect(() => GeometricFormatter.fromJSON(json.decode(text)),
             isNot(throwsA(isA<AssertionError>())));
       });
 
       test('fromJSON', () {
         var text =
-            '''{ "type": "Exponent", "template": "%name: %f", "a": 5, "b": 2 }''';
+            '''{ "type": "Geometric", "template": "%name: %f", "a": 5, "b": 2 }''';
 
-        var f = ExponentFormatter.fromJSON(json.decode(text));
+        var f = GeometricFormatter.fromJSON(json.decode(text));
         expect(f.describe(name: 'name', data: Data(level: 2)), 'name: 20');
         expect(f.describe(name: 'foo', data: Data(level: 3)), 'foo: 40');
       });
 
       test('toJSON default template ', () {
-        var formatter = ExponentFormatter(a: 2, b: 3);
-        expect(formatter.toJSON(), '{"type":"Exponent","a":2,"b":3}');
+        var formatter = GeometricFormatter(a: 2, b: 3);
+        expect(formatter.toJSON(), '{"type":"Geometric","a":2,"b":3,"c":0}');
       });
 
       test('toJSON', () {
         var formatter =
-            ExponentFormatter(a: 2, b: 3, template: '%name, %f yards');
+            GeometricFormatter(a: 2, b: 3, template: '%name, %f yards');
         expect(formatter.toJSON(),
-            '{"type":"Exponent","template":"%name, %f yards","a":2,"b":3}');
+            '{"type":"Geometric","template":"%name, %f yards","a":2,"b":3,"c":0}');
       });
 
       test('object methods', () {
-        var f1 = ExponentFormatter(a: 2, b: 3);
-        var f2 = ExponentFormatter(a: 2, b: 3, template: '%name %f');
-        var f3 = ExponentFormatter(a: 2, b: 3, template: '%name %f, %detail');
+        var f1 = GeometricFormatter(a: 2, b: 3);
+        var f2 = GeometricFormatter(a: 2, b: 3, template: '%name %f');
+        var f3 = GeometricFormatter(a: 2, b: 3, template: '%name %f, %detail');
         var f4 = LevelFormatter();
 
         expect(f1, equals(f1));
