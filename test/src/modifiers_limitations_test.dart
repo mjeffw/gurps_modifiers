@@ -239,6 +239,146 @@ main() {
       });
     });
 
+    group('Immediate Preparation Required', () {
+      var prep;
+      setUp(() {
+        prep = Modifiers.instance().byName('Immediate Preparation Required');
+      });
+
+      test('default', () {
+        expect(prep.isAttackModifier, false);
+        expect(prep.description, 'Immediate Preparation Required, 1 minute');
+        expect(prep.percentage, -30);
+      });
+
+      test('1 minute', () {
+        var mod = Modifier.copyWith(prep, detail: '1 minute');
+        expect(mod.description, 'Immediate Preparation Required, 1 minute');
+        expect(mod.percentage, -30);
+      });
+
+      test('10 minutes', () {
+        var mod = Modifier.copyWith(prep, detail: '10 minutes');
+        expect(mod.description, 'Immediate Preparation Required, 10 minutes');
+        expect(mod.percentage, -45);
+      });
+
+      test('1 hour', () {
+        var mod = Modifier.copyWith(prep, detail: '1 hour');
+        expect(mod.description, 'Immediate Preparation Required, 1 hour');
+        expect(mod.percentage, -75);
+      });
+
+      test('8 hours', () {
+        var mod = Modifier.copyWith(prep, detail: '8 hours');
+        expect(mod.description, 'Immediate Preparation Required, 8 hours');
+        expect(mod.percentage, -90);
+      });
+    });
+
+    group('Limited Use', () {
+      var use;
+      setUp(() {
+        use = Modifiers.instance().byName('Limited Use');
+      });
+
+      test('default', () {
+        expect(use.isAttackModifier, false);
+        expect(use.percentage, -40);
+        expect(use.description, 'Limited Use, 1/day');
+      });
+      test('1/day', () {
+        var mod = Modifier.copyWith(use, detail: '1/day');
+        expect(mod.isAttackModifier, false);
+        expect(mod.percentage, -40);
+        expect(mod.description, 'Limited Use, 1/day');
+      });
+      test('2/day', () {
+        var mod = Modifier.copyWith(use, detail: '2/day');
+        expect(mod.percentage, -30);
+        expect(mod.description, 'Limited Use, 2/day');
+      });
+      test('3-4/day', () {
+        var mod = Modifier.copyWith(use, detail: '3-4/day');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Limited Use, 3-4/day');
+      });
+      test('5-10/day', () {
+        var mod = Modifier.copyWith(use, detail: '5-10/day');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Limited Use, 5-10/day');
+      });
+    });
+
+    group('Limited Use, Fast Reload', () {
+      var use;
+      setUp(() {
+        use = Modifiers.instance().byName('Limited Use, Fast Reload');
+      });
+
+      test('default', () {
+        expect(use.isAttackModifier, false);
+        expect(use.percentage, -20);
+        expect(use.description, 'Limited Use, 1/day, Fast Reload');
+      });
+      test('1/day', () {
+        var mod = Modifier.copyWith(use, detail: '1/day');
+        expect(mod.isAttackModifier, false);
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Limited Use, 1/day, Fast Reload');
+      });
+      test('2/day', () {
+        var mod = Modifier.copyWith(use, detail: '2/day');
+        expect(mod.percentage, -15);
+        expect(mod.description, 'Limited Use, 2/day, Fast Reload');
+      });
+      test('3-4/day', () {
+        var mod = Modifier.copyWith(use, detail: '3-4/day');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Limited Use, 3-4/day, Fast Reload');
+      });
+      test('5-10/day', () {
+        var mod = Modifier.copyWith(use, detail: '5-10/day');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Limited Use, 5-10/day, Fast Reload');
+      });
+    });
+
+    group('Limited Use, Slow Reload', () {
+      var use;
+      setUp(() {
+        use = Modifiers.instance().byName('Limited Use, Slow Reload');
+      });
+
+      test('default', () {
+        expect(use.isAttackModifier, false);
+        expect(use.percentage, -35);
+        expect(use.description, 'Limited Use, 1/day, Slow Reload');
+      });
+      test('1/day', () {
+        var mod = Modifier.copyWith(use, detail: '1/day');
+        expect(mod.isAttackModifier, false);
+        expect(mod.percentage, -35);
+        expect(mod.description, 'Limited Use, 1/day, Slow Reload');
+      });
+      test('2/day', () {
+        var mod = Modifier.copyWith(use, detail: '2/day');
+        expect(mod.percentage, -25);
+        expect(mod.description, 'Limited Use, 2/day, Slow Reload');
+      });
+      test('3-4/day', () {
+        var mod = Modifier.copyWith(use, detail: '3-4/day');
+        expect(mod.percentage, -15);
+        expect(mod.description, 'Limited Use, 3-4/day, Slow Reload');
+      });
+      test('5-10/day', () {
+        var mod = Modifier.copyWith(use, detail: '5-10/day');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Limited Use, 5-10/day, Slow Reload');
+      });
+    });
+
+
     group('Minimum Range', () {
       var r;
       setUp(() {
@@ -1067,62 +1207,53 @@ main() {
     });
 
     test('Glamour', () {
-      var mod = ModifierTemplates.instance().templateByName('Glamour')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Glamour');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 10)), -50);
+      expect(mod.percentage, -5);
+      expect(mod.description, 'Glamour 1');
+
+      mod = Modifier.copyWith(mod, level: 10);
+      expect(mod.percentage, -50);
+      expect(mod.description, 'Glamour 10');
     });
 
     test('Hard to Use', () {
-      var mod = ModifierTemplates.instance().templateByName('Hard to Use')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Hard to Use');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
-    });
+      expect(mod.percentage, -5);
+      expect(mod.description, 'Hard to Use 1');
 
-    test('Immediate Preparation Required', () {
-      var mod = ModifierTemplates.instance()
-              .templateByName('Immediate Preparation Required')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -30);
-      expect(mod.percentage(Data(level: 2)), -45);
-      expect(mod.percentage(Data(level: 3)), -75);
-      expect(mod.percentage(Data(level: 4)), -90);
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -20);
+      expect(mod.description, 'Hard to Use 4');
+
+      expect(
+          () => Modifier.copyWith(mod, level: 5), throwsA(isA<RangeError>()));
     });
 
     test('Increased Immunity', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Increased Immunity') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Increased Immunity');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 4)), -40);
+      expect(mod.percentage, -10);
+      expect(mod.description, 'Increased Immunity 1');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -40);
+      expect(mod.description, 'Increased Immunity 4');
+
+      expect(
+          () => Modifier.copyWith(mod, level: 5), throwsA(isA<RangeError>()));
     });
 
     test('Inaccurate', () {
-      var mod = ModifierTemplates.instance().templateByName('Inaccurate')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Inaccurate');
       expect(mod.isAttackModifier, true);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
-    });
+      expect(mod.percentage, -5);
+      expect(mod.description, 'Inaccurate 1');
 
-    test('Limited Use', () {
-      var mod = ModifierTemplates.instance().templateByName('Limited Use')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 4)), -40);
-    });
-
-    test('Limited Use, Fast Reload', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Limited Use, Fast Reload') as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -20);
+      expect(mod.description, 'Inaccurate 4');
     });
 
     test('Limited Use, Slow Reload', () {
@@ -1134,7 +1265,7 @@ main() {
     });
 
     test('Maximum Duration', () {
-      var mod = ModifierTemplates.instance().templateByName('Maximum Duration')
+      var mod = Modifiers.instance().byName('Maximum Duration')
           as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -5);
@@ -1149,7 +1280,7 @@ main() {
     // most -5% less than Always On; e.g., if Always On is -20%, Minimum
     // Duration can’t go beyond -15%.
     test('Minimum Duration', () {
-      var mod = ModifierTemplates.instance().templateByName('Minimum Duration')
+      var mod = Modifiers.instance().byName('Minimum Duration')
           as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -5);
@@ -1176,23 +1307,22 @@ main() {
     });
 
     test('Onset', () {
-      var mod = ModifierTemplates.instance().templateByName('Onset')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Onset') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.percentage(Data(level: 1)), -10);
       expect(mod.percentage(Data(level: 4)), -40);
     });
 
     test('Exposure Time', () {
-      var mod = ModifierTemplates.instance().templateByName('Exposure Time')
-          as BaseLeveledTemplate;
+      var mod =
+          Modifiers.instance().byName('Exposure Time') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.percentage(Data(level: 1)), -30);
       expect(mod.percentage(Data(level: 4)), -60);
     });
 
     test('Periodic Recharge', () {
-      var mod = ModifierTemplates.instance().templateByName('Periodic Recharge')
+      var mod = Modifiers.instance().byName('Periodic Recharge')
           as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -5);
@@ -1224,7 +1354,7 @@ main() {
     });
 
     test('Reduced Duration', () {
-      var mod = ModifierTemplates.instance().templateByName('Reduced Duration')
+      var mod = Modifiers.instance().byName('Reduced Duration')
           as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -5);
@@ -1245,8 +1375,8 @@ main() {
     // fatigue or toxic damage. You must combine it with one of Blood Agent,
     // Contact Agent, Follow-Up, Respiratory Agent, or Sense-Based.
     test('Resistible', () {
-      var mod = ModifierTemplates.instance().templateByName('Resistible')
-          as BaseLeveledTemplate;
+      var mod =
+          Modifiers.instance().byName('Resistible') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, true);
       expect(mod.percentage(Data(level: 1)), -5);
       expect(mod.percentage(Data(level: 4)), -20);
@@ -1254,8 +1384,8 @@ main() {
     });
 
     test('Short-Range', () {
-      var mod = ModifierTemplates.instance().templateByName('Short-Range')
-          as BaseLeveledTemplate;
+      var mod =
+          Modifiers.instance().byName('Short-Range') as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -10);
       expect(mod.percentage(Data(level: 3)), -30);

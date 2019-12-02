@@ -662,13 +662,14 @@
     },
     {
       "name": "Immediate Preparation Required",
-      "type": "Variable",
-      "levelValues": [
-        -30,
-        -45,
-        -75,
-        -90
-      ]
+      "type": "NamedVariant",
+      "default": "1 minute",
+      "variations": {
+        "1 minute": -30,
+        "10 minutes": -45,
+        "1 hour": -75,
+        "8 hours": -90
+      }
     },
     {
       "name": "Inaccurate",
@@ -773,22 +774,42 @@
     },
     {
       "name": "Limited Use",
-      "maxLevel": 4,
-      "valuePerLevel": -10,
-      "type": "Leveled"
+      "type": "NamedVariant",
+      "default": "1/day",
+      "variations": {
+        "1/day": -40,
+        "2/day": -30,
+        "3-4/day": -20,
+        "5-10/day": -10
+      }
     },
     {
       "name": "Limited Use, Fast Reload",
-      "maxLevel": 4,
-      "valuePerLevel": -5,
-      "type": "Leveled"
+      "type": "NamedVariant",
+      "default": "1/day",
+      "variations": {
+        "1/day": -20,
+        "2/day": -15,
+        "3-4/day": -10,
+        "5-10/day": -5
+      },
+      "formatter": {
+        "template": "Limited Use, %detail, Fast Reload"
+      }
     },
     {
       "name": "Limited Use, Slow Reload",
-      "maxLevel": 4,
-      "baseValue": 5,
-      "valuePerLevel": -10,
-      "type": "Leveled"
+      "type": "NamedVariant",
+      "default": "1/day",
+      "variations": {
+        "1/day": -35,
+        "2/day": -25,
+        "3-4/day": -15,
+        "5-10/day": -5
+      },
+      "formatter": {
+        "template": "Limited Use, %detail, Slow Reload"
+      }
     },
     {
       "name": "Link",

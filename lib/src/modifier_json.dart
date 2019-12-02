@@ -684,6 +684,17 @@ String _modifierDataString = '''
       ]
     },
     {
+      "name": "Immediate Preparation Required",
+      "type": "NamedVariant",
+      "default": "1 minute",
+      "variations": {
+        "1 minute": -30
+      },
+      "formatter": {
+        "template": "%name, %detail"
+      }
+    },
+    {
       "name": "Inaccurate",
       "isAttackModifier": true,
       "valuePerLevel": -5,
