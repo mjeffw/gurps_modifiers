@@ -11,6 +11,12 @@
             "program": "./test/"
         },
         {
+            "name": "Dart: Run Limitation Tests",
+            "type": "dart",
+            "request": "launch",
+            "program": "./test/src/modifiers_limitations_test.dart"
+        },
+        {
             "name": "Update Modifier Data",
             "program": "./lib/src/util/modifier_file_updater.dart",
             "request": "launch",

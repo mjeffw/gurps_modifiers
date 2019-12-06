@@ -863,15 +863,16 @@
     },
     {
       "name": "Maximum Duration",
-      "type": "Variable",
-      "levelValues": [
-        -5,
-        -10,
-        -25,
-        -50,
-        -65,
-        -75
-      ]
+      "type": "NamedVariant",
+      "default": "10 minutes",
+      "variations": {
+        "12 hours": -5,
+        "1 hour": -10,
+        "30 minutes": -25,
+        "10 minutes": -50,
+        "1 minute": -65,
+        "10 seconds": -75
+      }
     },
     {
       "name": "Mental Defense Only",
@@ -881,9 +882,16 @@
     },
     {
       "name": "Minimum Duration",
-      "maxLevel": 6,
-      "valuePerLevel": -5,
-      "type": "Leveled"
+      "type": "NamedVariant",
+      "default": "8 hours",
+      "variations": {
+        "8 hours": -5,
+        "12 hours": -10,
+        "24 hours": -15,
+        "1 week": -20,
+        "1 month": -25,
+        "More than a month": -30
+      }
     },
     {
       "name": "Minimum Range",

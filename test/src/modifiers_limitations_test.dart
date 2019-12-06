@@ -378,6 +378,107 @@ main() {
       });
     });
 
+    group('Maximum Duration', () {
+      var max;
+      setUp(() {
+        max = Modifiers.instance().byName('Maximum Duration');
+      });
+
+      test('default', () {
+        expect(max.isAttackModifier, false);
+        expect(max.percentage, -50);
+        expect(max.description, 'Maximum Duration, 10 minutes');
+      });
+
+      test('12 hours', () {
+        var mod = Modifier.copyWith(max, detail: '12 hours');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Maximum Duration, 12 hours');
+      });
+
+      test('1 hour', () {
+        var mod = Modifier.copyWith(max, detail: '1 hour');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Maximum Duration, 1 hour');
+      });
+
+      test('30 minutes', () {
+        var mod = Modifier.copyWith(max, detail: '30 minutes');
+        expect(mod.percentage, -25);
+        expect(mod.description, 'Maximum Duration, 30 minutes');
+      });
+
+      test('10 minutes', () {
+        var mod = Modifier.copyWith(max, detail: '10 minutes');
+        expect(mod.percentage, -50);
+        expect(mod.description, 'Maximum Duration, 10 minutes');
+      });
+
+      test('1 minute', () {
+        var mod = Modifier.copyWith(max, detail: '1 minute');
+        expect(mod.percentage, -65);
+        expect(mod.description, 'Maximum Duration, 1 minute');
+      });
+
+      test('10 seconds', () {
+        var mod = Modifier.copyWith(max, detail: '10 seconds');
+        expect(mod.percentage, -75);
+        expect(mod.description, 'Maximum Duration, 10 seconds');
+      });
+    });
+
+    group('Minimum Duration', () {
+      //TODO: On an advantage that allows Always On, this limitation is worth at
+      // most -5% less than Always On; e.g., if Always On is -20%, Minimum
+      // Duration can’t go beyond -15%.
+      var dur;
+      setUp(() {
+        dur = Modifiers.instance().byName('Minimum Duration');
+      });
+
+      test('default', () {
+        expect(dur, isNotNull);
+        expect(dur.isAttackModifier, false);
+        expect(dur.percentage, -5);
+        expect(dur.description, 'Minimum Duration, 8 hours');
+      });
+
+      test('8 hours', () {
+        var mod = Modifier.copyWith(dur, detail: '8 hours');
+        expect(mod.percentage, -5);
+        expect(mod.description, 'Minimum Duration, 8 hours');
+      });
+
+      test('12 hours', () {
+        var mod = Modifier.copyWith(dur, detail: '12 hours');
+        expect(mod.percentage, -10);
+        expect(mod.description, 'Minimum Duration, 12 hours');
+      });
+
+      test('24 hours', () {
+        var mod = Modifier.copyWith(dur, detail: '24 hours');
+        expect(mod.percentage, -15);
+        expect(mod.description, 'Minimum Duration, 24 hours');
+      });
+
+      test('1 week', () {
+        var mod = Modifier.copyWith(dur, detail: '1 week');
+        expect(mod.percentage, -20);
+        expect(mod.description, 'Minimum Duration, 1 week');
+      });
+
+      test('1 month', () {
+        var mod = Modifier.copyWith(dur, detail: '1 month');
+        expect(mod.percentage, -25);
+        expect(mod.description, 'Minimum Duration, 1 month');
+      });
+
+      test('More than a month', () {
+        var mod = Modifier.copyWith(dur, detail: 'More than a month');
+        expect(mod.percentage, -30);
+        expect(mod.description, 'Minimum Duration, More than a month');
+      });
+    });
 
     group('Minimum Range', () {
       var r;
@@ -1061,8 +1162,7 @@ main() {
     });
   }, skip: false);
 
-  //TODO: This is the catch-all limitation. Must provide someway to enter
-  // limitation information (and potentially save it).
+  //TODO: This is the catch-all limitation. Must provide someway to enter limitation information (and potentially save it).
   group('Accessibility', () {
     var acc;
     setUp(() {
@@ -1256,38 +1356,6 @@ main() {
       expect(mod.description, 'Inaccurate 4');
     });
 
-    test('Limited Use, Slow Reload', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Limited Use, Slow Reload') as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -35);
-    });
-
-    test('Maximum Duration', () {
-      var mod = Modifiers.instance().byName('Maximum Duration')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 2)), -10);
-      expect(mod.percentage(Data(level: 3)), -25);
-      expect(mod.percentage(Data(level: 4)), -50);
-      expect(mod.percentage(Data(level: 5)), -65);
-      expect(mod.percentage(Data(level: 6)), -75);
-    });
-
-    //TODO: On an advantage that allows Always On, this limitation is worth at
-    // most -5% less than Always On; e.g., if Always On is -20%, Minimum
-    // Duration can’t go beyond -15%.
-    test('Minimum Duration', () {
-      var mod = Modifiers.instance().byName('Minimum Duration')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 2)), -10);
-      expect(mod.percentage(Data(level: 6)), -30);
-    });
-
     //TODO: Nuisance Effect: variable, depends on the effect. Guidelines:
     // • Your ability earns a reaction penalty from those around you. Perhaps
     //   it makes you look disgusting, or requires you to perform some sort of
@@ -1297,9 +1365,14 @@ main() {
     // • Your ability physically inconveniences you – it attracts stinging
     //   insects, causes your armor to rust, makes you ravenously hungry, etc.
     //   -5%.
+    group('Nuisance Effect', () {
+      var eff;
+      setUp(() {
+        eff = Modifiers.instance().byName('Nuisance Effect');
+      });
+    });
     test('Nuisance Effect, Reaction penalty', () {
-      var mod = ModifierTemplates.instance()
-              .templateByName('Nuisance Effect, Reaction penalty')
+      var mod = Modifiers.instance().byName('Nuisance Effect, Reaction penalty')
           as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -5);
@@ -1333,8 +1406,8 @@ main() {
     });
 
     test('Preparation Required', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Preparation Required') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Preparation Required')
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -20);
       expect(mod.percentage(Data(level: 2)), -30);
@@ -1343,8 +1416,7 @@ main() {
     });
 
     test('Weakened Without Preparation', () {
-      var mod = ModifierTemplates.instance()
-              .templateByName('Weakened Without Preparation')
+      var mod = Modifiers.instance().byName('Weakened Without Preparation')
           as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -10);
@@ -1363,8 +1435,8 @@ main() {
     });
 
     test('Requires Low Gravity', () {
-      var mod = ModifierTemplates.instance()
-          .templateByName('Requires Low Gravity') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Requires Low Gravity')
+          as BaseLeveledTemplate;
       expect(mod.isAttackModifier, false);
       expect(mod.percentage(Data(level: 1)), -5);
       expect(mod.percentage(Data(level: 4)), -20);
