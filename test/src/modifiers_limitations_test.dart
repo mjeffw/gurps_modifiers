@@ -677,6 +677,43 @@ main() {
       });
     });
 
+    group('Preparation Required', () {
+      var pr;
+      setUp(() {
+        pr = Modifiers.instance().byName('Preparation Required');
+      });
+
+      test('default', () {
+        expect(pr.description, 'Preparation Required, 1 minute');
+        expect(pr.percentage, -20);
+        expect(pr.isAttackModifier, false);
+      });
+
+      test('1 minute', () {
+        var mod = Modifier.copyWith(pr, detail: '1 minute');
+        expect(mod.description, 'Preparation Required, 1 minute');
+        expect(mod.percentage, -20);
+      });
+
+      test('10 minutes', () {
+        var mod = Modifier.copyWith(pr, detail: '10 minutes');
+        expect(mod.description, 'Preparation Required, 10 minutes');
+        expect(mod.percentage, -30);
+      });
+
+      test('1 hour', () {
+        var mod = Modifier.copyWith(pr, detail: '1 hour');
+        expect(mod.description, 'Preparation Required, 1 hour');
+        expect(mod.percentage, -50);
+      });
+
+      test('8 hours', () {
+        var mod = Modifier.copyWith(pr, detail: '8 hours');
+        expect(mod.description, 'Preparation Required, 8 hours');
+        expect(mod.percentage, -60);
+      });
+    });
+
     group('Requires (Attribute) Roll', () {
       var r;
       setUp(() {
@@ -834,6 +871,43 @@ main() {
       test('Allows Defense', () {
         var mod = Modifier.copyWith(m, detail: 'Allows Defense Roll');
         expect(mod.percentage, -20);
+      });
+    });
+
+    group('Weakened without Preparation', () {
+      var pr;
+      setUp(() {
+        pr = Modifiers.instance().byName('Weakened Without Preparation');
+      });
+
+      test('default', () {
+        expect(pr.description, 'Weakened Without Preparation, 1 minute');
+        expect(pr.percentage, -10);
+        expect(pr.isAttackModifier, false);
+      });
+
+      test('1 minute', () {
+        var mod = Modifier.copyWith(pr, detail: '1 minute');
+        expect(mod.description, 'Weakened Without Preparation, 1 minute');
+        expect(mod.percentage, -10);
+      });
+
+      test('10 minutes', () {
+        var mod = Modifier.copyWith(pr, detail: '10 minutes');
+        expect(mod.description, 'Weakened Without Preparation, 10 minutes');
+        expect(mod.percentage, -15);
+      });
+
+      test('1 hour', () {
+        var mod = Modifier.copyWith(pr, detail: '1 hour');
+        expect(mod.description, 'Weakened Without Preparation, 1 hour');
+        expect(mod.percentage, -25);
+      });
+
+      test('8 hours', () {
+        var mod = Modifier.copyWith(pr, detail: '8 hours');
+        expect(mod.description, 'Weakened Without Preparation, 8 hours');
+        expect(mod.percentage, -30);
       });
     });
   });
@@ -1528,62 +1602,118 @@ main() {
       expect(mod.description, 'Inaccurate 4');
     });
 
-    test('Preparation Required', () {
-      var mod = Modifiers.instance().byName('Preparation Required')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -20);
-      expect(mod.percentage(Data(level: 2)), -30);
-      expect(mod.percentage(Data(level: 3)), -50);
-      expect(mod.percentage(Data(level: 4)), -60);
-    });
+    group('Reduced Duration', () {
+      var rd;
+      setUp(() {
+        rd = Modifiers.instance().byName('Reduced Duration');
+      });
 
-    test('Weakened Without Preparation', () {
-      var mod = Modifiers.instance().byName('Weakened Without Preparation')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 2)), -15);
-      expect(mod.percentage(Data(level: 3)), -25);
-      expect(mod.percentage(Data(level: 4)), -30);
-    });
+      test('default', () {
+        expect(rd.description, 'Reduced Duration, 1/2');
+        expect(rd.percentage, -5);
+        expect(rd.isAttackModifier, false);
+        expect(rd.level, 1);
+      });
 
-    test('Reduced Duration', () {
-      var mod = Modifiers.instance().byName('Reduced Duration')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
-      expect(mod.percentage(Data(level: 7)), -35);
+      test('1/3', () {
+        var mod = Modifier.copyWith(rd, level: 2);
+        expect(mod.description, 'Reduced Duration, 1/3');
+        expect(mod.percentage, -10);
+      });
+
+      test('1/6', () {
+        var mod = Modifier.copyWith(rd, level: 3);
+        expect(mod.description, 'Reduced Duration, 1/6');
+        expect(mod.percentage, -15);
+      });
+
+      test('1/10', () {
+        var mod = Modifier.copyWith(rd, level: 4);
+        expect(mod.description, 'Reduced Duration, 1/10');
+        expect(mod.percentage, -20);
+      });
+
+      test('1/20', () {
+        var mod = Modifier.copyWith(rd, level: 5);
+        expect(mod.description, 'Reduced Duration, 1/20');
+        expect(mod.percentage, -25);
+      });
+
+      test('1/30', () {
+        var mod = Modifier.copyWith(rd, level: 6);
+        expect(mod.description, 'Reduced Duration, 1/30');
+        expect(mod.percentage, -30);
+      });
+
+      test('1/60', () {
+        var mod = Modifier.copyWith(rd, level: 7);
+        expect(mod.description, 'Reduced Duration, 1/60');
+        expect(mod.percentage, -35);
+      });
+
+      test('1/100', () {
+        var mod = Modifier.copyWith(rd, level: 8);
+        expect(mod.description, 'Reduced Duration, 1/100');
+        expect(mod.percentage, -40);
+      });
+
+      test('1/300', () {
+        var mod = Modifier.copyWith(rd, level: 10);
+        expect(mod.description, 'Reduced Duration, 1/300');
+        expect(mod.percentage, -50);
+      });
     });
 
     test('Requires Low Gravity', () {
-      var mod = Modifiers.instance().byName('Requires Low Gravity')
-          as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Requires Low Gravity');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
-      expect(mod.percentage(Data(level: 10)), -50);
+      expect(mod.percentage, -5);
+      expect(mod.level, 1);
+      expect(mod.description, 'Requires Low Gravity, 0.9G');
+
+      var g = Modifier.copyWith(mod, level: 2);
+      expect(g.percentage, -10);
+      expect(g.description, 'Requires Low Gravity, 0.8G');
+
+      g = Modifier.copyWith(mod, level: 10);
+      expect(g.percentage, -50);
+      expect(g.description, 'Requires Low Gravity, 0G');
+
+      expect(
+          () => Modifier.copyWith(mod, level: 11), throwsA(isA<RangeError>()));
     });
 
     //TODO: This limitation is only available for Innate Attacks that inflict
     // fatigue or toxic damage. You must combine it with one of Blood Agent,
     // Contact Agent, Follow-Up, Respiratory Agent, or Sense-Based.
     test('Resistible', () {
-      var mod =
-          Modifiers.instance().byName('Resistible') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Resistible');
       expect(mod.isAttackModifier, true);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
-      expect(mod.percentage(Data(level: 10)), -50);
+      expect(mod.percentage, -5);
+      expect(mod.level, 1);
+      expect(mod.description, 'Resistible, HT-5');
+
+      mod = Modifier.copyWith(mod, level: 4);
+      expect(mod.percentage, -20);
+
+      mod = Modifier.copyWith(mod, level: 10);
+      expect(mod.percentage, -50);
+      expect(mod.description, 'Resistible, HT+4');
     });
 
     test('Short-Range', () {
-      var mod =
-          Modifiers.instance().byName('Short-Range') as BaseLeveledTemplate;
+      var mod = Modifiers.instance().byName('Short-Range');
       expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 3)), -30);
+      expect(mod.description, 'Short-Range 1');
+      expect(mod.percentage, -10);
+      expect(mod.level, 1);
+
+      mod = Modifier.copyWith(mod, level: 3);
+      expect(mod.description, 'Short-Range 3');
+      expect(mod.percentage, -30);
+
+      expect(
+          () => Modifier.copyWith(mod, level: 4), throwsA(isA<RangeError>()));
     });
   }, skip: false);
 

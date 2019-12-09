@@ -1060,13 +1060,14 @@
     },
     {
       "name": "Preparation Required",
-      "type": "Variable",
-      "levelValues": [
-        -20,
-        -30,
-        -50,
-        -60
-      ]
+      "type": "NamedVariant",
+      "default": "1 minute",
+      "variations": {
+        "1 minute": -20,
+        "10 minutes": -30,
+        "1 hour": -50,
+        "8 hours": -60
+      }
     },
     {
       "name": "Radiation",
@@ -1125,9 +1126,18 @@
     },
     {
       "name": "Reduced Duration",
-      "maxLevel": 7,
       "valuePerLevel": -5,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Pattern",
+        "template": "%name, 1/%f",
+        "pattern": [
+          2,
+          3,
+          6,
+          10
+        ]
+      }
     },
     {
       "name": "Reduced Fatigue Cost",
@@ -1273,7 +1283,13 @@
       "name": "Requires Low Gravity",
       "maxLevel": 10,
       "valuePerLevel": -5,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Arithmetic",
+        "template": "%name, %fG",
+        "a": -0.1,
+        "b": 1
+      }
     },
     {
       "name": "Requires Reaction Roll",
@@ -1289,7 +1305,14 @@
       "name": "Resistible",
       "isAttackModifier": true,
       "valuePerLevel": -5,
-      "type": "Leveled"
+      "type": "Leveled",
+      "formatter": {
+        "type": "Arithmetic",
+        "template": "%name, HT%f",
+        "a": 1,
+        "b": -6,
+        "force-sign": true
+      }
     },
     {
       "name": "Respiratory Agent",
@@ -1466,13 +1489,14 @@
     },
     {
       "name": "Weakened Without Preparation",
-      "type": "Variable",
-      "levelValues": [
-        -10,
-        -15,
-        -25,
-        -30
-      ]
+      "type": "NamedVariant",
+      "default": "1 minute",
+      "variations": {
+        "1 minute": -10,
+        "10 minutes": -15,
+        "1 hour": -25,
+        "8 hours": -30
+      }
     },
     {
       "name": "World-Spanning",

@@ -111,7 +111,7 @@ class DescriptionFormatter with HasAttributes {
 /// set level.
 ///
 /// This formatter adds the %f symbol to the list of possible replacement
-/// symbols. The %f value is typically the level of the modifier.
+/// symbols. The %f value is a numeric value; typically the level of the mod.
 ///
 class LevelFormatter extends DescriptionFormatter {
   static const TYPE = 'Level';
@@ -272,35 +272,56 @@ class ArithmeticFormatter extends LevelFormatter {
   ///
   /// The constant multiplier.
   ///
-  final int a;
+  final num a;
 
   ///
   /// The number to raise to the "levelth" power.
-  final int b;
+  final num b;
+
+  ///
+  /// If true, always display the sign of _f_value.
+  final bool forceSign;
 
   ///
   /// Create an [ArithmeticFormatter] with the given parameters.
   ///
   ArithmeticFormatter(
-      {this.a, this.b, String template = LevelFormatter.TEMPLATE})
+      {this.a,
+      this.b,
+      String template = LevelFormatter.TEMPLATE,
+      bool forceSign = false})
       : assert(a != null),
         assert(b != null),
+        this.forceSign = forceSign,
         super(template: template);
 
-  factory ArithmeticFormatter.fromJSON(Map<String, dynamic> json) {
-    return ArithmeticFormatter(
-        a: json['a'], b: json['b'], template: json['template']);
-  }
+  factory ArithmeticFormatter.fromJSON(Map<String, dynamic> json) =>
+      ArithmeticFormatter(
+          a: json['a'],
+          b: json['b'],
+          template: json['template'],
+          forceSign: json['force-sign'] ?? false);
 
   ///
   /// Return the level value by calculating the artithmetic value.
   ///
   @override
-  String _f_value(int level) => ((a * level) + b).toString();
+  String _f_value(int level) => numToString((a * level) + b);
+
+  String numToString(num value) {
+    var text = (value.toDouble() == value.toInt())
+        ? value.toInt().toString()
+        : value.toString();
+    return '${forceSign && value >= 0 ? "+" + text : text}';
+  }
 
   @override
-  Map<String, dynamic> get attributeMap =>
-      {...super.attributeMap, "a": a, "b": b};
+  Map<String, dynamic> get attributeMap => {
+        ...super.attributeMap,
+        "a": a,
+        "b": b,
+        if (forceSign) "force-sign": forceSign
+      };
 }
 
 class PatternFormatter extends LevelFormatter {
