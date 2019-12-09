@@ -11,7 +11,6 @@ class FormatterFactory {
   static Map<String, Function> _factoryDictionary = {
     PatternFormatter.TYPE: (json) => PatternFormatter.fromJSON(json),
     LevelFormatter.TYPE: (json) => LevelFormatter.fromJSON(json),
-    // ArrayFormatter.TYPE: (json) => ArrayFormatter.fromJSON(json),
     GeometricFormatter.TYPE: (json) => GeometricFormatter.fromJSON(json),
     ArithmeticFormatter.TYPE: (json) => ArithmeticFormatter.fromJSON(json),
   };
@@ -144,65 +143,6 @@ class LevelFormatter extends DescriptionFormatter {
   ///
   String _f_value(int level) => level.toString();
 }
-
-///
-/// Formatter that sets the value of %f to an element of an array of strings,
-/// indexed by level.
-///
-/// Use this for when the levels are 'named' or for which a formula cannot be
-/// easily derived.
-///
-/// Example: Armor Divisor could be thought of as having levels, each costing
-/// +50%. Instead of showing "Armor Divisor 1", "Armor Divisor 2", etc, the
-/// canonical way to list this enhancer would be "Armor Divisor (2)", "Armor
-/// Divisor (3)"", etc.
-///
-/// This could be accomplished by creating the following _ArrayFormatter:
-///
-///     var formatter = _ArrayFormatter(array: ['(2)', '(3)', '(5)', '(10)']);
-///
-// TODO - Deprecate?
-// class ArrayFormatter extends LevelFormatter {
-//   static const String TYPE = 'Array';
-
-//   @override
-//   String get _type => TYPE;
-
-///
-/// The array of values to use.
-///
-// final MyList<String> array;
-
-///
-/// Create an [ArrayFormatter] with the given string list and template.
-/// The template defaults to '%name %f' if not provided.
-///
-// ArrayFormatter(
-//     {List<String> array, String template = LevelFormatter.TEMPLATE})
-//     : assert(array != null),
-//       array = MyList(delegate: array),
-//       super(template: template);
-
-///
-/// Create an [ArrayFormatter] from the JSON data.
-///
-// ArrayFormatter.fromJSON(Map<String, dynamic> json)
-//     : assert(json['array'] != null),
-//       array = json['array'] != null
-//           ? MyList(delegate: List<String>.from(json['array']))
-//           : null,
-//       super.fromJSON(json);
-
-///
-/// Use (level - 1) as the index into array; return the value at that index.
-///
-//   @override
-//   String _f_value(int level) => array[level - 1];
-
-//   @override
-//   Map<String, dynamic> get attributeMap =>
-//       {...super.attributeMap, "array": array};
-// }
 
 ///
 /// A formatter that calculates the %f value from the [level] by applying an
