@@ -239,6 +239,44 @@ main() {
       });
     });
 
+    group('Exposure Time', () {
+      var on;
+      setUp(() {
+        on = Modifiers.instance().byName('Exposure Time');
+      });
+
+      test('Default', () {
+        expect(on, isNotNull);
+        expect(on.description, 'Exposure Time, 1 minute');
+        expect(on.isAttackModifier, true);
+        expect(on.percentage, -30);
+      });
+
+      test('1 minute', () {
+        var mod = Modifier.copyWith(on, detail: '1 minute');
+        expect(mod.description, 'Exposure Time, 1 minute');
+        expect(mod.percentage, -30);
+      });
+
+      test('1 hour', () {
+        var mod = Modifier.copyWith(on, detail: '1 hour');
+        expect(mod.description, 'Exposure Time, 1 hour');
+        expect(mod.percentage, -40);
+      });
+
+      test('1 week', () {
+        var mod = Modifier.copyWith(on, detail: '1 week');
+        expect(mod.description, 'Exposure Time, 1 week');
+        expect(mod.percentage, -60);
+      });
+
+      test('1 day', () {
+        var mod = Modifier.copyWith(on, detail: '1 day');
+        expect(mod.description, 'Exposure Time, 1 day');
+        expect(mod.percentage, -50);
+      });
+    });
+
     group('Immediate Preparation Required', () {
       var prep;
       setUp(() {
@@ -502,6 +540,140 @@ main() {
         var mod = Modifier.copyWith(r, detail: '5% Max Range');
         expect(mod.percentage, -10);
         expect(mod.description, 'Minimum Range, 5% Max Range');
+      });
+    });
+
+    group('Nuisance Effect', () {
+      var eff;
+      setUp(() {
+        eff = Modifiers.instance().byName('Nuisance Effect');
+      });
+
+      test('Default', () {
+        expect(eff.percentage, -5);
+        expect(eff.description, 'Nuisance Effect, Obvious');
+        expect(eff.isAttackModifier, false);
+      });
+
+      test('Obvious', () {
+        var mod = Modifier.copyWith(eff, detail: 'Obvious');
+        expect(mod.percentage, -5);
+        expect(mod.isAttackModifier, false);
+      });
+
+      test('Inconvenience', () {
+        var mod = Modifier.copyWith(eff, detail: 'Inconvenience');
+        expect(mod.percentage, -5);
+        expect(mod.isAttackModifier, false);
+      });
+
+      test('-1 Reaction', () {
+        var mod =
+            Modifier.copyWith(eff, detail: '-1 Reaction from those nearby');
+        expect(mod.percentage, -5);
+        expect(mod.isAttackModifier, false);
+      });
+
+      test('-2 Reaction', () {
+        var mod =
+            Modifier.copyWith(eff, detail: '-2 Reaction from those nearby');
+        expect(mod.percentage, -10);
+        expect(mod.isAttackModifier, false);
+      });
+
+      test('-3 Reaction', () {
+        var mod =
+            Modifier.copyWith(eff, detail: '-3 Reaction from those nearby');
+        expect(mod.percentage, -15);
+        expect(mod.isAttackModifier, false);
+      });
+
+      test('-4 Reaction', () {
+        var mod =
+            Modifier.copyWith(eff, detail: '-4 Reaction from those nearby');
+        expect(mod.percentage, -20);
+        expect(mod.isAttackModifier, false);
+      });
+    });
+
+    group('Onset', () {
+      var on;
+      setUp(() {
+        on = Modifiers.instance().byName('Onset');
+      });
+
+      test('Default', () {
+        expect(on, isNotNull);
+        expect(on.description, 'Onset, 1 minute');
+        expect(on.isAttackModifier, true);
+        expect(on.percentage, -10);
+      });
+
+      test('1 minute', () {
+        var mod = Modifier.copyWith(on, detail: '1 minute');
+        expect(mod.description, 'Onset, 1 minute');
+        expect(mod.percentage, -10);
+      });
+
+      test('1 day', () {
+        var mod = Modifier.copyWith(on, detail: '1 hour');
+        expect(mod.description, 'Onset, 1 hour');
+        expect(mod.percentage, -20);
+      });
+
+      test('1 week', () {
+        var mod = Modifier.copyWith(on, detail: '1 week');
+        expect(mod.description, 'Onset, 1 week');
+        expect(mod.percentage, -40);
+      });
+
+      test('1 day', () {
+        var mod = Modifier.copyWith(on, detail: '1 day');
+        expect(mod.description, 'Onset, 1 day');
+        expect(mod.percentage, -30);
+      });
+    });
+
+    group('Periodic Recharge', () {
+      var pr;
+      setUp(() {
+        pr = Modifiers.instance().byName('Periodic Recharge');
+      });
+
+      test('default', () {
+        expect(pr.description, 'Periodic Recharge, 1 minute');
+        expect(pr.isAttackModifier, false);
+        expect(pr.percentage, -80);
+      });
+
+      test('1 minute', () {
+        var mod = Modifier.copyWith(pr, detail: '1 minute');
+        expect(mod.description, 'Periodic Recharge, 1 minute');
+        expect(mod.percentage, -80);
+      });
+
+      test('10 minutes', () {
+        var mod = Modifier.copyWith(pr, detail: '10 minutes');
+        expect(mod.description, 'Periodic Recharge, 10 minutes');
+        expect(mod.percentage, -40);
+      });
+
+      test('1 hour', () {
+        var mod = Modifier.copyWith(pr, detail: '1 hour');
+        expect(mod.description, 'Periodic Recharge, 1 hour');
+        expect(mod.percentage, -20);
+      });
+
+      test('8 hours', () {
+        var mod = Modifier.copyWith(pr, detail: '8 hours');
+        expect(mod.description, 'Periodic Recharge, 8 hours');
+        expect(mod.percentage, -10);
+      });
+
+      test('24 hours', () {
+        var mod = Modifier.copyWith(pr, detail: '24 hours');
+        expect(mod.description, 'Periodic Recharge, 24 hours');
+        expect(mod.percentage, -5);
       });
     });
 
@@ -1354,55 +1526,6 @@ main() {
       mod = Modifier.copyWith(mod, level: 4);
       expect(mod.percentage, -20);
       expect(mod.description, 'Inaccurate 4');
-    });
-
-    //TODO: Nuisance Effect: variable, depends on the effect. Guidelines:
-    // • Your ability earns a reaction penalty from those around you. Perhaps
-    //   it makes you look disgusting, or requires you to perform some sort of
-    //   distressing ritual. -5% per -1 to reactions (max -4). (Implemented.)
-    // • Your ability makes you obvious, limiting stealth and attracting
-    //   enemies. -5%.
-    // • Your ability physically inconveniences you – it attracts stinging
-    //   insects, causes your armor to rust, makes you ravenously hungry, etc.
-    //   -5%.
-    group('Nuisance Effect', () {
-      var eff;
-      setUp(() {
-        eff = Modifiers.instance().byName('Nuisance Effect');
-      });
-    });
-    test('Nuisance Effect, Reaction penalty', () {
-      var mod = Modifiers.instance().byName('Nuisance Effect, Reaction penalty')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 4)), -20);
-    });
-
-    test('Onset', () {
-      var mod = Modifiers.instance().byName('Onset') as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage(Data(level: 1)), -10);
-      expect(mod.percentage(Data(level: 4)), -40);
-    });
-
-    test('Exposure Time', () {
-      var mod =
-          Modifiers.instance().byName('Exposure Time') as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, true);
-      expect(mod.percentage(Data(level: 1)), -30);
-      expect(mod.percentage(Data(level: 4)), -60);
-    });
-
-    test('Periodic Recharge', () {
-      var mod = Modifiers.instance().byName('Periodic Recharge')
-          as BaseLeveledTemplate;
-      expect(mod.isAttackModifier, false);
-      expect(mod.percentage(Data(level: 1)), -5);
-      expect(mod.percentage(Data(level: 2)), -10);
-      expect(mod.percentage(Data(level: 3)), -20);
-      expect(mod.percentage(Data(level: 4)), -40);
-      expect(mod.percentage(Data(level: 5)), -80);
     });
 
     test('Preparation Required', () {

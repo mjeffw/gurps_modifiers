@@ -512,10 +512,14 @@
     {
       "name": "Exposure Time",
       "isAttackModifier": true,
-      "maxLevel": 4,
-      "baseValue": -20,
-      "valuePerLevel": -10,
-      "type": "Leveled"
+      "type": "NamedVariant",
+      "default": "1 minute",
+      "variations": {
+        "1 minute": -30,
+        "1 hour": -40,
+        "1 day": -50,
+        "1 week": -60
+      }
     },
     {
       "name": "Extended Duration",
@@ -996,10 +1000,17 @@
       "percentage": -10
     },
     {
-      "name": "Nuisance Effect, Reaction penalty",
-      "maxLevel": 4,
-      "valuePerLevel": -5,
-      "type": "Leveled"
+      "name": "Nuisance Effect",
+      "type": "NamedVariant",
+      "default": "Obvious",
+      "variations": {
+        "-1 Reaction from those nearby": -5,
+        "-2 Reaction from those nearby": -10,
+        "-3 Reaction from those nearby": -15,
+        "-4 Reaction from those nearby": -20,
+        "Obvious": -5,
+        "Inconvenience": -5
+      }
     },
     {
       "name": "Once On, Stays On",
@@ -1014,9 +1025,14 @@
     {
       "name": "Onset",
       "isAttackModifier": true,
-      "maxLevel": 4,
-      "valuePerLevel": -10,
-      "type": "Leveled"
+      "type": "NamedVariant",
+      "default": "1 minute",
+      "variations": {
+        "1 minute": -10,
+        "1 hour": -20,
+        "1 day": -30,
+        "1 week": -40
+      }
     },
     {
       "name": "Overhead",
@@ -1026,14 +1042,15 @@
     },
     {
       "name": "Periodic Recharge",
-      "type": "Variable",
-      "levelValues": [
-        -5,
-        -10,
-        -20,
-        -40,
-        -80
-      ]
+      "type": "NamedVariant",
+      "default": "1 minute",
+      "variations": {
+        "1 minute": -80,
+        "10 minutes": -40,
+        "1 hour": -20,
+        "8 hours": -10,
+        "24 hours": -5
+      }
     },
     {
       "name": "Persistent",
