@@ -1311,7 +1311,7 @@
         "template": "%name, HT%f",
         "a": 1,
         "b": -6,
-        "force-sign": true
+        "signed": true
       }
     },
     {

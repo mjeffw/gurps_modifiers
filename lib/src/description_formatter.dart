@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
 import 'modifier_data.dart';
@@ -30,6 +31,14 @@ class FormatterFactory {
 /// If detail is blank or null, the default description is simply the name.
 ///
 class DescriptionFormatter with HasAttributes {
+  ///
+  /// Build a DescriptionFormatter from a JSON structure
+  ///
+  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) =>
+      (json == null || json.isEmpty)
+          ? DescriptionFormatter()
+          : FormatterFactory.get(json).call(json);
+
   static const TEMPLATE = '%name, %detail';
 
   ///
@@ -55,23 +64,16 @@ class DescriptionFormatter with HasAttributes {
   ///
   /// Create a [DescriptionFormatter] with the given template.
   ///
-  DescriptionFormatter({String template = TEMPLATE, DetailAlias alias})
+  DescriptionFormatter({String template, DetailAlias alias})
       : template = template ?? TEMPLATE,
         alias = alias ?? DetailAlias.NULL;
 
-  ///
-  /// Build a DescriptionFormatter from a JSON structure
-  ///
-  factory DescriptionFormatter.fromJSON(Map<String, dynamic> json) =>
-      (json == null)
-          ? DescriptionFormatter()
-          : FormatterFactory.get(json).call(json);
-
-  factory DescriptionFormatter._fromJSON(Map<String, dynamic> json) {
-    return DescriptionFormatter(
-        template: json['template'],
-        alias: DetailAlias.fromJSON(json['detailAlias']));
-  }
+  DescriptionFormatter._fromJSON(Map<String, dynamic> json,
+      {String defaultTemplate})
+      : template = json['template'] ?? defaultTemplate ?? TEMPLATE,
+        alias = json['detailAlias'] == null
+            ? DetailAlias.NULL
+            : DetailAlias.fromJSON(json['detailAlias']);
 
   ///
   /// Given a Modifier template name and instance data, return the description.
@@ -126,12 +128,11 @@ class LevelFormatter extends DescriptionFormatter {
   ///
   /// Create a constant [LevelFormatter]. By default, the description is <name> <level>.
   ///
-  LevelFormatter({String template = TEMPLATE, DetailAlias alias})
+  LevelFormatter({String template, DetailAlias alias})
       : super(template: template ?? TEMPLATE, alias: alias);
 
-  factory LevelFormatter.fromJSON(Map<String, dynamic> json) => LevelFormatter(
-      template: json['template'],
-      alias: DetailAlias.fromJSON(json['detailAlias']));
+  LevelFormatter.fromJSON(Map<String, dynamic> json, {String defaultTemplate})
+      : super._fromJSON(json, defaultTemplate: defaultTemplate ?? TEMPLATE);
 
   String describe({String name, ModifierData data}) => super
       .describe(name: name, data: data)
@@ -160,6 +161,7 @@ class LevelFormatter extends DescriptionFormatter {
 ///
 ///     var formatter = _ArrayFormatter(array: ['(2)', '(3)', '(5)', '(10)']);
 ///
+// TODO - Deprecate?
 class ArrayFormatter extends LevelFormatter {
   static const String TYPE = 'Array';
 
@@ -184,14 +186,12 @@ class ArrayFormatter extends LevelFormatter {
   ///
   /// Create an [ArrayFormatter] from the JSON data.
   ///
-  factory ArrayFormatter.fromJSON(Map<String, dynamic> json) {
-    var list =
-        json['array'] != null ? List<String>.from(json['array'] as List) : null;
-    return ArrayFormatter(
-      array: list,
-      template: json['template'],
-    );
-  }
+  ArrayFormatter.fromJSON(Map<String, dynamic> json)
+      : assert(json['array'] != null),
+        array = json['array'] != null
+            ? MyList(delegate: List<String>.from(json['array']))
+            : null,
+        super.fromJSON(json);
 
   ///
   /// Use (level - 1) as the index into array; return the value at that index.
@@ -243,10 +243,13 @@ class GeometricFormatter extends LevelFormatter {
         c = c ?? 0,
         super(template: template);
 
-  factory GeometricFormatter.fromJSON(Map<String, dynamic> json) {
-    return GeometricFormatter(
-        a: json['a'], b: json['b'], c: json['c'], template: json['template']);
-  }
+  GeometricFormatter.fromJSON(Map<String, dynamic> json)
+      : assert(json['a'] != null),
+        assert(json['b'] != null),
+        a = json['a'],
+        b = json['b'],
+        c = json['c'] ?? 0,
+        super.fromJSON(json);
 
   ///
   /// Return the level value by calculating the exponential value.
@@ -280,7 +283,7 @@ class ArithmeticFormatter extends LevelFormatter {
 
   ///
   /// If true, always display the sign of _f_value.
-  final bool forceSign;
+  final bool signed;
 
   ///
   /// Create an [ArithmeticFormatter] with the given parameters.
@@ -289,39 +292,36 @@ class ArithmeticFormatter extends LevelFormatter {
       {this.a,
       this.b,
       String template = LevelFormatter.TEMPLATE,
-      bool forceSign = false})
+      bool signed = false})
       : assert(a != null),
         assert(b != null),
-        this.forceSign = forceSign,
+        this.signed = signed,
         super(template: template);
 
-  factory ArithmeticFormatter.fromJSON(Map<String, dynamic> json) =>
-      ArithmeticFormatter(
-          a: json['a'],
-          b: json['b'],
-          template: json['template'],
-          forceSign: json['force-sign'] ?? false);
+  ArithmeticFormatter.fromJSON(Map<String, dynamic> json)
+      : assert(json['a'] != null),
+        assert(json['b'] != null),
+        a = json['a'],
+        b = json['b'],
+        signed = json['signed'] ?? false,
+        super.fromJSON(json, defaultTemplate: LevelFormatter.TEMPLATE);
 
   ///
   /// Return the level value by calculating the artithmetic value.
   ///
   @override
-  String _f_value(int level) => numToString((a * level) + b);
+  String _f_value(int level) => _numToString((a * level) + b);
 
-  String numToString(num value) {
-    var text = (value.toDouble() == value.toInt())
-        ? value.toInt().toString()
-        : value.toString();
-    return '${forceSign && value >= 0 ? "+" + text : text}';
-  }
+  String _numToString(num value) =>
+      '${signed && value >= 0 ? "+" : ""}' + _flattenToString(value);
+
+  String _flattenToString(num value) => (value.toDouble() == value.toInt())
+      ? value.toInt().toString()
+      : value.toString();
 
   @override
-  Map<String, dynamic> get attributeMap => {
-        ...super.attributeMap,
-        "a": a,
-        "b": b,
-        if (forceSign) "force-sign": forceSign
-      };
+  Map<String, dynamic> get attributeMap =>
+      {...super.attributeMap, "a": a, "b": b, if (signed) "signed": signed};
 }
 
 class PatternFormatter extends LevelFormatter {
@@ -332,17 +332,15 @@ class PatternFormatter extends LevelFormatter {
 
   final MyList<int> pattern; // e.g., 2, 3, 5, 10
 
-  PatternFormatter(
-      {List<int> pattern, String template = LevelFormatter.TEMPLATE})
+  PatternFormatter({List<int> pattern, String template})
       : assert(pattern != null),
         pattern = MyList<int>(delegate: pattern),
-        super(template: template);
+        super(template: template ?? LevelFormatter.TEMPLATE);
 
-  factory PatternFormatter.fromJSON(Map<String, dynamic> json) {
-    var json2 = json['pattern'];
-    var pattern = json2 == null ? null : List<int>.from(json2);
-    return PatternFormatter(pattern: pattern, template: json['template']);
-  }
+  PatternFormatter.fromJSON(Map<String, dynamic> json)
+      : assert(json['pattern'] != null),
+        pattern = MyList<int>(delegate: List<int>.from(json['pattern'])),
+        super.fromJSON(json, defaultTemplate: LevelFormatter.TEMPLATE);
 
   int _mult(int level) => pattern[(level - 1) % pattern.length];
 
