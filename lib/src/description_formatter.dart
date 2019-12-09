@@ -11,7 +11,7 @@ class FormatterFactory {
   static Map<String, Function> _factoryDictionary = {
     PatternFormatter.TYPE: (json) => PatternFormatter.fromJSON(json),
     LevelFormatter.TYPE: (json) => LevelFormatter.fromJSON(json),
-    ArrayFormatter.TYPE: (json) => ArrayFormatter.fromJSON(json),
+    // ArrayFormatter.TYPE: (json) => ArrayFormatter.fromJSON(json),
     GeometricFormatter.TYPE: (json) => GeometricFormatter.fromJSON(json),
     ArithmeticFormatter.TYPE: (json) => ArithmeticFormatter.fromJSON(json),
   };
@@ -162,47 +162,47 @@ class LevelFormatter extends DescriptionFormatter {
 ///     var formatter = _ArrayFormatter(array: ['(2)', '(3)', '(5)', '(10)']);
 ///
 // TODO - Deprecate?
-class ArrayFormatter extends LevelFormatter {
-  static const String TYPE = 'Array';
+// class ArrayFormatter extends LevelFormatter {
+//   static const String TYPE = 'Array';
 
-  @override
-  String get _type => TYPE;
+//   @override
+//   String get _type => TYPE;
 
-  ///
-  /// The array of values to use.
-  ///
-  final MyList<String> array;
+///
+/// The array of values to use.
+///
+// final MyList<String> array;
 
-  ///
-  /// Create an [ArrayFormatter] with the given string list and template.
-  /// The template defaults to '%name %f' if not provided.
-  ///
-  ArrayFormatter(
-      {List<String> array, String template = LevelFormatter.TEMPLATE})
-      : assert(array != null),
-        array = MyList(delegate: array),
-        super(template: template);
+///
+/// Create an [ArrayFormatter] with the given string list and template.
+/// The template defaults to '%name %f' if not provided.
+///
+// ArrayFormatter(
+//     {List<String> array, String template = LevelFormatter.TEMPLATE})
+//     : assert(array != null),
+//       array = MyList(delegate: array),
+//       super(template: template);
 
-  ///
-  /// Create an [ArrayFormatter] from the JSON data.
-  ///
-  ArrayFormatter.fromJSON(Map<String, dynamic> json)
-      : assert(json['array'] != null),
-        array = json['array'] != null
-            ? MyList(delegate: List<String>.from(json['array']))
-            : null,
-        super.fromJSON(json);
+///
+/// Create an [ArrayFormatter] from the JSON data.
+///
+// ArrayFormatter.fromJSON(Map<String, dynamic> json)
+//     : assert(json['array'] != null),
+//       array = json['array'] != null
+//           ? MyList(delegate: List<String>.from(json['array']))
+//           : null,
+//       super.fromJSON(json);
 
-  ///
-  /// Use (level - 1) as the index into array; return the value at that index.
-  ///
-  @override
-  String _f_value(int level) => array[level - 1];
+///
+/// Use (level - 1) as the index into array; return the value at that index.
+///
+//   @override
+//   String _f_value(int level) => array[level - 1];
 
-  @override
-  Map<String, dynamic> get attributeMap =>
-      {...super.attributeMap, "array": array};
-}
+//   @override
+//   Map<String, dynamic> get attributeMap =>
+//       {...super.attributeMap, "array": array};
+// }
 
 ///
 /// A formatter that calculates the %f value from the [level] by applying an

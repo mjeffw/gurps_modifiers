@@ -198,102 +198,102 @@ void main() {
       });
     });
 
-    group('ArrayFormatter', () {
-      const text =
-          '{"type":"Array","template":"%name %f","array":["A","B","C"]}';
+    // group('ArrayFormatter', () {
+    //   const text =
+    //       '{"type":"Array","template":"%name %f","array":["A","B","C"]}';
 
-      test('no-args constuctor', () {
-        expect(() => ArrayFormatter(), throwsA(isA<AssertionError>()));
-      });
+    //   test('no-args constuctor', () {
+    //     expect(() => ArrayFormatter(), throwsA(isA<AssertionError>()));
+    //   });
 
-      test('null template constuctor', () {
-        expect(ArrayFormatter(array: ['a', 'b', 'c']).template, '%name %f');
-      });
-      test('template constuctor', () {
-        expect(ArrayFormatter(template: 'Boo', array: ['a', 'b', 'c']).template,
-            'Boo');
-      });
+    //   test('null template constuctor', () {
+    //     expect(ArrayFormatter(array: ['a', 'b', 'c']).template, '%name %f');
+    //   });
+    //   test('template constuctor', () {
+    //     expect(ArrayFormatter(template: 'Boo', array: ['a', 'b', 'c']).template,
+    //         'Boo');
+    //   });
 
-      test('describe', () {
-        var f = ArrayFormatter(array: ['a', 'b', 'c']);
-        expect(f.describe(data: Data(level: 2), name: 'foo'), 'foo b');
-        expect(f.describe(data: Data(level: 1), name: 'foo'), 'foo a');
+    //   test('describe', () {
+    //     var f = ArrayFormatter(array: ['a', 'b', 'c']);
+    //     expect(f.describe(data: Data(level: 2), name: 'foo'), 'foo b');
+    //     expect(f.describe(data: Data(level: 1), name: 'foo'), 'foo a');
 
-        var f2 =
-            ArrayFormatter(array: ['a', 'b', 'c'], template: '%f :: %name');
-        expect(f2.describe(data: Data(level: 2), name: 'foo'), 'b :: foo');
-        expect(f2.describe(data: Data(level: 3), name: 'foo'), 'c :: foo');
-      });
+    //     var f2 =
+    //         ArrayFormatter(array: ['a', 'b', 'c'], template: '%f :: %name');
+    //     expect(f2.describe(data: Data(level: 2), name: 'foo'), 'b :: foo');
+    //     expect(f2.describe(data: Data(level: 3), name: 'foo'), 'c :: foo');
+    //   });
 
-      test('null args describe', () {
-        var f = ArrayFormatter(array: ['a', 'b', 'c']);
-        expect(() => f.describe(), throwsA(isA<Error>()));
-        expect(
-            () => f.describe(data: null, name: 'foo'), throwsA(isA<Error>()));
-        expect(() => f.describe(data: null, name: null), throwsA(isA<Error>()));
-        expect(() => f.describe(name: null), throwsA(isA<Error>()));
-        expect(() => f.describe(name: 'foo', data: Data(level: null)),
-            throwsA(isA<Error>()));
-      });
+    //   test('null args describe', () {
+    //     var f = ArrayFormatter(array: ['a', 'b', 'c']);
+    //     expect(() => f.describe(), throwsA(isA<Error>()));
+    //     expect(
+    //         () => f.describe(data: null, name: 'foo'), throwsA(isA<Error>()));
+    //     expect(() => f.describe(data: null, name: null), throwsA(isA<Error>()));
+    //     expect(() => f.describe(name: null), throwsA(isA<Error>()));
+    //     expect(() => f.describe(name: 'foo', data: Data(level: null)),
+    //         throwsA(isA<Error>()));
+    //   });
 
-      test('fromJSON', () {
-        var f1 = DescriptionFormatter.fromJSON(json.decode(text));
-        expect(f1.describe(name: 'name', data: Data(level: 1)), 'name A');
-        expect(f1.describe(name: 'bob', data: Data(level: 2)), 'bob B');
-      });
+    //   test('fromJSON', () {
+    //     var f1 = DescriptionFormatter.fromJSON(json.decode(text));
+    //     expect(f1.describe(name: 'name', data: Data(level: 1)), 'name A');
+    //     expect(f1.describe(name: 'bob', data: Data(level: 2)), 'bob B');
+    //   });
 
-      test('fromJSON without template', () {
-        var text = '{ "type": "Array", "array": ["A", "B", "C"] }';
-        expect(ArrayFormatter.fromJSON(json.decode(text)).template, '%name %f');
-      });
+    //   test('fromJSON without template', () {
+    //     var text = '{ "type": "Array", "array": ["A", "B", "C"] }';
+    //     expect(ArrayFormatter.fromJSON(json.decode(text)).template, '%name %f');
+    //   });
 
-      test('fromJSON missing array', () {
-        var text = '{ "type": "Array", "template": "%name %f" }';
-        expect(() => ArrayFormatter.fromJSON(json.decode(text)),
-            throwsA(isA<AssertionError>()));
-      });
+    //   test('fromJSON missing array', () {
+    //     var text = '{ "type": "Array", "template": "%name %f" }';
+    //     expect(() => ArrayFormatter.fromJSON(json.decode(text)),
+    //         throwsA(isA<AssertionError>()));
+    //   });
 
-      test('fromJSON with template', () {
-        var text =
-            '{"type":"Array","template":"AA %f --** %name!","array":["A","B"]}';
-        var f = ArrayFormatter.fromJSON(json.decode(text));
-        expect(f.template, 'AA %f --** %name!');
-        expect(
-            f.describe(name: 'name', data: Data(level: 1)), 'AA A --** name!');
-        expect(f.describe(name: 'bob', data: Data(level: 2)), 'AA B --** bob!');
-      });
+    //   test('fromJSON with template', () {
+    //     var text =
+    //         '{"type":"Array","template":"AA %f --** %name!","array":["A","B"]}';
+    //     var f = ArrayFormatter.fromJSON(json.decode(text));
+    //     expect(f.template, 'AA %f --** %name!');
+    //     expect(
+    //         f.describe(name: 'name', data: Data(level: 1)), 'AA A --** name!');
+    //     expect(f.describe(name: 'bob', data: Data(level: 2)), 'AA B --** bob!');
+    //   });
 
-      test('toJSON, default template', () {
-        var formatter = ArrayFormatter(array: ['a', 'b', 'c']);
-        expect(formatter.toJSON(), '{"type":"Array","array":["a","b","c"]}');
-      });
+    //   test('toJSON, default template', () {
+    //     var formatter = ArrayFormatter(array: ['a', 'b', 'c']);
+    //     expect(formatter.toJSON(), '{"type":"Array","array":["a","b","c"]}');
+    //   });
 
-      test('toJSON', () {
-        var formatter =
-            ArrayFormatter(array: ['a', 'b', 'c'], template: '%name level %f');
-        expect(formatter.toJSON(),
-            '{"type":"Array","template":"%name level %f","array":["a","b","c"]}');
-      });
+    //   test('toJSON', () {
+    //     var formatter =
+    //         ArrayFormatter(array: ['a', 'b', 'c'], template: '%name level %f');
+    //     expect(formatter.toJSON(),
+    //         '{"type":"Array","template":"%name level %f","array":["a","b","c"]}');
+    //   });
 
-      test('object methods', () {
-        var f1 = ArrayFormatter(array: ['a', 'b', 'c']);
-        var f2 = ArrayFormatter(array: ['a', 'b', 'c'], template: '%name %f');
-        var f3 = ArrayFormatter(
-            array: ['a', 'b', 'c'], template: '%name %f, %detail');
-        var f4 = LevelFormatter(template: '%name %f');
+    //   test('object methods', () {
+    //     var f1 = ArrayFormatter(array: ['a', 'b', 'c']);
+    //     var f2 = ArrayFormatter(array: ['a', 'b', 'c'], template: '%name %f');
+    //     var f3 = ArrayFormatter(
+    //         array: ['a', 'b', 'c'], template: '%name %f, %detail');
+    //     var f4 = LevelFormatter(template: '%name %f');
 
-        expect(f1, equals(f1));
-        expect(f1, equals(f2));
-        expect(f2, equals(f1));
-        expect(f1, isNot(equals(f3)));
-        expect(f3, isNot(equals(f1)));
-        expect(f1, isNot(equals(f4)));
-        expect(f4, isNot(equals(f1)));
+    //     expect(f1, equals(f1));
+    //     expect(f1, equals(f2));
+    //     expect(f2, equals(f1));
+    //     expect(f1, isNot(equals(f3)));
+    //     expect(f3, isNot(equals(f1)));
+    //     expect(f1, isNot(equals(f4)));
+    //     expect(f4, isNot(equals(f1)));
 
-        expect(f1.hashCode, equals(f2.hashCode));
-        expect(f1.hashCode, isNot(equals(f3.hashCode)));
-      });
-    });
+    //     expect(f1.hashCode, equals(f2.hashCode));
+    //     expect(f1.hashCode, isNot(equals(f3.hashCode)));
+    //   });
+    // });
 
     group('GeometricFormatter', () {
       test('no-args constructor', () {
