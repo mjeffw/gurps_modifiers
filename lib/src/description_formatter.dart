@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
 import 'modifier_data.dart';
@@ -77,13 +76,11 @@ class DescriptionFormatter with HasAttributes {
   ///
   /// Given a Modifier template name and instance data, return the description.
   ///
-  String describe({String name, ModifierData data}) {
-    var text = template
-        .replaceFirst('%name', _name(name))
-        .replaceFirst('%detail', _detail(data))
-        .trim();
-    return deleteTrailing(text, ',');
-  }
+  String describe({String name, ModifierData data}) => template
+      .replaceFirst('%name', _name(name))
+      .replaceFirst('%detail', _detail(data))
+      .trim()
+      .deleteTrailing(',');
 
   ///
   /// The Modifier name. This getter exists to allow subclasses to respond with
@@ -184,7 +181,8 @@ class GeometricFormatter extends LevelFormatter {
         super(template: template);
 
   GeometricFormatter.fromJSON(Map<String, dynamic> json)
-      : assert(json['a'] != null),
+      : assert(json['type'] == TYPE),
+        assert(json['a'] != null),
         assert(json['b'] != null),
         a = json['a'],
         b = json['b'],
@@ -239,7 +237,8 @@ class ArithmeticFormatter extends LevelFormatter {
         super(template: template);
 
   ArithmeticFormatter.fromJSON(Map<String, dynamic> json)
-      : assert(json['a'] != null),
+      : assert(json['type'] == TYPE),
+        assert(json['a'] != null),
         assert(json['b'] != null),
         a = json['a'],
         b = json['b'],

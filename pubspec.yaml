@@ -5,10 +5,9 @@ description: A starting point for Dart libraries or applications.
 # author: Wilson, Marvin (jw9615) <email@example.com>
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  json_annotation: ^3.0.0
   quiver: ^2.1.2+1
   dart_utils:
     git:

@@ -196,6 +196,135 @@ void main() {
       });
     });
 
+    group('Arithmetic Formatter', () {
+      test('no-args constructor', () {
+        expect(() => ArithmeticFormatter(), throwsA(isA<AssertionError>()));
+      });
+
+      test('no-b constructor', () {
+        expect(() => ArithmeticFormatter(a: 2), throwsA(isA<AssertionError>()));
+      });
+
+      test('no-a constructor', () {
+        expect(() => ArithmeticFormatter(b: 2), throwsA(isA<AssertionError>()));
+      });
+
+      test('no template constructor', () {
+        expect(
+            ArithmeticFormatter(a: 5, b: 2).template, LevelFormatter.TEMPLATE);
+      });
+
+      test('null template constructor', () {
+        expect(ArithmeticFormatter(a: 5, b: 3, template: null).template,
+            LevelFormatter.TEMPLATE);
+      });
+
+      test('template constructor', () {
+        expect(
+            ArithmeticFormatter(a: 1, b: 1, template: 'One %name is %f')
+                .template,
+            'One %name is %f');
+      });
+
+      test('no signed constructor', () {
+        expect(
+            ArithmeticFormatter(a: 1, b: 1, template: 'One %name is %f').signed,
+            false);
+      });
+
+      test('describe', () {
+        var f = ArithmeticFormatter(a: 2, b: 3);
+        expect(f.describe(data: Data(level: 2), name: 'foo'), 'foo 7');
+        expect(f.describe(data: Data(level: 1), name: 'foo'), 'foo 5');
+
+        var f2 = ArithmeticFormatter(a: 1, b: 2, template: '%f :: %name');
+        expect(f2.describe(data: Data(level: 4), name: 'bar'), '6 :: bar');
+
+        var f3 = ArithmeticFormatter(a: 3, b: 0, signed: true);
+        expect(f3.describe(data: Data(level: 7), name: 'baz'), 'baz +21');
+      });
+
+      test('null args describe', () {
+        var f = ArithmeticFormatter(a: 2, b: 2);
+        expect(() => f.describe(), throwsA(isA<Error>()));
+        expect(() => f.describe(data: null), throwsA(isA<Error>()));
+        expect(
+            () => f.describe(data: null, name: 'bar'), throwsA(isA<Error>()));
+        expect(() => f.describe(name: null), throwsA(isA<Error>()));
+        expect(
+            () => f.describe(data: Data(), name: 'baz'), throwsA(isA<Error>()));
+      });
+
+      test('fromJSON -- missing a', () {
+        var text =
+            '''{ "type": "Arithmetic", "template": "%name %f", "b": 2 }''';
+
+        expect(() => ArithmeticFormatter.fromJSON(json.decode(text)),
+            throwsA(isA<AssertionError>()));
+      });
+
+      test('fromJSON -- missing b', () {
+        var text =
+            '''{ "type": "Arithmetic", "template": "%name %f", "a": 5 }''';
+
+        expect(() => ArithmeticFormatter.fromJSON(json.decode(text)),
+            throwsA(isA<AssertionError>()));
+      });
+
+      test('fromJSON -- missing template', () {
+        var text = '''{ "type": "Arithmetic", "a": 5, "b": 2 }''';
+
+        expect(() => ArithmeticFormatter.fromJSON(json.decode(text)),
+            isNot(throwsA(isA<AssertionError>())));
+      });
+
+      test('fromJSON', () {
+        var text =
+            '''{ "type": "Arithmetic", "template": "%name: %f", "a": 5, "b": 2 }''';
+
+        var f = ArithmeticFormatter.fromJSON(json.decode(text));
+        expect(f.describe(name: 'name', data: Data(level: 2)), 'name: 12');
+        expect(f.describe(name: 'foo', data: Data(level: 3)), 'foo: 17');
+      });
+
+      test('toJSON default template ', () {
+        var formatter = ArithmeticFormatter(a: 2, b: 3);
+        expect(formatter.toJSON(), '{"type":"Arithmetic","a":2,"b":3}');
+      });
+
+      test('toJSON', () {
+        var formatter =
+            ArithmeticFormatter(a: 2, b: 3, template: '%name, %f yards');
+        expect(formatter.toJSON(),
+            '{"type":"Arithmetic","template":"%name, %f yards","a":2,"b":3}');
+      });
+
+      test('toJSON - with signed', () {
+        var formatter =
+            ArithmeticFormatter(a: 2, b: 3, template: '%name, %f yards', signed: true);
+        expect(formatter.toJSON(),
+            '{"type":"Arithmetic","template":"%name, %f yards","a":2,"b":3,"signed":true}');
+      });
+
+      test('object methods', () {
+        var f1 = ArithmeticFormatter(a: 2, b: 3);
+        var f2 = ArithmeticFormatter(a: 2, b: 3, template: '%name %f');
+        var f3 = ArithmeticFormatter(a: 2, b: 3, template: '%name %f, %detail');
+        var f4 = GeometricFormatter(a: 2, b: 3);
+
+        expect(f1, equals(f1));
+        expect(f1, equals(f2));
+        expect(f2, equals(f1));
+        expect(f1, isNot(equals(f3)));
+        expect(f3, isNot(equals(f1)));
+        expect(f1, isNot(equals(f4)));
+        expect(f4, isNot(equals(f1)));
+
+        expect(f1.hashCode, equals(f2.hashCode));
+        expect(f1.hashCode, isNot(equals(f3.hashCode)));
+      });
+    });
+
     group('GeometricFormatter', () {
       test('no-args constructor', () {
         expect(() => GeometricFormatter(), throwsA(isA<AssertionError>()));
@@ -247,24 +376,26 @@ void main() {
       });
 
       test('fromJSON -- missing a', () {
-        var text = '''{ "type": "Exponent", "template": "%name %f", "b": 2 }''';
+        var text =
+            '''{ "type": "Geometric", "template": "%name %f", "b": 2 }''';
 
         expect(() => GeometricFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- missing b', () {
-        var text = '''{ "type": "Exponent", "template": "%name %f", "a": 5 }''';
+        var text =
+            '''{ "type": "Geometric", "template": "%name %f", "a": 5 }''';
 
         expect(() => GeometricFormatter.fromJSON(json.decode(text)),
             throwsA(isA<AssertionError>()));
       });
 
       test('fromJSON -- missing template', () {
-        var text = '''{ "type": "Exponent", "a": 5, "b": 2 }''';
+        var text = '''{ "type": "Geometric", "a": 5, "b": 2 }''';
 
-        expect(() => GeometricFormatter.fromJSON(json.decode(text)),
-            isNot(throwsA(isA<AssertionError>())));
+        expect(GeometricFormatter.fromJSON(json.decode(text)).template,
+            LevelFormatter.TEMPLATE);
       });
 
       test('fromJSON', () {

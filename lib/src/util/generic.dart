@@ -3,15 +3,17 @@ import 'dart:convert';
 import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
-String deleteTrailing(String text, String other) {
-  if (text.endsWith(other)) {
-    text = text.substring(0, text.length - other.length);
+extension StringMethods on String {
+  String deleteTrailing(String other) {
+    if (this.endsWith(other)) {
+      return this.substring(0, this.length - other.length).trim();
+    }
+    return this;
   }
-  return text.trim();
 }
 
-bool attributeMapsEqual(Map<String, dynamic> map, Map<String, dynamic> other) {
-  if (map == other) return true;
+bool attributeMapsEqual<K, V>(Map<K, V> map, Map<K, V> other) {
+  if (identical(map, other)) return true;
   if (map == null || other == null) return false;
   if (map.length != other.length) return false;
 
@@ -25,9 +27,9 @@ bool attributeMapsEqual(Map<String, dynamic> map, Map<String, dynamic> other) {
 
     if (!identical(aValue.runtimeType, bValue.runtimeType)) return false;
 
-    if (aValue is List) {
+    if (aValue is List && bValue is List) {
       if (!listsEqual(aValue, bValue)) return false;
-    } else if (aValue is Map) {
+    } else if (aValue is Map && bValue is Map) {
       if (!mapsEqual(aValue, bValue)) return false;
     } else if (aValue != bValue) return false;
   }
