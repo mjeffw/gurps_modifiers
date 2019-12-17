@@ -1,9 +1,6 @@
 import 'package:gurps_modifiers/src/modifier.dart';
-import 'package:gurps_modifiers/src/modifier_template.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
-
-import 'data.dart';
 
 //TODO: Implementation idea: Modifiers with multiple options, like Bombardment, Effective skill 14
 // AND Bombardment, Effective skill 12, etc, could be turned into a single entry ("Bombardment"),
@@ -1408,7 +1405,6 @@ void main() {
     });
   }, skip: false);
 
-  //TODO: This is the catch-all limitation. Must provide someway to enter limitation information (and potentially save it).
   group('Accessibility', () {
     var acc;
     setUp(() {
