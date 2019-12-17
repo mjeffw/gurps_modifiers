@@ -10,23 +10,13 @@ abstract class ModifierTemplates {
   Iterable<String> fetchKeys();
   String printSourceData();
 
-  factory ModifierTemplates.instance() {
-    if (_Modifiers._instance == null) {
-      _Modifiers._instance = _Modifiers();
-    }
-    return _Modifiers._instance;
-  }
+  factory ModifierTemplates.instance() => _Modifiers._instance ??= _Modifiers();
 }
 
 abstract class Modifiers {
   Modifier byName(String name);
 
-  factory Modifiers.instance() {
-    if (_Modifiers._instance == null) {
-      _Modifiers._instance = _Modifiers();
-    }
-    return _Modifiers._instance;
-  }
+  factory Modifiers.instance() => _Modifiers._instance ??= _Modifiers();
 }
 
 class _ModifierFactory {
@@ -39,7 +29,7 @@ class _ModifierFactory {
 class _Modifiers implements ModifierTemplates, Modifiers {
   static _Modifiers _instance;
 
-  static Map<String, Function> _constructors = {
+  static final Map<String, Function> _constructors = {
     SimpleModifierTemplate.KEY: (x) => SimpleModifierTemplate.fromJSON(x),
     LeveledTemplate.KEY: (x) => LeveledTemplate.fromJSON(x),
     VariableLeveledTemplate.KEY: (x) => VariableLeveledTemplate.fromJSON(x),
@@ -50,8 +40,9 @@ class _Modifiers implements ModifierTemplates, Modifiers {
         LeveledNamedVariantTemplate.fromJSON(x),
   };
 
-  static Map<String, _ModifierFactory> _map = {};
+  static final Map<String, _ModifierFactory> _map = {};
 
+  @override
   ModifierTemplate templateByName(String name) {
     var myFactory = _map[name];
     return myFactory.builder.call(myFactory.data);
@@ -60,10 +51,11 @@ class _Modifiers implements ModifierTemplates, Modifiers {
   @override
   Modifier byName(String name) => templateByName(name).createModifier();
 
+  @override
   Iterable<String> fetchKeys() => _Modifiers._map.keys;
 
   _Modifiers() {
-    print("create");
+    print('create');
     if (_map.isEmpty) {
       var service = ModifierData();
       var temp = json.decode(service.contents);
@@ -76,13 +68,12 @@ class _Modifiers implements ModifierTemplates, Modifiers {
     }
   }
 
+  @override
   String printSourceData() {
     var keys = _map.keys.toList();
     keys.sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
     var data = keys.map((f) => templateByName(f)).toList();
 
-    var line = JsonEncoder.withIndent('  ').convert({"modifiers": data});
-
-    return line;
+    return JsonEncoder.withIndent('  ').convert({'modifiers': data});
   }
 }

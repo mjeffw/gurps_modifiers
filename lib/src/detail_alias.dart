@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 import 'util/generic.dart';
 
 class DetailAlias with HasAttributes {
@@ -5,7 +7,7 @@ class DetailAlias with HasAttributes {
 
   final MyMap<String, String> aliases;
 
-  DetailAlias({Map<String, String> aliases})
+  DetailAlias({@required Map<String, String> aliases})
       : assert(aliases != null),
         aliases = MyMap(delegate: aliases);
 

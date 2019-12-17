@@ -8,7 +8,7 @@ import 'data.dart';
 //TODO: Implementation idea: Modifiers with multiple options, like Bombardment, Effective skill 14
 // AND Bombardment, Effective skill 12, etc, could be turned into a single entry ("Bombardment"),
 // with a number of radio buttons (one for each option).
-main() {
+void main() {
   group('NamedVariants', () {
     group('Active Defense', () {
       Modifier a;
@@ -950,7 +950,7 @@ main() {
         m = Modifiers.instance().byName('Environmental');
       });
 
-      _verify({int percent, String detail}) {
+      void _verify({int percent, String detail}) {
         var mod = Modifier.copyWith(m, detail: detail);
         expect(mod.percentage, percent);
         expect(mod.description, 'Environmental, $detail');
@@ -1419,7 +1419,7 @@ main() {
       expect(() => acc.percentage, throwsA(isA<StateError>()));
     });
 
-    _verify(String detail, int percent) {
+    void _verify(String detail, int percent) {
       var mod = Modifier.copyWith(acc, detail: detail);
       expect(mod.percentage, percent,
           reason:

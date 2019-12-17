@@ -1,8 +1,9 @@
 import 'package:gurps_modifiers/src/template_subtypes.dart';
+import 'package:meta/meta.dart';
 
-import 'modifier_data.dart';
 import 'description_formatter.dart';
 import 'modifier.dart';
+import 'modifier_data.dart';
 import 'util/generic.dart';
 
 ///
@@ -34,10 +35,12 @@ abstract class ModifierTemplate with HasAttributes {
   /// Constructor
   ///
   ModifierTemplate(
-      {this.name, this.isAttackModifier, DescriptionFormatter formatter})
+      {@required this.name,
+      @required this.isAttackModifier,
+      DescriptionFormatter formatter})
       : assert(name != null),
         assert(isAttackModifier != null),
-        this.formatter = formatter ?? DescriptionFormatter();
+        formatter = formatter ?? DescriptionFormatter();
 
   ///
   /// Create and return a [Modifier] based on this template.
@@ -63,8 +66,8 @@ abstract class ModifierTemplate with HasAttributes {
 
   @override
   Map<String, dynamic> get attributeMap => {
-        "name": name,
-        if (isAttackModifier) "isAttackModifier": true,
+        'name': name,
+        if (isAttackModifier) 'isAttackModifier': true,
       };
 }
 
@@ -127,11 +130,11 @@ abstract class BaseLeveledTemplate extends ModifierTemplate {
   Map<String, dynamic> get attributeMap => {
         ...super.attributeMap,
         if (maxLevel != null && !(this is VariableLeveledTemplate))
-          "maxLevel": maxLevel,
-        if (baseValue != null && baseValue != 0) "baseValue": baseValue,
-        if (!(this is VariableLeveledTemplate)) "valuePerLevel": valuePerLevel,
+          'maxLevel': maxLevel,
+        if (baseValue != null && baseValue != 0) 'baseValue': baseValue,
+        if (!(this is VariableLeveledTemplate)) 'valuePerLevel': valuePerLevel,
         if (levelPrompt != null && levelPrompt != 'Level')
-          "levelPrompt": levelPrompt,
+          'levelPrompt': levelPrompt,
       };
 }
 
@@ -158,13 +161,13 @@ class CyclicModifierTemplate extends ModifierTemplate {
       'Cyclic, ${intervalText[data.interval.index]}, ${data.cycles} cycles${_resistibleText(data)}${_contagionText(data)}';
 
   String _resistibleText(CyclicData data) =>
-      data.resistible ? ", Resistible" : "";
+      data.resistible ? ', Resistible' : '';
 
   String _contagionText(CyclicData data) => data.contagion == ContagionType.None
-      ? ""
+      ? ''
       : data.contagion == ContagionType.Mildly
-          ? ", Mildly Contagious"
-          : ", Highly Contagious";
+          ? ', Mildly Contagious'
+          : ', Highly Contagious';
 
   @override
   int percentage(ModifierData data) => _calculateCyclicCost(data as CyclicData);
@@ -188,7 +191,7 @@ class CyclicModifierTemplate extends ModifierTemplate {
 
   @override
   Modifier createModifier({ModifierData data}) {
-    CyclicData d2 = data as CyclicData;
+    var d2 = data as CyclicData;
     return CyclicModifier(
         template: this,
         contagion: d2?.contagion ?? ContagionType.None,
@@ -200,6 +203,6 @@ class CyclicModifierTemplate extends ModifierTemplate {
   @override
   Map<String, dynamic> get attributeMap => {
         ...super.attributeMap,
-        "type": "Cyclic",
+        'type': 'Cyclic',
       };
 }

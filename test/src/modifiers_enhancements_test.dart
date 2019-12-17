@@ -3,7 +3,7 @@ import 'package:gurps_modifiers/src/modifier.dart';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   group('Simple', () {
     test('Aura', () {
       var mod = Modifiers.instance().byName('Aura');
@@ -1132,7 +1132,7 @@ main() {
     }, skip: false);
 
     test('Incendiary', () {
-      Modifier inc = Modifiers.instance().byName('Incendiary');
+      var inc = Modifiers.instance().byName('Incendiary');
 
       expect(inc.isAttackModifier, true);
       expect(inc.percentage, 10);

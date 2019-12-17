@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:gurps_modifiers/src/modifiers.dart';
 import 'package:test/test.dart';
 
-main() {
+void main() {
   group('modifiers', () {
     test('fetch returns a new object', () {
       var m1 = ModifierTemplates.instance().templateByName('Accurate');
@@ -12,7 +12,7 @@ main() {
     });
 
     test('printSourceData', () async {
-      String derived = ModifierTemplates.instance().printSourceData();
+      var derived = ModifierTemplates.instance().printSourceData();
 
       var file = File('lib/src/modifier_data.json');
       var contents;

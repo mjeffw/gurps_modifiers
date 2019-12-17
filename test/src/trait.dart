@@ -45,7 +45,7 @@ class Trait {
       List<Modifier> modifiers,
       this.numberOfLevels})
       : modifiers = modifiers ?? const <Modifier>[],
-        this.hasLevels = hasLevels ?? false;
+        hasLevels = hasLevels ?? false;
 
   ///
   /// Cost of the trait, including levels, but before applying modifiers

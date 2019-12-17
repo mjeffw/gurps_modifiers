@@ -84,7 +84,7 @@ void main() {
       });
 
       test('fromJSON with template', () {
-        String text = '{ "type": "Simple", "template": "%name %detail" }';
+        var text = '{ "type": "Simple", "template": "%name %detail" }';
         var f = DescriptionFormatter.fromJSON(json.decode(text));
         expect(f, isA<DescriptionFormatter>());
         expect(f.template, '%name %detail');
@@ -150,7 +150,7 @@ void main() {
       });
 
       test('fromJSON without template', () {
-        String text = '{ "type": "Level" }';
+        var text = '{ "type": "Level" }';
         var f = DescriptionFormatter.fromJSON(json.decode(text));
         expect(f, isA<LevelFormatter>());
         expect(f.template, LevelFormatter.TEMPLATE);
@@ -158,7 +158,7 @@ void main() {
       });
 
       test('fromJSON with template', () {
-        String text = '{ "type": "Level", "template": "%name %detail" }';
+        var text = '{ "type": "Level", "template": "%name %detail" }';
         var f = DescriptionFormatter.fromJSON(json.decode(text));
         expect(f, isA<LevelFormatter>());
         expect(f.template, '%name %detail');
@@ -300,8 +300,8 @@ void main() {
       });
 
       test('toJSON - with signed', () {
-        var formatter =
-            ArithmeticFormatter(a: 2, b: 3, template: '%name, %f yards', signed: true);
+        var formatter = ArithmeticFormatter(
+            a: 2, b: 3, template: '%name, %f yards', signed: true);
         expect(formatter.toJSON(),
             '{"type":"Arithmetic","template":"%name, %f yards","a":2,"b":3,"signed":true}');
       });

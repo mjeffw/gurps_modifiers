@@ -1,13 +1,14 @@
 import 'dart:math';
-
+import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
+import 'package:dart_utils/dart_utils.dart';
 
 import 'modifier_data.dart';
 import 'detail_alias.dart';
 import 'util/generic.dart';
 
 class FormatterFactory {
-  static Map<String, Function> _factoryDictionary = {
+  static final Map<String, Function> _factoryDictionary = {
     PatternFormatter.TYPE: (json) => PatternFormatter.fromJSON(json),
     LevelFormatter.TYPE: (json) => LevelFormatter.fromJSON(json),
     GeometricFormatter.TYPE: (json) => GeometricFormatter.fromJSON(json),
@@ -97,10 +98,11 @@ class DescriptionFormatter with HasAttributes {
   ///
   /// The object's attributes returned as a map
   ///
+  @override
   Map<String, dynamic> get attributeMap => {
         if (_type != null) 'type': _type,
         if (template != _defaultTemplate) 'template': template,
-        if (alias != null && alias != DetailAlias.NULL) "detailAlias": alias,
+        if (alias != null && alias != DetailAlias.NULL) 'detailAlias': alias,
       };
 }
 
@@ -130,6 +132,7 @@ class LevelFormatter extends DescriptionFormatter {
   LevelFormatter.fromJSON(Map<String, dynamic> json, {String defaultTemplate})
       : super._fromJSON(json, defaultTemplate: defaultTemplate ?? TEMPLATE);
 
+  @override
   String describe({String name, ModifierData data}) => super
       .describe(name: name, data: data)
       .replaceFirst('%f', _f_value(data.level))
@@ -174,7 +177,10 @@ class GeometricFormatter extends LevelFormatter {
   /// Create a [GeometricFormatter] with the given parameters.
   ///
   GeometricFormatter(
-      {this.a, this.b, int c, String template = LevelFormatter.TEMPLATE})
+      {@required this.a,
+      @required this.b,
+      int c,
+      String template = LevelFormatter.TEMPLATE})
       : assert(a != null),
         assert(b != null),
         c = c ?? 0,
@@ -197,7 +203,7 @@ class GeometricFormatter extends LevelFormatter {
 
   @override
   Map<String, dynamic> get attributeMap =>
-      {...super.attributeMap, "a": a, "b": b, "c": c};
+      {...super.attributeMap, 'a': a, 'b': b, 'c': c};
 }
 
 ///
@@ -227,13 +233,13 @@ class ArithmeticFormatter extends LevelFormatter {
   /// Create an [ArithmeticFormatter] with the given parameters.
   ///
   ArithmeticFormatter(
-      {this.a,
-      this.b,
+      {@required this.a,
+      @required this.b,
       String template = LevelFormatter.TEMPLATE,
       bool signed = false})
       : assert(a != null),
         assert(b != null),
-        this.signed = signed,
+        signed = signed,
         super(template: template);
 
   ArithmeticFormatter.fromJSON(Map<String, dynamic> json)
@@ -260,7 +266,7 @@ class ArithmeticFormatter extends LevelFormatter {
 
   @override
   Map<String, dynamic> get attributeMap =>
-      {...super.attributeMap, "a": a, "b": b, if (signed) "signed": signed};
+      {...super.attributeMap, 'a': a, 'b': b, if (signed) 'signed': signed};
 }
 
 class PatternFormatter extends LevelFormatter {
@@ -271,7 +277,7 @@ class PatternFormatter extends LevelFormatter {
 
   final MyList<int> pattern; // e.g., 2, 3, 5, 10
 
-  PatternFormatter({List<int> pattern, String template})
+  PatternFormatter({@required List<int> pattern, String template})
       : assert(pattern != null),
         pattern = MyList<int>(delegate: pattern),
         super(template: template ?? LevelFormatter.TEMPLATE);

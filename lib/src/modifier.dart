@@ -16,8 +16,10 @@ class ModifierDTO with ModifierData {
 class Modifier with ModifierData {
   String get name => template.name;
 
+  @override
   final String detail;
 
+  @override
   final int level;
 
   int get percentage => template.percentage(this);
@@ -29,7 +31,7 @@ class Modifier with ModifierData {
   final ModifierTemplate template;
 
   Modifier({this.template, this.detail, int level = 1})
-      : this.level = (template.hasLevels) ? level : null;
+      : level = (template.hasLevels) ? level : null;
 
   factory Modifier.copyWith(Modifier source, {String detail, int level}) {
     if (level != null && !source.template.hasLevels) {
@@ -43,15 +45,21 @@ class Modifier with ModifierData {
 }
 
 class CyclicModifier extends Modifier with CyclicData {
+  @override
   final CyclicInterval interval;
+  @override
   final int cycles;
+  @override
   final bool resistible;
+  @override
   final ContagionType contagion;
 
   CyclicModifierTemplate get _template => template;
 
+  @override
   int get percentage => _template.percentage(this);
 
+  @override
   String get description => _template.levelName(this);
 
   CyclicModifier(

@@ -3,15 +3,6 @@ import 'dart:convert';
 import 'package:quiver/collection.dart';
 import 'package:quiver/core.dart';
 
-extension StringMethods on String {
-  String deleteTrailing(String other) {
-    if (this.endsWith(other)) {
-      return this.substring(0, this.length - other.length).trim();
-    }
-    return this;
-  }
-}
-
 bool attributeMapsEqual<K, V>(Map<K, V> map, Map<K, V> other) {
   if (identical(map, other)) return true;
   if (map == null || other == null) return false;
@@ -66,8 +57,8 @@ mixin HasAttributes {
   @override
   bool operator ==(dynamic other) {
     if (identical(this, other)) return true;
-    return identical(this.runtimeType, other.runtimeType) &&
-        attributeMapsEqual(this.attributeMap, other.attributeMap);
+    return identical(runtimeType, other.runtimeType) &&
+        attributeMapsEqual(attributeMap, other.attributeMap);
   }
 
   ///

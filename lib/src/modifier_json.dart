@@ -6,7 +6,7 @@ class ModifierData {
     var file = File('lib/src/modifier_data.json');
 
     if (file.existsSync()) {
-      this.contents = file.readAsStringSync();
+      contents = file.readAsStringSync();
     }
   }
 }

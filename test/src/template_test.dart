@@ -71,32 +71,29 @@ void main() {
       });
 
       test('fromJSON - minimal', () {
-        String source = '''{ "type": "Simple", "name": "Foo" }''';
+        var source = '''{ "type": "Simple", "name": "Foo" }''';
 
-        SimpleModifierTemplate m =
-            SimpleModifierTemplate.fromJSON(json.decode(source));
+        var m = SimpleModifierTemplate.fromJSON(json.decode(source));
         expect(m.name, 'Foo');
         expect(m.isAttackModifier, false);
         expect(m.percentage(Data()), 0);
       });
 
       test('fromJSON + isAttackModifier', () {
-        String source =
+        var source =
             '''{ "type": "Simple", "name": "Foo", "isAttackModifier": true }''';
 
-        SimpleModifierTemplate m =
-            SimpleModifierTemplate.fromJSON(json.decode(source));
+        var m = SimpleModifierTemplate.fromJSON(json.decode(source));
         expect(m.name, 'Foo');
         expect(m.isAttackModifier, true);
         expect(m.percentage(Data()), 0);
       });
 
       test('fromJSON + Percentage', () {
-        String source =
+        var source =
             '''{ "type": "Simple", "name": "Bar", "isAttackModifier": false, "percentage": -5 }''';
 
-        SimpleModifierTemplate m =
-            SimpleModifierTemplate.fromJSON(json.decode(source));
+        var m = SimpleModifierTemplate.fromJSON(json.decode(source));
         expect(m.name, 'Bar');
         expect(m.isAttackModifier, false);
         expect(m.percentage(Data()), -5);
@@ -276,7 +273,7 @@ void main() {
         var source = '''{ "type": "Leveled", "name": "Foo", "valuePerLevel": 7,
             "formatter": {"type": "Level","template": "Boo-Ya"} }''';
         var m = LeveledTemplate.fromJSON(json.decode(source));
-        expect(m.formatter, LevelFormatter(template: "Boo-Ya"));
+        expect(m.formatter, LevelFormatter(template: 'Boo-Ya'));
       });
     });
 
@@ -326,7 +323,7 @@ void main() {
       });
 
       test('fromJSON - no type', () {
-        var source = "{}";
+        var source = '{}';
         expect(() => VariableLeveledTemplate.fromJSON(json.decode(source)),
             throwsA(isA<AssertionError>()));
       });

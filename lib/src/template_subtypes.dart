@@ -1,5 +1,6 @@
 import 'package:dart_utils/dart_utils.dart';
 import 'package:gurps_modifiers/src/modifier.dart';
+import 'package:meta/meta.dart';
 import 'package:quiver/core.dart';
 
 import 'description_formatter.dart';
@@ -43,7 +44,7 @@ class SimpleModifierTemplate extends ModifierTemplate {
       DetailAlias detailAlias,
       this.defaultDetail})
       : assert(percentage != null),
-        this._percentage = percentage,
+        _percentage = percentage,
         super(
             name: name,
             isAttackModifier: isAttackModifier,
@@ -71,11 +72,11 @@ class SimpleModifierTemplate extends ModifierTemplate {
   @override
   Map<String, dynamic> get attributeMap => {
         ...super.attributeMap,
-        "type": KEY,
-        "percentage": _percentage,
-        if (defaultDetail != null) "default": defaultDetail,
+        'type': KEY,
+        'percentage': _percentage,
+        if (defaultDetail != null) 'default': defaultDetail,
         if (formatter != null && formatter != DescriptionFormatter())
-          "formatter": formatter,
+          'formatter': formatter,
       };
 }
 
@@ -91,6 +92,7 @@ class NamedVariantTemplate extends ModifierTemplate {
 
   List<String> get variationNames => variations.keys.toList();
 
+  @override
   int percentage(ModifierData data) =>
       variations[data.detail ?? defaultVariation] ?? _percentage.value;
 
@@ -139,12 +141,12 @@ class NamedVariantTemplate extends ModifierTemplate {
   @override
   Map<String, dynamic> get attributeMap => {
         ...super.attributeMap,
-        "type": KEY,
-        if (_percentage.isPresent) "percentage": _percentage.value,
-        if (defaultVariation != null) "default": defaultVariation,
-        "variations": variations,
+        'type': KEY,
+        if (_percentage.isPresent) 'percentage': _percentage.value,
+        if (defaultVariation != null) 'default': defaultVariation,
+        'variations': variations,
         if (formatter != null && formatter != DescriptionFormatter())
-          "formatter": formatter,
+          'formatter': formatter,
       };
 }
 
@@ -164,7 +166,7 @@ class LeveledTemplate extends BaseLeveledTemplate {
   LeveledTemplate(
       {String name,
       int baseValue = 0,
-      int valuePerLevel,
+      @required int valuePerLevel,
       int maxLevel,
       String levelPrompt,
       LevelFormatter formatter,
@@ -200,9 +202,9 @@ class LeveledTemplate extends BaseLeveledTemplate {
   @override
   Map<String, dynamic> get attributeMap => {
         ...super.attributeMap,
-        "type": KEY,
+        'type': KEY,
         if (formatter != null && formatter != LevelFormatter())
-          "formatter": formatter,
+          'formatter': formatter,
       };
 }
 
@@ -250,10 +252,10 @@ class VariableLeveledTemplate extends BaseLeveledTemplate {
   Map<String, dynamic> get attributeMap {
     var map = {
       ...super.attributeMap,
-      "type": KEY,
-      "levelValues": _levelValues,
+      'type': KEY,
+      'levelValues': _levelValues,
       if (formatter != null && formatter != LevelFormatter())
-        "formatter": formatter,
+        'formatter': formatter,
     };
     map.remove('maxLevel');
     map.remove('valuePerLevel');
@@ -328,11 +330,11 @@ class LeveledNamedVariantTemplate extends BaseLeveledTemplate {
   Map<String, dynamic> get attributeMap {
     var map = {
       ...super.attributeMap,
-      "type": KEY,
-      if (defaultVariation != null) "default": defaultVariation,
-      "variations": variations,
+      'type': KEY,
+      if (defaultVariation != null) 'default': defaultVariation,
+      'variations': variations,
       if (formatter != null && formatter != LevelFormatter())
-        "formatter": formatter,
+        'formatter': formatter,
     };
     return map..remove('valuePerLevel');
   }
@@ -374,8 +376,9 @@ class Category with HasAttributes {
     return cat;
   }
 
+  @override
   Map<String, dynamic> get attributeMap =>
-      {"name": name, "cost": cost, "items": _items};
+      {'name': name, 'cost': cost, 'items': _items};
 }
 
 Category NullCategory = Category(name: 'NULL', cost: null, items: []);
@@ -424,8 +427,10 @@ class CategorizedTemplate extends ModifierTemplate {
         detail: data == null ? defaultDetail : data.detail);
   }
 
+  @override
   int percentage(ModifierData data) => _findCategory(data.detail).cost;
 
+  @override
   String describe(ModifierData data) =>
       formatter.describe(name: name, data: data);
 
@@ -436,10 +441,10 @@ class CategorizedTemplate extends ModifierTemplate {
   @override
   Map<String, dynamic> get attributeMap => {
         ...super.attributeMap,
-        "type": KEY,
-        if (defaultDetail != null) "default": defaultDetail,
-        "categories": categories,
+        'type': KEY,
+        if (defaultDetail != null) 'default': defaultDetail,
+        'categories': categories,
         if (formatter != null && formatter != DescriptionFormatter())
-          "formatter": formatter,
+          'formatter': formatter,
       };
 }

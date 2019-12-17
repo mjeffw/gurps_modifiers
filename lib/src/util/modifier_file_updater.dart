@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:gurps_modifiers/src/modifiers.dart';
 
-main() async {
-  ModifierTemplates modifiers = ModifierTemplates.instance();
+void main() async {
+  var modifiers = ModifierTemplates.instance();
   var contents = modifiers.printSourceData();
 
   print(contents);
